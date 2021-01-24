@@ -22,9 +22,9 @@ class ViewController: UIViewController {
     static let sectionHeaderElementKind = "section-header-element-kind"
     var searchController: UISearchController?
     var webServiceManager: WebServiceManager!
-    var dataSource: UICollectionViewDiffableDataSource<String, Package>! = nil
+    var dataSource: UICollectionViewDiffableDataSource<String, CatalogueQualityScores>! = nil
     var collectionView: UICollectionView! = nil
-    var snapshot: NSDiffableDataSourceSnapshot<String, Package>! = nil
+    var snapshot: NSDiffableDataSourceSnapshot<String, CatalogueQualityScores>! = nil
     var fieldsArr = [Field]()
     var resultArr = [Package]()
     var layoutType: Int = 1
@@ -260,8 +260,8 @@ extension ViewController {
     /// - Returns Void
     /// - Takes the result of the API call and applys it to the data source
     func configureDataSource() {
-        let cellRegistration = UICollectionView.CellRegistration<MenuCell, Package>{ (cell, indexPath, data) in
-            cell.label.text = data.title
+        let cellRegistration = UICollectionView.CellRegistration<MenuCell, CatalogueQualityScores>{ (cell, indexPath, data) in
+            cell.label.text = data.package
             cell.contentView.backgroundColor = .white
             cell.contentView.shadowBorder()
             cell.label.textAlignment = .center
@@ -278,7 +278,7 @@ extension ViewController {
             }
         }
         
-        dataSource = UICollectionViewDiffableDataSource<String, Package>(collectionView: collectionView, cellProvider: { (collectionView: UICollectionView, indexPath: IndexPath, identifier: Package) -> UICollectionViewCell? in
+        dataSource = UICollectionViewDiffableDataSource<String, CatalogueQualityScores>(collectionView: collectionView, cellProvider: { (collectionView: UICollectionView, indexPath: IndexPath, identifier: CatalogueQualityScores) -> UICollectionViewCell? in
             return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: identifier)
         })
         
@@ -288,7 +288,7 @@ extension ViewController {
             return self.supplementaryView
         }
         
-        snapshot = NSDiffableDataSourceSnapshot<String, Package>()
+        snapshot = NSDiffableDataSourceSnapshot<String, CatalogueQualityScores>()
         snapshot.appendSections(["Recently modified data"])
     }
 }
@@ -296,18 +296,18 @@ extension ViewController {
 // MARK: - Request next data set
 
 extension ViewController {
-//    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-//        if indexPath.row == collectionView.numberOfItems(inSection: indexPath.section) - 1 {
-//            updateNextSet()
-//        }
-//    }
-//
-//    func updateNextSet(){
-//        offsetBy += 1
-//        print("num", offsetBy)
-//        configureAPIRequest(offsetBy: offsetBy)
-//        DispatchQueue.main.async(execute: collectionView.reloadData)
-//    }
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if indexPath.row == collectionView.numberOfItems(inSection: indexPath.section) - 1 {
+            updateNextSet()
+        }
+    }
+
+    func updateNextSet(){
+        offsetBy += 1
+        print("num", offsetBy)
+        configureAPIRequest(offsetBy: offsetBy)
+        DispatchQueue.main.async(execute: collectionView.reloadData)
+    }
 }
 
 // MARK: - API request
@@ -319,15 +319,17 @@ extension ViewController {
     /// - Create an API request to the Catalogue Quality Scores
     /// https://open.toronto.ca/dataset/catalogue-quality-scores/
     func configureAPIRequest(offsetBy: Int = 0) {
-//        let urlString = "https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/datastore_search"
+//        let urlString = "https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/datastore_search?id=7b2830a7-1483-451f-8681-ef4942eedc34"
 //        let paramters = ["id": "22f223e7-73f7-4842-935c-80a0ba5c3e5b", "limit": "10"]
         let OFFSET_CONSTANT = 20
         print("total", String(OFFSET_CONSTANT * offsetBy))
 //        let urlString = "https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/recently_changed_packages_activity_list"
 //        let parameters: [String: String] = ["limit": "20", "offset": String(OFFSET_CONSTANT * offsetBy)]
         
-        let urlString = "https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/tag_list"
-        let parameters: [String: String] = ["limit": "20"]
+//        let urlString = "https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/package_show?id=473def30-1c87-45f1-95c4-06b9bf693fec"
+        let urlString = "https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/datastore_search"
+//        var parameters: [String: String]?
+        let parameters: [String: String] = ["id": "22f223e7-73f7-4842-935c-80a0ba5c3e5b", "limit": "5", "offset": String(OFFSET_CONSTANT * offsetBy)]
         
         webServiceManager = WebServiceManager()
         webServiceManager.sendRequest(urlString, parameters: parameters) { (responseObject, error) in
@@ -335,17 +337,22 @@ extension ViewController {
                 print(error?.localizedDescription ?? "Unknown error")
                 return
             }
+  
+//            latest updates
+//            print(responseObject)
+//            if let result = responseObject["result"] as? [String: Any] {
+//                print("result", result)
+//            }
             
-            if let result = responseObject["result"] as? [[String: Any]] {
-                print(result)
-                result.forEach { (package) in
-                    if let data = package["data"] as? [String: Any], let package = data["package"] as? [String: Any], let title = package["title"] as? String {
-//                        print(data)
-                        self.snapshot.appendItems([Package(title: title)])
-                    }
-                }
-            }
+//            if let result = responseObject["result"] as? [[String: Any]] {
+//                result.forEach { (package) in
+//                    if let data = package["data"] as? [String: Any], let package = data["package"] as? [String: Any], let title = package["title"] as? String {
+//                        self.snapshot.appendItems([Package(title: title)])
+//                    }
+//                }
+//            }
             
+//              tag_list?
 //            if let result = responseObject["result"] as? [String: Any] {
 //                // parse all the fields
 //                if let fields = result["fields"] as? [[String: Any]] {
@@ -357,15 +364,16 @@ extension ViewController {
 //                }
 //
 //                // parse the content of the API fetch to be displayed
-//                if let finalResult = result["records"] as? [[String: Any]] {
+                
+                if let result = responseObject["result"] as? [String: Any],  let finalResult = result["records"] as? [[String: Any]] {
 //                    print(finalResult)
-//                    finalResult.forEach { (catalogue) in
-//                        if let package = catalogue["package"] as? String {
-//                            self.snapshot.appendItems([CatalogueQualityScores(package: package)])
-////                            self.resultArr.append(CatalogueQualityScores(grade_norm: medal))
-//                        }
-//                    }
-//                }
+                    finalResult.forEach { (catalogue) in
+                        if let package = catalogue["package"] as? String {
+                            self.snapshot.appendItems([CatalogueQualityScores(package: package)])
+//                            self.resultArr.append(CatalogueQualityScores(grade_norm: medal))
+                        }
+                    }
+                }
 //            }
             
             self.dataSource.apply(self.snapshot, animatingDifferences: false)
