@@ -10,7 +10,7 @@ import MapKit
 
 class SearchResultsController: UITableViewController {
 
-    var matchingItems: [MKMapItem] = []
+    private var matchingItems: [MKMapItem] = []
     var mapView: MKMapView? = nil
     weak var delegate: AddressFetchDelegate?
     

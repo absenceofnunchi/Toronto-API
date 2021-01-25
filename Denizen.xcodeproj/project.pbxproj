@@ -22,6 +22,11 @@
 		49993CE525BA54C200091758 /* AppProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49993CE425BA54C200091758 /* AppProtocols.swift */; };
 		49993CEB25BA553100091758 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49993CEA25BA553100091758 /* MapKit.framework */; };
 		49993CF025BA5AF900091758 /* AppDataTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49993CEF25BA5AF900091758 /* AppDataTypes.swift */; };
+		499D566825BE0E3F00FB2FDE /* CustomDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499D566725BE0E3F00FB2FDE /* CustomDataSource.swift */; };
+		499D567025BE153200FB2FDE /* AyncFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499D566F25BE153200FB2FDE /* AyncFetcher.swift */; };
+		499D567525BE167500FB2FDE /* DataType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499D567425BE167500FB2FDE /* DataType.swift */; };
+		499D567A25BE1D8900FB2FDE /* AsyncFetcherOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499D567925BE1D8900FB2FDE /* AsyncFetcherOperation.swift */; };
+		499D567F25BE308800FB2FDE /* WebServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499D567E25BE308800FB2FDE /* WebServiceManager.swift */; };
 		49D9BE9C25BB865C00F59FDC /* MenuCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D9BE9B25BB865C00F59FDC /* MenuCell.swift */; };
 /* End PBXBuildFile section */
 
@@ -64,6 +69,11 @@
 		49993CE425BA54C200091758 /* AppProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppProtocols.swift; sourceTree = "<group>"; };
 		49993CEA25BA553100091758 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		49993CEF25BA5AF900091758 /* AppDataTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDataTypes.swift; sourceTree = "<group>"; };
+		499D566725BE0E3F00FB2FDE /* CustomDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomDataSource.swift; sourceTree = "<group>"; };
+		499D566F25BE153200FB2FDE /* AyncFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AyncFetcher.swift; sourceTree = "<group>"; };
+		499D567425BE167500FB2FDE /* DataType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataType.swift; sourceTree = "<group>"; };
+		499D567925BE1D8900FB2FDE /* AsyncFetcherOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncFetcherOperation.swift; sourceTree = "<group>"; };
+		499D567E25BE308800FB2FDE /* WebServiceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebServiceManager.swift; sourceTree = "<group>"; };
 		49D9BE9B25BB865C00F59FDC /* MenuCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -119,13 +129,18 @@
 			children = (
 				4909019B25B91DB900E38196 /* AppDelegate.swift */,
 				4909019D25B91DB900E38196 /* SceneDelegate.swift */,
-				4909019F25B91DB900E38196 /* ViewController.swift */,
 				490901CF25B9257B00E38196 /* SearchResultsController.swift */,
+				499D566725BE0E3F00FB2FDE /* CustomDataSource.swift */,
+				499D566F25BE153200FB2FDE /* AyncFetcher.swift */,
+				499D567925BE1D8900FB2FDE /* AsyncFetcherOperation.swift */,
 				49993CDF25BA400A00091758 /* temp.swift */,
+				499D567425BE167500FB2FDE /* DataType.swift */,
+				499D567E25BE308800FB2FDE /* WebServiceManager.swift */,
 				490901A125B91DB900E38196 /* Main.storyboard */,
 				490901A425B91DC000E38196 /* Assets.xcassets */,
 				490901A625B91DC000E38196 /* LaunchScreen.storyboard */,
 				490901A925B91DC000E38196 /* Info.plist */,
+				499D566625BE0E1800FB2FDE /* ViewControllers */,
 				49D9BE9A25BB863F00F59FDC /* Cells and Supplementary Views */,
 				49993CD625BA14DE00091758 /* Extensions + Utilities */,
 			);
@@ -166,6 +181,14 @@
 				49993CEA25BA553100091758 /* MapKit.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		499D566625BE0E1800FB2FDE /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				4909019F25B91DB900E38196 /* ViewController.swift */,
+			);
+			path = ViewControllers;
 			sourceTree = "<group>";
 		};
 		49D9BE9A25BB863F00F59FDC /* Cells and Supplementary Views */ = {
@@ -307,13 +330,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				499D567525BE167500FB2FDE /* DataType.swift in Sources */,
 				49D9BE9C25BB865C00F59FDC /* MenuCell.swift in Sources */,
 				49993CD825BA14FC00091758 /* AppExtensions.swift in Sources */,
+				499D566825BE0E3F00FB2FDE /* CustomDataSource.swift in Sources */,
+				499D567A25BE1D8900FB2FDE /* AsyncFetcherOperation.swift in Sources */,
+				499D567F25BE308800FB2FDE /* WebServiceManager.swift in Sources */,
 				490901D025B9257B00E38196 /* SearchResultsController.swift in Sources */,
 				490901A025B91DB900E38196 /* ViewController.swift in Sources */,
 				4909019C25B91DB900E38196 /* AppDelegate.swift in Sources */,
 				49993CE525BA54C200091758 /* AppProtocols.swift in Sources */,
 				49993CF025BA5AF900091758 /* AppDataTypes.swift in Sources */,
+				499D567025BE153200FB2FDE /* AyncFetcher.swift in Sources */,
 				4909019E25B91DB900E38196 /* SceneDelegate.swift in Sources */,
 				49993CE025BA400A00091758 /* temp.swift in Sources */,
 				4918476325BCF0AE006AC15C /* TitleSupplementaryView.swift in Sources */,

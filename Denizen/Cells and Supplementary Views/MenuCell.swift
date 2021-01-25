@@ -13,8 +13,13 @@
 import UIKit
 
 class MenuCell: UICollectionViewCell {
+    // MARK:- Properties
+    
     let label = UILabel()
-    static let reuseIdentifier = "menu-cell-reuse-identifier"
+    static let reuseIdentifier = Cell.menuCell
+    
+    /// The `UUID` for the data this cell is presenting.
+    var representedIdentifier: UUID?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -25,6 +30,8 @@ class MenuCell: UICollectionViewCell {
     }
     
 }
+
+// MARK: - Configure
 
 extension MenuCell {
     func configure() {
