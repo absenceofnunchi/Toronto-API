@@ -8,12 +8,11 @@
 import Foundation
 import MapKit
 
-// view controller
-protocol AddressFetchDelegate: AnyObject {
-    /// Passes the address selection.
-    /// - Parameter MKPlaceMark: The selected address from search results controller
-    /// - Throws Void
-    /// - Returns: Void
-    /// - Takes the address selected from the search results controller and passes it to `ViewController` to be used.
-    func didFetchAddress(_ address: MKPlacemark)
+// This protocol helps inform ViewController from SearchResultsController that a suggested search or product was selected.
+protocol SuggestedSearch: AnyObject {
+    /// This protocol helps inform MainTableViewController that a suggested search or product was selected.
+    func didSelectSuggestedSearch(token: UISearchToken)
+    
+    /// A product was selected; inform our delgeate that a product was selected to view.
+    func didSelectProduct(product: Item)
 }

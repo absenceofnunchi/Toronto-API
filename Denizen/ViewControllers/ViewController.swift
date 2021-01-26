@@ -12,25 +12,35 @@
  */
 
 import UIKit
-import MapKit
 
 class ViewController: UIViewController {
+    // MARK:- Properties
+    
     static let sectionHeaderElementKind = "section-header-element-kind"
-    private var searchController: UISearchController?
+    
+    // The suffix portion of the user activity type for this view controller.
+    static let activitySuffix = "mainRestored "
+    
+    var searchController: UISearchController!
+    var searchResultsController: SearchResultsController!
+    var suggestArray = [String]()
+
     private var collectionView: UICollectionView! = nil
     private var layoutType: Int = 1
     private let dataSource = CustomDataSource()
     
     override var prefersStatusBarHidden: Bool { true }
     
+    // MARK: - viewDidLoad
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(red: (247/255), green: (247/255), blue: (247/255), alpha: 1)
         
+        configureHierarchy()
         configureNavigationController()
         configureSearchController()
         configureSearchBar()
-        configureHierarchy()
         configureCellRegister()
     }
 }
@@ -59,85 +69,8 @@ extension ViewController {
     }
 }
 
-
-// MARK:- Search bar
-
-extension ViewController: UISearchBarDelegate {
-    
-    // configure search controller
-    func configureSearchController() {
-        let searchResultsController = SearchResultsController()
-        let mapView = MKMapView()
-        searchResultsController.mapView = mapView
-        searchResultsController.delegate = self
-        searchController = UISearchController(searchResultsController: searchResultsController)
-        searchController?.searchResultsUpdater = searchResultsController
-        searchController?.isActive = true
-        searchController?.hidesNavigationBarDuringPresentation = false
-        searchController?.obscuresBackgroundDuringPresentation = false
-        
-        definesPresentationContext = true
-        navigationItem.searchController = searchController
-    }
-    
-    func configureSearchBar() {
-        // search bar attributes
-        let searchBar = searchController!.searchBar
-        searchBar.delegate = self
-        searchBar.autocapitalizationType = .none
-        searchBar.sizeToFit()
-        searchBar.tintColor = .black
-        searchBar.searchBarStyle = .minimal
-        
-        // set the search bar height
-        let size = CGSize(width: 1, height: 50)
-        let renderer = UIGraphicsImageRenderer(size: size)
-        let image = renderer.image { (_) in
-            UIColor.white.setFill()
-            let rect = UIBezierPath(rect: CGRect(origin: .zero, size: size))
-            rect.fill()
-        }
-        searchBar.setSearchFieldBackgroundImage(image, for: .normal)
-        
-        // search text field attributes
-        let searchTextField = searchBar.searchTextField
-        searchTextField.borderStyle = .none
-        searchTextField.layer.cornerRadius = 8
-        searchTextField.layer.borderWidth = 1
-        searchTextField.layer.borderColor = UIColor(red: 224/255, green: 224/255, blue: 224/255, alpha: 1).cgColor
-        searchTextField.frame = CGRect(origin: .zero, size: size)
-        
-        // cancel button location adjustment
-        let cancelButton = UIBarButtonItem.appearance(whenContainedInInstancesOf: [UISearchBar.self])
-        cancelButton.setTitlePositionAdjustment(UIOffset(horizontal: 0, vertical: 5), for: .default)
-    }
-    
-    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        //        if webServiceManager == nil {
-        //            webServiceManager = WebServiceManager(packageId: packageId, urlString: urlString2)
-        //        } else {
-        //            webServiceManager.packageId = packageId
-        //            webServiceManager.urlString = urlString2
-        //        }
-        //
-        //        webServiceManager.useOfAPIRequest()
-        
-    }
-    
-    func searchBarResultsListButtonClicked(_ searchBar: UISearchBar) {
-        print("clicked")
-    }
-}
-
-// MARK:- AddressFetchDelegate
-
-extension ViewController: AddressFetchDelegate {
-    func didFetchAddress(_ address: MKPlacemark) {
-        print(address)
-    }
-}
-
 // MARK:- Create Layout
+
 extension ViewController {
     /// Creates a grid layout for the collection view
     /// - Parameter Int
@@ -210,6 +143,7 @@ extension ViewController {
 }
 
 // MARK:- Hierarchy
+
 extension ViewController {
     /// Creates a collection view
     /// - Parameter None
@@ -228,7 +162,6 @@ extension ViewController {
         view.addSubview(collectionView)
     }
 }
-
 
 // MARK: - Cell register
 

@@ -38,3 +38,12 @@ class RecentlyChanged: FetchedData {
         self.title = title
     }
 }
+
+struct Item {
+    enum ColorKind: Int {
+        case red = 0
+        case green = 1
+        case blue = 2
+        case yellow = 3
+    }
+}

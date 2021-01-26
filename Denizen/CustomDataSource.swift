@@ -20,8 +20,6 @@ class CustomDataSource: NSObject, UICollectionViewDataSource {
     private var data = [FetchedData]()
     
     // api request
-    private var webServiceManager: WebServiceManager!
-    let urlString = "https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/recently_changed_packages_activity_list"
     let OFFSET_CONSTANT = 30
 
     override init() {
@@ -32,6 +30,7 @@ class CustomDataSource: NSObject, UICollectionViewDataSource {
 }
 
 // MARK:- Data source
+
 extension CustomDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
@@ -82,13 +81,12 @@ extension CustomDataSource {
 extension CustomDataSource {
     func configureInitialData() {
         let parameters: [String: String] = ["limit": "30"]
-        webServiceManager = WebServiceManager()
-        webServiceManager.sendRequest(urlString, parameters: parameters) { (responseObject, error) in
+        WebServiceManager.shared.sendRequest(subdomain: Subdomain.recentlyChanged, parameters: parameters) { (responseObject, error) in
             guard let responseObject = responseObject, error == nil else {
                 print(error?.localizedDescription ?? "Unknown error")
                 return
             }
-        
+            
             if let result = responseObject["result"] as? [[String: Any]] {
                 result.forEach { (package) in
                     if let data = package["data"] as? [String: Any], let package = data["package"] as? [String: Any], let title = package["title"] as? String {
@@ -106,37 +104,36 @@ extension CustomDataSource {
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         // prefetch network data 5 rows prior to the end of the existing data
         if indexPath.row == collectionView.numberOfItems(inSection: indexPath.section) - 10 {
-            print(indexPath.row)
             updateNextSet(collectionView)
         }
     }
 
     func updateNextSet(_ collectionView: UICollectionView){
-//     if index.row == data.count - 5 {
-        let fetchQueue = OperationQueue()
-        fetchQueue.qualityOfService = .background
-        fetchQueue.addOperation {
-            self.offsetBy += 1
-            let parameters: [String: String] = ["limit": "30", "offset": String(self.OFFSET_CONSTANT * self.offsetBy)]
-            self.webServiceManager.sendRequest(self.urlString, parameters: parameters) { (responseObject, error) in
-                guard let responseObject = responseObject, error == nil else {
-                    print(error?.localizedDescription ?? "Unknown error")
-                    return
-                }
-
-                if let result = responseObject["result"] as? [[String: Any]] {
-                    result.forEach { (package) in
-                        if let data = package["data"] as? [String: Any], let package = data["package"] as? [String: Any], let title = package["title"] as? String {
-                            self.data.append(RecentlyChanged(title: title))
-                            DispatchQueue.main.async {
-                                collectionView.reloadData()
-                            }
-                        }
-                    }
-                }
-            }
-        }
-//     }
+//     if indexPath.row == data.count - 5 {
+//        let fetchQueue = OperationQueue()
+//        fetchQueue.qualityOfService = .background
+//        fetchQueue.addOperation {
+//            self.offsetBy += 1
+//            let parameters: [String: String] = ["limit": "30", "offset": String(self.OFFSET_CONSTANT * self.offsetBy)]
+//            self.webServiceManager.sendRequest(self.urlString, parameters: parameters) { (responseObject, error) in
+//                guard let responseObject = responseObject, error == nil else {
+//                    print(error?.localizedDescription ?? "Unknown error")
+//                    return
+//                }
+//
+//                if let result = responseObject["result"] as? [[String: Any]] {
+//                    result.forEach { (package) in
+//                        if let data = package["data"] as? [String: Any], let package = data["package"] as? [String: Any], let title = package["title"] as? String {
+//                            self.data.append(RecentlyChanged(title: title))
+//                        }
+//                    }
+//                            DispatchQueue.main.async {
+//                                collectionView.reloadData()
+//                            }
+//                }
+//            }
+//        }
+//        }
     }
 }
 
@@ -161,7 +158,6 @@ extension CustomDataSource: UICollectionViewDelegate {
 
 extension CustomDataSource: UICollectionViewDataSourcePrefetching {
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
-        print("run", indexPaths)
 //        for index in indexPaths {
 //            print("index row", index.row)
 //            print("data count", data.count - 5)

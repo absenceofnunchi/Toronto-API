@@ -7,51 +7,34 @@
 
 import Foundation
 
-// MARK:- Web service manager
+// MARK:- Cell identifier
 
-struct WebServiceManager {
-//    var urlString: String
-//    var parameters: [String: String]?
-//    
-//    func makeAPIRequest(){
-//
-//    }
-    
-    //Send Request with ResultType<Success, Error>
-    func sendRequest(_ url: String, parameters: [String: String]? = nil, completion: @escaping ([String: Any]?, Error?) -> Void) {
-        var components = URLComponents(string: url)!
-        if let parameters = parameters {
-            components.queryItems = parameters.map { (key, value) in
-                URLQueryItem(name: key, value: value)
-            }
-        }
-
-        components.percentEncodedQuery = components.percentEncodedQuery?.replacingOccurrences(of: "+", with: "%2B")
-        let request = URLRequest(url: components.url!)
-        
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            guard let data = data,
-                  let response = response as? HTTPURLResponse,
-                  (200 ..< 300) ~= response.statusCode,
-                  error == nil else {
-                completion(nil, error)
-                return
-            }
-            
-            let responseObject = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any]
-            completion(responseObject, nil)
-        }
-        task.resume()
-    }
+struct Cell {
+    static var menuCell = "menu-cell-reuse-identifier"
+    static var supplementaryCell = "title-supplementary-reuse-identifier"
 }
 
+// MARK: - URL
+/// WebServiceManager and prefetch
 
+struct MyURL {
+    static var baseURL = "https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/"
+}
 
-//sendRequest("someurl", parameters: ["foo": "bar"]) { responseObject, error in
-//    guard let responseObject = responseObject, error == nil else {
-//        print(error ?? "Unknown error")
-//        return
-//    }
-//
-//    // use `responseObject` here
-//}
+struct Subdomain {
+    static var tags = "tag_list"
+    static var packages = "package_list"
+    static var recentlyChanged = "recently_changed_packages_activity_list"
+    static var qualityScores = "datastore_search"
+}
+
+// MARK: - SearchCategories
+/// SearchResultsController, WebServiceManager
+
+enum SearchCategories: String, CaseIterable {
+    case tags = "Tags"
+    case packages = "Packages"
+    case recentlyChanged = "Recently Changed"
+    case qualityScores = "Quality Scores"
+}
+

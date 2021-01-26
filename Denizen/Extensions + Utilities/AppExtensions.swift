@@ -68,3 +68,29 @@ extension CharacterSet {
         return allowed
     }()
 }
+
+// MARK: - Table View
+extension UITableViewController {
+    
+    static let productCellIdentifier = "cellID"
+    
+    // Used by both MainTableViewController and ResultsTableController to define its table cells.
+    func configureCell(_ cell: UITableViewCell, forItemTitle title: String) {
+//        let textTitle = NSMutableAttributedString(string: forItemTitle)
+//        let textColor = SearchResultsController.suggestedColor(fromIndex: product.color)
+//
+//        textTitle.addAttribute(NSAttributedString.Key.foregroundColor,
+//                               value: textColor,
+//                               range: NSRange(location: 0, length: textTitle.length))
+//        cell.textLabel?.attributedText = textTitle
+        cell.textLabel?.text = title
+        
+        // Build the price and year as the detail right string.
+//        let priceString = product.formattedPrice()
+//        let yearString = product.formattedDate()
+//        cell.detailTextLabel?.text = "\(priceString!) | \(yearString!)"
+//        cell.accessoryType = .disclosureIndicator
+        cell.imageView?.image = nil
+    }
+    
+}
