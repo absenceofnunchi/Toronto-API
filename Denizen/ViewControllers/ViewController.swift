@@ -23,7 +23,7 @@ class ViewController: UIViewController {
     
     var searchController: UISearchController!
     var searchResultsController: SearchResultsController!
-    var suggestArray = [String]()
+    var suggestArray = [FetchedData]()
 
     private var collectionView: UICollectionView! = nil
     private var layoutType: Int = 1

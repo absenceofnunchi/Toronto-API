@@ -18,7 +18,7 @@ import UIKit
 class SearchResultsController: UITableViewController {
     // MARK: - Properties
     
-    var items = [String]()
+    var fetchedDataArr: [FetchedData]!
     weak var suggestedSearchDelegate: SuggestedSearch?
     
     // colors for the tokens
@@ -26,42 +26,49 @@ class SearchResultsController: UITableViewController {
         var suggestedColor: UIColor!
         switch fromIndex {
             case 0:
-                suggestedColor = UIColor(red: 33/255, green: 1/255, blue: 95/255, alpha: 1)
+                suggestedColor = UIColor.red
             case 1:
-                suggestedColor = UIColor(red: 175/255, green: 0/255, blue: 105/255, alpha: 1)
+                suggestedColor = UIColor.orange
             case 2:
-                suggestedColor = UIColor(red: 85/255, green: 179/255, blue: 177/255, alpha: 1)
+                suggestedColor = UIColor.yellow
             case 3:
-                suggestedColor = UIColor(red: 246/255, green: 192/255, blue: 101/255, alpha: 1)
+                suggestedColor = UIColor.green
+            case 4:
+                suggestedColor = UIColor.blue
+            case 5:
+                suggestedColor = UIColor.purple
+            case 6:
+                suggestedColor = UIColor.brown
             default:
-                break
+                suggestedColor = UIColor.cyan
         }
         
         return suggestedColor
     }
     
-    // images for the tokens
-    private func suggestedImage(fromIndex: Int) -> UIImage {
-        let color = SearchResultsController.suggestedColor(fromIndex: fromIndex)
-        return (UIImage(systemName: "magnifyingglass.circle.fill")?.withTintColor(color))!
-    }
-    
-    // titles for the tokens
-    class func suggestedTitle(fromIndex: Int) -> String {
-        return suggestedSearches[fromIndex]
-    }
-    
     // categories i.e. tags, packages, quality score, etc
-    static var suggestedSearches: [String] {
+    var suggestedSearches: [String] {
         var s = [String]()
-        for category in SearchCategories.allCases {
-            s.append(NSLocalizedString(category.rawValue, comment: ""))
+        
+        if showSuggestedSearches == .additionalSuggest {
+            for fetchedData in fetchedDataArr {
+                s.append(fetchedData.title)
+            }
+        } else {
+            for category in SearchCategories.allCases {
+                s.append(NSLocalizedString(category.rawValue, comment: ""))
+            }
         }
+
         return s
     }
     
+    enum SearchState {
+        case none, suggested, additionalSuggest
+    }
+    
     // To hide/show the suggested searches before and after a token is selected
-    var showSuggestedSearches: Bool = false {
+    var showSuggestedSearches: SearchState = .none {
         didSet {
             if oldValue != showSuggestedSearches {
                 tableView.reloadData()
@@ -81,26 +88,38 @@ class SearchResultsController: UITableViewController {
 extension SearchResultsController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return showSuggestedSearches ? SearchResultsController.suggestedSearches.count : items.count
+        switch showSuggestedSearches {
+            case .suggested:
+                return suggestedSearches.count
+            case .none, .additionalSuggest:
+                return fetchedDataArr.count
+        }
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return showSuggestedSearches ? NSLocalizedString("Suggested Searches", comment: "") : ""
+        switch showSuggestedSearches {
+            case .suggested:
+                return NSLocalizedString("Suggested Searches", comment: "")
+            case .none, .additionalSuggest:
+                return ""
+        }
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell")!
-        if showSuggestedSearches {
-            let suggestedTitle = NSMutableAttributedString(string: SearchResultsController.suggestedSearches[indexPath.row])
-            suggestedTitle.addAttribute(.foregroundColor, value: UIColor.label, range: NSRange(location: 0, length: suggestedTitle.length))
-            cell.textLabel?.attributedText = suggestedTitle
-            
-            let image = suggestedImage(fromIndex: indexPath.row)
-            let tintableImage = image.withRenderingMode(.alwaysOriginal)
-            cell.imageView?.image = tintableImage
-        } else {
-            let item = items[indexPath.row]
-            configureCell(cell, forItemTitle: item)
+        
+        switch showSuggestedSearches {
+            case .suggested:
+                let suggestedTitle = NSMutableAttributedString(string: suggestedSearches[indexPath.row])
+                suggestedTitle.addAttribute(.foregroundColor, value: UIColor.label, range: NSRange(location: 0, length: suggestedTitle.length))
+                cell.textLabel?.attributedText = suggestedTitle
+                
+                let image = suggestedImage(fromIndex: indexPath.row)
+                let tintableImage = image.withRenderingMode(.alwaysOriginal)
+                cell.imageView?.image = tintableImage
+            case .none, .additionalSuggest:
+                let item = fetchedDataArr[indexPath.row].title
+                configureCell(cell, forItemTitle: item)
         }
         
         return cell
@@ -111,14 +130,15 @@ extension SearchResultsController {
         tableView.deselectRow(at: indexPath, animated: true)
         
         // Make sure we are showing suggested searches before notifying which token was selected
-        if showSuggestedSearches {
-            // A suggested search was selected; inform our delegate that the selected search token was selected.
-            let tokenToInsert = SearchResultsController.searchToken(tokenValue: indexPath.row)
-            suggestedSearchDelegate.didSelectSuggestedSearch(token: tokenToInsert)
-        } else {
-            // A product was selected; inform our delgeate that a product was selected to view.
-//            let selectedProduct = items[indexPath.row]
-//            suggestedSearchDelegate.didSelectProduct(product: selectedProduct)
+        switch showSuggestedSearches {
+            case .suggested, .additionalSuggest:
+                // A suggested search was selected; inform our delegate that the selected search token was selected.
+                let tokenToInsert = searchToken(tokenValue: indexPath.row)
+                suggestedSearchDelegate.didSelectSuggestedSearch(token: tokenToInsert)
+            case .none:
+                // A product was selected; inform our delgeate that a product was selected to view.
+                let selected = fetchedDataArr[indexPath.row]
+                suggestedSearchDelegate.didSelectItem(fetchedData: selected)
         }
     }
     
@@ -140,16 +160,32 @@ extension SearchResultsController {
         return colorKind
     }
     
+
+}
+
+// MARK: - Tokenize
+
+extension SearchResultsController {
+    // images for the tokens
+    private func suggestedImage(fromIndex: Int) -> UIImage {
+        let color = SearchResultsController.suggestedColor(fromIndex: fromIndex)
+        return (UIImage(systemName: "magnifyingglass.circle.fill")?.withTintColor(color))!
+    }
+    
+    // titles for the tokens
+    func suggestedTitle(fromIndex: Int) -> String {
+        return suggestedSearches[fromIndex]
+    }
+    
     // Search a search token from an input value.
-    class func searchToken(tokenValue: Int) -> UISearchToken {
+    func searchToken(tokenValue: Int) -> UISearchToken {
         let tokenColor = SearchResultsController.suggestedColor(fromIndex: tokenValue)
-        let image =
-            UIImage(systemName: "circle.fill")?.withTintColor(tokenColor, renderingMode: .alwaysOriginal)
+        let image = UIImage(systemName: "circle.fill")?.withTintColor(tokenColor, renderingMode: .alwaysOriginal)
         let searchToken = UISearchToken(icon: image, text: suggestedTitle(fromIndex: tokenValue))
         
         // Set the color kind number as the token value.
-        let color = SearchResultsController.colorKind(fromIndex: tokenValue).rawValue
-        searchToken.representedObject = NSNumber(value: color)
+//        let color = SearchResultsController.colorKind(fromIndex: tokenValue).rawValue
+        searchToken.representedObject = NSNumber(value: tokenValue)
         
         return searchToken
     }

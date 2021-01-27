@@ -14,5 +14,5 @@ protocol SuggestedSearch: AnyObject {
     func didSelectSuggestedSearch(token: UISearchToken)
     
     /// A product was selected; inform our delgeate that a product was selected to view.
-    func didSelectProduct(product: Item)
+    func didSelectItem(fetchedData: FetchedData)
 }

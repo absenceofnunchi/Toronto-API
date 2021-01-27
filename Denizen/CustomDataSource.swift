@@ -17,7 +17,7 @@ class CustomDataSource: NSObject, UICollectionViewDataSource {
     private var supplementaryView: UICollectionReusableView!
     private var offsetBy: Int = 0
     private var Y_OF_HEADER_VIEW: CGFloat! = 0
-    private var data = [FetchedData]()
+    private var data = [Item]()
     
     // api request
     let OFFSET_CONSTANT = 30
@@ -79,22 +79,39 @@ extension CustomDataSource {
 // MARK: - Initial data
 
 extension CustomDataSource {
-    func configureInitialData() {
-        let parameters: [String: String] = ["limit": "30"]
-        WebServiceManager.shared.sendRequest(subdomain: Subdomain.recentlyChanged, parameters: parameters) { (responseObject, error) in
+    func configureInitialData() {        
+        let recentlyChanged = SearchCategories.recentlyChanged
+        recentlyChanged.fetchAPI(url: recentlyChanged.url, parameters: [.limit:"30"]) { (responseObject, error) in
             guard let responseObject = responseObject, error == nil else {
                 print(error?.localizedDescription ?? "Unknown error")
                 return
             }
-            
+
             if let result = responseObject["result"] as? [[String: Any]] {
                 result.forEach { (package) in
-                    if let data = package["data"] as? [String: Any], let package = data["package"] as? [String: Any], let title = package["title"] as? String {
-                        self.data.append(RecentlyChanged(title: title))
+                    if let data = package["data"] as? [String: Any],
+                       let package = data["package"] as? [String: Any],
+                       let title = package["title"] as? String,
+                       let id = package["id"] as? String {
+                        self.data.append(RecentlyChanged(title: title, id: id))
                     }
                 }
             }
         }
+//        WebServiceManager.shared.sendRequest(subdomain: Subdomain.recentlyChanged, parameters: parameters) { (responseObject, error) in
+//            guard let responseObject = responseObject, error == nil else {
+//                print(error?.localizedDescription ?? "Unknown error")
+//                return
+//            }
+//
+//            if let result = responseObject["result"] as? [[String: Any]] {
+//                result.forEach { (package) in
+//                    if let data = package["data"] as? [String: Any], let package = data["package"] as? [String: Any], let title = package["title"] as? String {
+//                        self.data.append(RecentlyChanged(title: title))
+//                    }
+//                }
+//            }
+//        }
     }
 }
 

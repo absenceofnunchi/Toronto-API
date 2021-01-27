@@ -4,6 +4,13 @@
 //
 //  Created by J C on 2021-01-25.
 //
+/*
+ Abstract:
+ defines the search controller, which involves,
+    1. set the apepearance of the search bar and the search text field
+    2. set the search results controller
+    3. define what happens when the user taps on the items from search results controller
+ */
 
 import UIKit
 
@@ -70,7 +77,7 @@ extension ViewController: UISearchBarDelegate {
             // Text is empty, show suggested searches again.
             setToSuggestedSearches()
         } else {
-            searchResultsController.showSuggestedSearches = false
+            searchResultsController.showSuggestedSearches = .none
         }
     }
     
@@ -83,7 +90,7 @@ extension ViewController: UISearchBarDelegate {
     func setToSuggestedSearches() {
         // Show suggested searches only if we don't have a search token in the search field.
         if searchController.searchBar.searchTextField.tokens.isEmpty {
-            searchResultsController.showSuggestedSearches = true
+            searchResultsController.showSuggestedSearches = .suggested
             
             // We are no longer interested in cell navigating, since we are now showing the suggested searches.
             searchResultsController.tableView.delegate = searchResultsController
@@ -110,10 +117,19 @@ extension ViewController: SuggestedSearch {
     func didSelectSuggestedSearch(token: UISearchToken) {
         if let searchField = navigationItem.searchController?.searchBar.searchTextField {
             suggestArray.removeAll()
-            searchField.insertToken(token, at: 0)
-       
-            // Hide the suggested searches now that we have a token.
-            searchResultsController.showSuggestedSearches = false
+            searchField.insertToken(token, at: searchField.tokens.count > 0 ? searchField.tokens.count : 0)
+            
+            if let searchTokenValue = token.representedObject as? NSNumber {
+                // if the token is tags, then we need further filtering, so show the additional suggestion
+                if case let suggestedSearch = SearchCategories.allCases[searchTokenValue.intValue], suggestedSearch == .tags {
+                    print("tag token detected")
+                    searchResultsController.showSuggestedSearches = .additionalSuggest
+                } else {
+                    // Hide the suggested searches now that we have a token.
+                    print("else")
+                    searchResultsController.showSuggestedSearches = .none
+                }
+            }
             
             // Update the search query with the newly inserted token
             updateSearchResults(for: searchController!)
@@ -121,9 +137,10 @@ extension ViewController: SuggestedSearch {
     }
     
     // SearchResultscontroller selected an item so navigate to that item
-    func didSelectProduct(product: Item) {
+    func didSelectItem(fetchedData: FetchedData) {
         // Set up the detail view controller to show
         let itemDetailVC = ItemDetailViewController()
+        itemDetailVC.fetchedData = fetchedData
         navigationController?.pushViewController(itemDetailVC, animated: true)
     }
 }
