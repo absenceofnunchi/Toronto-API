@@ -49,19 +49,19 @@ extension ViewController: UISearchBarDelegate {
         searchBar.tintColor = .black
         searchBar.searchBarStyle = .minimal
         
-        // set the search bar height
+//        // set the search bar height
         let size = CGSize(width: 1, height: 50)
-        let renderer = UIGraphicsImageRenderer(size: size)
-        let image = renderer.image { (_) in
-            UIColor.white.setFill()
-            let rect = UIBezierPath(rect: CGRect(origin: .zero, size: size))
-            rect.fill()
-        }
-        searchBar.setSearchFieldBackgroundImage(image, for: .normal)
+//        let renderer = UIGraphicsImageRenderer(size: size)
+//        let image = renderer.image { (_) in
+//            UIColor.white.setFill()
+//            let rect = UIBezierPath(rect: CGRect(origin: .zero, size: size))
+//            rect.fill()
+//        }
+//        searchBar.setSearchFieldBackgroundImage(image, for: .normal)
         
         // search text field attributes
         let searchTextField = searchBar.searchTextField
-        searchTextField.borderStyle = .none
+        searchTextField.borderStyle = .roundedRect
         searchTextField.layer.cornerRadius = 8
         searchTextField.layer.borderWidth = 1
         searchTextField.layer.borderColor = UIColor(red: 224/255, green: 224/255, blue: 224/255, alpha: 1).cgColor
@@ -72,22 +72,33 @@ extension ViewController: UISearchBarDelegate {
         cancelButton.setTitlePositionAdjustment(UIOffset(horizontal: 0, vertical: 5), for: .default)
     }
 
+//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+//        let searchBarStatus: (Bool, Int) = (isTextFieldEmpty: searchText.isEmpty, tokenCount: searchBar.searchTextField.tokens.count)
+//        print(searchBarStatus)
+//        switch searchBarStatus {
+//            case (true, 0):
+//                setToSuggestedSearches()
+//            case (true, 1):
+//                if let searchTokenValue = searchBar.searchTextField.tokens[0].representedObject as? NSNumber {
+//                    if case let suggestedSearch = SearchCategories.allCases[searchTokenValue.intValue], suggestedSearch == .tags {
+//                        searchResultsController.showSuggestedSearches = .additionalSuggest
+//                    }
+//                }
+//            default:
+//                searchResultsController.showSuggestedSearches = .none
+//        }
+//    }
+    
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchBar.text!.isEmpty {
-            // Text is empty, show suggested searches again.
             setToSuggestedSearches()
         } else {
             searchResultsController.showSuggestedSearches = .none
         }
     }
     
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        // User tapped the Done button in the keyboard.
-        searchController.dismiss(animated: true, completion: nil)
-        searchBar.text = ""
-    }
-
     func setToSuggestedSearches() {
+
         // Show suggested searches only if we don't have a search token in the search field.
         if searchController.searchBar.searchTextField.tokens.isEmpty {
             searchResultsController.showSuggestedSearches = .suggested
@@ -95,6 +106,12 @@ extension ViewController: UISearchBarDelegate {
             // We are no longer interested in cell navigating, since we are now showing the suggested searches.
             searchResultsController.tableView.delegate = searchResultsController
         }
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        // User tapped the Done button in the keyboard.
+        searchController.dismiss(animated: true, completion: nil)
+        searchBar.text = ""
     }
 }
 
@@ -116,19 +133,18 @@ extension ViewController: SuggestedSearch {
     // SearchResultsController selected a suggested search, so we need to apply the search token.
     func didSelectSuggestedSearch(token: UISearchToken) {
         if let searchField = navigationItem.searchController?.searchBar.searchTextField {
-            suggestArray.removeAll()
             searchField.insertToken(token, at: searchField.tokens.count > 0 ? searchField.tokens.count : 0)
             
             if let searchTokenValue = token.representedObject as? NSNumber {
                 // if the token is tags, then we need further filtering, so show the additional suggestion
                 if case let suggestedSearch = SearchCategories.allCases[searchTokenValue.intValue], suggestedSearch == .tags {
-                    print("tag token detected")
-                    searchResultsController.showSuggestedSearches = .additionalSuggest
+//                    searchResultsController.showSuggestedSearches = .additionalSuggest
                 } else {
                     // Hide the suggested searches now that we have a token.
-                    print("else")
                     searchResultsController.showSuggestedSearches = .none
                 }
+            } else if let _ = token.representedObject as? SearchCategoriesWithQuery, searchField.tokens.count == 2 {
+                searchResultsController.showSuggestedSearches = .none
             }
             
             // Update the search query with the newly inserted token

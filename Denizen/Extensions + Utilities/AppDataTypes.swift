@@ -5,13 +5,15 @@
 //  Created by J C on 2021-01-21.
 //
 
-import Foundation
+import UIKit
 
 // MARK:- Cell identifier
 
 struct Cell {
+    static var searchResultCell = "search-result-cell"
     static var menuCell = "menu-cell-reuse-identifier"
     static var supplementaryCell = "title-supplementary-reuse-identifier"
+    static var itemDetailCell = "item-detail-cell-identifier"
 }
 
 // MARK: - URL
@@ -39,16 +41,19 @@ struct URLScheme {
 enum QueryKey: String {
     case id = "id"
     case limit = "limit"
+    case fq = "fq"
 }
 
-//enum QueryValue: String {
-//    case
-//}
+enum QueryFilter: String {
+    case tags = "tags"
+    case none = ""
+}
 
 enum ActionType: String {
     case tagShow = "tag_show"
     case packageShow = "package_show"
     case datastoreSearch = "datastore_search"
+    case packageSearch = "package_search"
 }
 
 
@@ -104,7 +109,45 @@ class RecentlyChanged: Item {
 struct FetchedData {
     var id: String? = nil
     let title: String
-    var searchCategories: SearchCategories
+    var searchCategories: SearchManager? = nil
     var parameters: [QueryKey: String]? = nil
+    var queryValue: String? = nil
 }
+
+enum SearchState {
+    case none, suggested, additionalSuggest
+}
+
+// MARK: - ItemInfo
+/// ExpandDetailViewController
+
+struct ItemInfo {
+    let header: String?
+    let body: String
+}
+
+// MARK: - PaddedLabel
+
+class PaddedLabel: UILabel {
+    
+    var topInset: CGFloat = 15.0
+    var bottomInset: CGFloat = 15.0
+    var leftInset: CGFloat = 15.0
+    var rightInset: CGFloat = 15.0
+    
+    override func drawText(in rect: CGRect) {
+        let insets = UIEdgeInsets(top: topInset, left: leftInset, bottom: bottomInset, right: rightInset)
+        super.drawText(in: rect.inset(by: insets))
+    }
+    
+    override var intrinsicContentSize: CGSize {
+        get {
+            var contentSize = super.intrinsicContentSize
+            contentSize.height += topInset + bottomInset
+            contentSize.width += leftInset + rightInset
+            return contentSize
+        }
+    }
+}
+
 

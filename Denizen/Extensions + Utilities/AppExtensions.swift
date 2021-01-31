@@ -11,7 +11,6 @@ import UIKit
 
 extension UIView {
     func shadowBorder(color: UIColor = .lightGray, opacity: Float = 0.8, offSet: CGSize = CGSize(width: -0.50, height: 0.50), cornerRadius: CGFloat = 15) {
-        
         layer.shadowColor = color.cgColor
         layer.shadowOffset = offSet
         layer.shadowOpacity = opacity
@@ -20,6 +19,51 @@ extension UIView {
         backgroundColor = .systemBackground
     }
 }
+
+extension UIViewController {
+    func activityStartAnimating(activityColor: UIColor, backgroundColor: UIColor) {
+        let backgroundView = UIView()
+        backgroundView.frame = CGRect.init(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height)
+        backgroundView.backgroundColor = backgroundColor
+        backgroundView.tag = 5000
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(activityIndicatorTapped))
+        backgroundView.addGestureRecognizer(tap)
+        
+        var activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView()
+        activityIndicator = UIActivityIndicatorView(frame: CGRect.init(x: 0, y: 0, width: 50, height: 50))
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.style = .large
+        activityIndicator.color = activityColor
+        activityIndicator.startAnimating()
+        activityIndicator.tag = 5000
+//        self.view.isUserInteractionEnabled = false
+        
+        backgroundView.addSubview(activityIndicator)
+        self.view.addSubview(backgroundView)
+        
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            activityIndicator.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: self.view.centerYAnchor)
+        ])
+    }
+    
+    func activityStopAnimating() {
+        DispatchQueue.main.async {
+            if let background = self.view.viewWithTag(5000) {
+                background.removeFromSuperview()
+//                self.view.isUserInteractionEnabled = true
+            }
+        }
+    }
+    
+    @objc func activityIndicatorTapped() {
+        print("tapped")
+        navigationController?.popToRootViewController(animated: true)
+    }
+}
+
 
 // MARK: - UITextField
 
@@ -40,11 +84,9 @@ extension UITextField {
             shadowLayer.shadowRadius = 5
             
             layer.insertSublayer(shadowLayer, at: 0)
-            //layer.insertSublayer(shadowLayer, below: nil) // also works
         }
     }
 }
-
 
 extension Dictionary {
     func percentEncoded() -> Data? {

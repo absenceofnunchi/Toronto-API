@@ -320,6 +320,7 @@
 //    /// - Create an API request to the Catalogue Quality Scores
 //https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/resource_search?query=name:aboriginal
 //https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/package_search?fq=tags:economy
+// https:/ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/package_show?id=7e038ff9-b616-4070-9753-6f493b2cdbb0
 //https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/package_search?q=59de0a7d-86d0-40a3-80b8-75d213e902ab
 //    /// https://open.toronto.ca/dataset/catalogue-quality-scores/
 //    func configureAPIRequest(offsetBy: Int = 0) {
@@ -444,3 +445,5 @@
 ////        }
 ////    }
 ////}
+
+

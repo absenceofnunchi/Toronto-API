@@ -79,7 +79,8 @@ extension CustomDataSource {
 // MARK: - Initial data
 
 extension CustomDataSource {
-    func configureInitialData() {        
+    func configureInitialData() {
+        
         let recentlyChanged = SearchCategories.recentlyChanged
         recentlyChanged.fetchAPI(url: recentlyChanged.url, parameters: [.limit:"30"]) { (responseObject, error) in
             guard let responseObject = responseObject, error == nil else {

@@ -50,21 +50,17 @@ class SearchResultsController: UITableViewController {
     var suggestedSearches: [String] {
         var s = [String]()
         
-        if showSuggestedSearches == .additionalSuggest {
-            for fetchedData in fetchedDataArr {
-                s.append(fetchedData.title)
-            }
-        } else {
-            for category in SearchCategories.allCases {
-                s.append(NSLocalizedString(category.rawValue, comment: ""))
-            }
+        switch showSuggestedSearches {
+            case .none, .additionalSuggest:
+                for fetchedData in fetchedDataArr {
+                    s.append(fetchedData.title)
+                }
+            case .suggested:
+                for category in SearchCategories.allCases {
+                    s.append(NSLocalizedString(category.rawValue, comment: ""))
+                }
         }
-
         return s
-    }
-    
-    enum SearchState {
-        case none, suggested, additionalSuggest
     }
     
     // To hide/show the suggested searches before and after a token is selected
@@ -78,7 +74,7 @@ class SearchResultsController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: Cell.searchResultCell)
         tableView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)
     }
 }
@@ -88,12 +84,7 @@ class SearchResultsController: UITableViewController {
 extension SearchResultsController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch showSuggestedSearches {
-            case .suggested:
-                return suggestedSearches.count
-            case .none, .additionalSuggest:
-                return fetchedDataArr.count
-        }
+        return suggestedSearches.count
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -106,7 +97,7 @@ extension SearchResultsController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell")!
+        let cell = tableView.dequeueReusableCell(withIdentifier: Cell.searchResultCell)!
         
         switch showSuggestedSearches {
             case .suggested:
@@ -128,15 +119,19 @@ extension SearchResultsController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let suggestedSearchDelegate = suggestedSearchDelegate else { return }
         tableView.deselectRow(at: indexPath, animated: true)
-        
+
         // Make sure we are showing suggested searches before notifying which token was selected
         switch showSuggestedSearches {
-            case .suggested, .additionalSuggest:
+            case .suggested:
                 // A suggested search was selected; inform our delegate that the selected search token was selected.
                 let tokenToInsert = searchToken(tokenValue: indexPath.row)
                 suggestedSearchDelegate.didSelectSuggestedSearch(token: tokenToInsert)
+            case .additionalSuggest:
+                let title = fetchedDataArr[indexPath.row].title
+                let tokenToInsert = searchToken(title: title)
+                suggestedSearchDelegate.didSelectSuggestedSearch(token: tokenToInsert)
             case .none:
-                // A product was selected; inform our delgeate that a product was selected to view.
+                // A product was selected; inform our delgete that a product was selected to view.
                 let selected = fetchedDataArr[indexPath.row]
                 suggestedSearchDelegate.didSelectItem(fetchedData: selected)
         }
@@ -177,7 +172,7 @@ extension SearchResultsController {
         return suggestedSearches[fromIndex]
     }
     
-    // Search a search token from an input value.
+    // Search a search token from an input value. This token is for the suggested search.
     func searchToken(tokenValue: Int) -> UISearchToken {
         let tokenColor = SearchResultsController.suggestedColor(fromIndex: tokenValue)
         let image = UIImage(systemName: "circle.fill")?.withTintColor(tokenColor, renderingMode: .alwaysOriginal)
@@ -186,6 +181,17 @@ extension SearchResultsController {
         // Set the color kind number as the token value.
 //        let color = SearchResultsController.colorKind(fromIndex: tokenValue).rawValue
         searchToken.representedObject = NSNumber(value: tokenValue)
+        
+        return searchToken
+    }
+    
+    // search token for the additional suggested search
+    func searchToken(title: String) -> UISearchToken {
+        let tokenColor = SearchResultsController.suggestedColor(fromIndex: 6)
+        let image = UIImage(systemName: "circle.fill")?.withTintColor(tokenColor, renderingMode: .alwaysOriginal)
+        let searchToken = UISearchToken(icon: image, text: title)
+        let tag = SearchCategoriesWithQuery.tag(title)
+        searchToken.representedObject = tag
         
         return searchToken
     }

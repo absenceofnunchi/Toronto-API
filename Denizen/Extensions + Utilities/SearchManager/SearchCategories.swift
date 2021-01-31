@@ -10,7 +10,7 @@ import Foundation
 // MARK: - SearchCategories
 /// SearchResultsController, WebServiceManager
 
-enum SearchCategories: String, CaseIterable {
+enum SearchCategories: String, CaseIterable, SearchManager {
     case tags = "Tags"
     case packages = "Packages"
     case recentlyChanged = "Recently Changed"

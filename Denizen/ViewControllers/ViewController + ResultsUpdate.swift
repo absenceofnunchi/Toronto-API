@@ -25,20 +25,20 @@ extension ViewController: UISearchResultsUpdating {
         
         // fetch the API from one of SearchCategories as long as a token is selected and the text field is empty
         if text.isEmpty, !searchController.searchBar.searchTextField.tokens.isEmpty  {
+            suggestArray.removeAll()
+
             let searchTextField = searchController.searchBar.searchTextField
             let searchToken = searchTextField.tokens[searchTextField.tokens.count - 1]
             if let searchTokenValue = searchToken.representedObject as? NSNumber {
                 let suggestedSearch = SearchCategories.allCases[searchTokenValue.intValue]
                 fetchAndParse(suggestedSearch: suggestedSearch)
-                print("1 fetch and parse")
-            } else {
-                print("2 fetch and parse")
-
+            } else if let searchTokenValue = searchToken.representedObject as? SearchCategoriesWithQuery {
+                fetchWithQueryAndParse(searchCategory: searchTokenValue)
             }
-        } else {
+        }else {
             // now that we have the list from the selected token, we can further filter the list
             var filtered = suggestArray
-
+            
             // Strip out all the leading and trailing spaces.
             let whitespaceCharacterSet = CharacterSet.whitespaces
             let strippedString = text.trimmingCharacters(in: whitespaceCharacterSet).lowercased()
@@ -59,26 +59,35 @@ extension ViewController: UISearchResultsUpdating {
     }
     
     // MARK:- fetchAndParse
+    
     func fetchAndParse(suggestedSearch: SearchCategories) {
+        navigationController?.activityStartAnimating(activityColor: UIColor.darkGray, backgroundColor: UIColor(red: 211/255, green: 211/255, blue: 211/255, alpha: 0.5))
+
         suggestedSearch.fetchAPI(url: suggestedSearch.url , parameters: nil) { (responseObject, error) in
             guard let responseObject = responseObject, error == nil else {
-                print(error?.localizedDescription ?? "Unknown error")
+                print("fetch and parse error",error?.localizedDescription ?? "Unknown error")
+                self.showAlertController(error: error)
                 return
             }
-            
+
             switch suggestedSearch {
                 case .tags:
                     if let results = responseObject["result"] as? [String] {
                         let fetchedDataArr = results.map { FetchedData(title: $0, searchCategories: suggestedSearch, parameters: [suggestedSearch.queryKey: $0])}
                         self.suggestArray += fetchedDataArr
-                        self.loadSearchControllerData(with: self.suggestArray)
+                    }
+                    self.loadSearchControllerData(with: self.suggestArray)
+                    
+                    // when the token is deleted by backspace, the no row is selected, which means there is no change for the showSuggestedSearches to be toggled.
+                    DispatchQueue.main.async {
+                        self.searchResultsController.showSuggestedSearches = .additionalSuggest
                     }
                 case .packages:
                     if let results = responseObject["result"] as? [String] {
                         let fetchedDataArr = results.map { FetchedData(title: $0, searchCategories: suggestedSearch, parameters: [suggestedSearch.queryKey: $0])}
                         self.suggestArray += fetchedDataArr
-                        self.loadSearchControllerData(with: self.suggestArray)
                     }
+                    self.loadSearchControllerData(with: self.suggestArray)
                 case .recentlyChanged:
                     if let results = responseObject["result"] as? [[String: Any]] {
                         results.forEach { (package) in
@@ -91,8 +100,8 @@ extension ViewController: UISearchResultsUpdating {
                                 self.suggestArray.append(fetchedData)
                             }
                         }
-                        self.loadSearchControllerData(with: self.suggestArray)
                     }
+                    self.loadSearchControllerData(with: self.suggestArray)
                 case .qualityScores:
                     if let result = responseObject["result"] as? [String: Any], let records = result["records"] as? [[String: Any]] {
                         records.forEach { (catalogue) in
@@ -101,8 +110,52 @@ extension ViewController: UISearchResultsUpdating {
                                 self.suggestArray.append(fetchedData)
                             }
                         }
-                        self.loadSearchControllerData(with: self.suggestArray)
                     }
+                    self.loadSearchControllerData(with: self.suggestArray)
+            }
+        }
+    }
+    
+    // MARK: - Alert controller
+    
+    func showAlertController(error: Error?) {
+        navigationController?.activityStopAnimating()
+        DispatchQueue.main.async {
+            let alertController = UIAlertController(title: "Network Error", message: error?.localizedDescription ?? "Unknown Error", preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (_) in
+                if let searchField = self.navigationItem.searchController?.searchBar.searchTextField {
+                    var count = searchField.tokens.count
+                    while count > 0 {
+                        searchField.removeToken(at: count - 1)
+                        count -= 1
+                    }
+                }
+            }))
+            self.present(alertController, animated: true, completion: nil)
+        }
+    }
+    
+    // MARK: - fetch with query and parse
+    // https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/package_search?fq=tags:economy
+    
+    func fetchWithQueryAndParse(searchCategory: SearchCategoriesWithQuery) {
+        navigationController?.activityStartAnimating(activityColor: UIColor.darkGray, backgroundColor: UIColor(red: 211/255, green: 211/255, blue: 211/255, alpha: 0.5))
+        searchCategory.fetchAPI(url: searchCategory.urlWithQuery, parameters: searchCategory.parameters) { (responseObject, error) in
+            guard let responseObject = responseObject, error == nil else {
+                print("fetchWithQueryAndParse error",error?.localizedDescription ?? "Unknown error")
+                self.showAlertController(error: error)
+                return
+            }
+            print("run")
+            if let result = responseObject["result"] as? [String: Any], let results = result["results"] as? [[String: Any]] {
+                results.forEach { (item) in
+                    if let title = item["title"] as? String, let id = item["id"] as? String {
+                        // https:/ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/package_show?id=7e038ff9-b616-4070-9753-6f493b2cdbb0
+                        let fetchedData = FetchedData(title: title, queryValue: id)
+                        self.suggestArray.append(fetchedData)
+                    }
+                }
+                self.loadSearchControllerData(with: self.suggestArray)
             }
         }
     }
@@ -119,13 +172,10 @@ extension ViewController: UISearchResultsUpdating {
     func loadSearchControllerData(with fetchedDataArr: [FetchedData]) {
         DispatchQueue.main.async {
             if let searchResultsController = self.searchController.searchResultsController as? SearchResultsController {
+                self.navigationController?.activityStopAnimating()
                 searchResultsController.fetchedDataArr = fetchedDataArr
                 searchResultsController.tableView.reloadData()
             }
         }
     }
 }
-
-//You will need to contact MPAC directly for data that you may perceive as missing. [MPAC website](https://www.mpac.ca/).
-//, "name": address-points-municipal-toronto-one-address-repository, "metadata_modified": 2021-01-26T23:15:37.093942, "private": 0, "state": active, "revision_id": 2041b023-2176-4bde-aa8f-7d9e0edca71a, "title": Address Points (Municipal) - Toronto One Address Repository, "url": <null>, "license_id": open-government-licence-toronto, "version": <null>, "metadata_created": 2019-07-23T16:30:45.457004, "id": abedd8bc-e3dd-4d45-8e69-79165a76e4fa, "owner_org": 95a064ae-77e8-4ef0-a4e3-4e2d43e1f066, "type": dataset, "author": <null>]
-//package ["author_email": <null>, "maintainer_email": <null>, "creator_user_id": 150d5301-86ec-44a3-a070-50f2cea839c9, "maintainer": <null>, "notes":

@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -28,7 +28,14 @@
 		499CB57225BF1B450093BC07 /* ViewController + SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499CB57125BF1B450093BC07 /* ViewController + SearchBar.swift */; };
 		499D566825BE0E3F00FB2FDE /* CustomDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499D566725BE0E3F00FB2FDE /* CustomDataSource.swift */; };
 		499D567F25BE308800FB2FDE /* WebServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499D567E25BE308800FB2FDE /* WebServiceManager.swift */; };
+		49A8248625C22B5A0007D7D1 /* SearchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A8248525C22B5A0007D7D1 /* SearchManager.swift */; };
+		49A8248B25C22BF70007D7D1 /* SearchCategoriesWithQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A8248A25C22BF70007D7D1 /* SearchCategoriesWithQuery.swift */; };
+		49BC9EF825C64F3F00859AF6 /* ExpandDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BC9EF725C64F3F00859AF6 /* ExpandDetailViewController.swift */; };
+		49CA84AD25C5A5740015B125 /* ItemDetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CA84AC25C5A5740015B125 /* ItemDetailCell.swift */; };
 		49D9BE9C25BB865C00F59FDC /* MenuCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D9BE9B25BB865C00F59FDC /* MenuCell.swift */; };
+		86CB5BDB5C47A74273118E92 /* Pods_DenizenTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 861951D686F8AE113AB2733D /* Pods_DenizenTests.framework */; };
+		BB01434DCCA7020476E8DBB8 /* Pods_Denizen_DenizenUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 579498E343E5D25F7720BFC9 /* Pods_Denizen_DenizenUITests.framework */; };
+		E74CF363FCC8108FDEDB3D47 /* Pods_Denizen.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5078C9CA5C8D025890357525 /* Pods_Denizen.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +56,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		434815BCC6C9A7C5EA9C8211 /* Pods-Denizen.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Denizen.release.xcconfig"; path = "Target Support Files/Pods-Denizen/Pods-Denizen.release.xcconfig"; sourceTree = "<group>"; };
 		4909019825B91DB900E38196 /* Denizen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Denizen.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4909019B25B91DB900E38196 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4909019D25B91DB900E38196 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -76,7 +84,19 @@
 		499CB57125BF1B450093BC07 /* ViewController + SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController + SearchBar.swift"; sourceTree = "<group>"; };
 		499D566725BE0E3F00FB2FDE /* CustomDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomDataSource.swift; sourceTree = "<group>"; };
 		499D567E25BE308800FB2FDE /* WebServiceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebServiceManager.swift; sourceTree = "<group>"; };
+		49A8248525C22B5A0007D7D1 /* SearchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchManager.swift; sourceTree = "<group>"; };
+		49A8248A25C22BF70007D7D1 /* SearchCategoriesWithQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCategoriesWithQuery.swift; sourceTree = "<group>"; };
+		49BC9EF725C64F3F00859AF6 /* ExpandDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandDetailViewController.swift; sourceTree = "<group>"; };
+		49CA84AC25C5A5740015B125 /* ItemDetailCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailCell.swift; sourceTree = "<group>"; };
 		49D9BE9B25BB865C00F59FDC /* MenuCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuCell.swift; sourceTree = "<group>"; };
+		4A5F3B01F3F0460F8025684E /* Pods-Denizen-DenizenUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Denizen-DenizenUITests.debug.xcconfig"; path = "Target Support Files/Pods-Denizen-DenizenUITests/Pods-Denizen-DenizenUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		5078C9CA5C8D025890357525 /* Pods_Denizen.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Denizen.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		579498E343E5D25F7720BFC9 /* Pods_Denizen_DenizenUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Denizen_DenizenUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D76C6B75C4EF9B52AE9062F /* Pods-Denizen-DenizenUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Denizen-DenizenUITests.release.xcconfig"; path = "Target Support Files/Pods-Denizen-DenizenUITests/Pods-Denizen-DenizenUITests.release.xcconfig"; sourceTree = "<group>"; };
+		861951D686F8AE113AB2733D /* Pods_DenizenTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DenizenTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C20694D51BEE48829DBF9BAF /* Pods-DenizenTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DenizenTests.release.xcconfig"; path = "Target Support Files/Pods-DenizenTests/Pods-DenizenTests.release.xcconfig"; sourceTree = "<group>"; };
+		CCB5689A34E055E858E81F8E /* Pods-Denizen.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Denizen.debug.xcconfig"; path = "Target Support Files/Pods-Denizen/Pods-Denizen.debug.xcconfig"; sourceTree = "<group>"; };
+		F3C183E55216EFF386C0A050 /* Pods-DenizenTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DenizenTests.debug.xcconfig"; path = "Target Support Files/Pods-DenizenTests/Pods-DenizenTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +105,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				49993CEB25BA553100091758 /* MapKit.framework in Frameworks */,
+				E74CF363FCC8108FDEDB3D47 /* Pods_Denizen.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -92,6 +113,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				86CB5BDB5C47A74273118E92 /* Pods_DenizenTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -99,6 +121,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BB01434DCCA7020476E8DBB8 /* Pods_Denizen_DenizenUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -113,6 +136,7 @@
 				490901BC25B91DC100E38196 /* DenizenUITests */,
 				4909019925B91DB900E38196 /* Products */,
 				49993CE925BA553100091758 /* Frameworks */,
+				86812339ECD0936CAA219BA3 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -133,10 +157,10 @@
 				4909019D25B91DB900E38196 /* SceneDelegate.swift */,
 				499D566725BE0E3F00FB2FDE /* CustomDataSource.swift */,
 				49993CDF25BA400A00091758 /* temp.swift */,
-				499CB57925BF1D2C0093BC07 /* Supporting Files */,
 				499D566625BE0E1800FB2FDE /* ViewControllers */,
 				49D9BE9A25BB863F00F59FDC /* Cells and Supplementary Views */,
 				49993CD625BA14DE00091758 /* Extensions + Utilities */,
+				499CB57925BF1D2C0093BC07 /* Supporting Files */,
 			);
 			path = Denizen;
 			sourceTree = "<group>";
@@ -162,10 +186,10 @@
 		49993CD625BA14DE00091758 /* Extensions + Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				49A8248F25C230440007D7D1 /* SearchManager */,
 				49993CD725BA14FC00091758 /* AppExtensions.swift */,
 				49993CE425BA54C200091758 /* AppProtocols.swift */,
 				49993CEF25BA5AF900091758 /* AppDataTypes.swift */,
-				4923AB0925C0A84200463E80 /* SearchCategories.swift */,
 				499D567E25BE308800FB2FDE /* WebServiceManager.swift */,
 			);
 			path = "Extensions + Utilities";
@@ -175,6 +199,9 @@
 			isa = PBXGroup;
 			children = (
 				49993CEA25BA553100091758 /* MapKit.framework */,
+				5078C9CA5C8D025890357525 /* Pods_Denizen.framework */,
+				579498E343E5D25F7720BFC9 /* Pods_Denizen_DenizenUITests.framework */,
+				861951D686F8AE113AB2733D /* Pods_DenizenTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -198,8 +225,19 @@
 				490D348A25BF2CB200E94116 /* ViewController + ResultsUpdate.swift */,
 				490901CF25B9257B00E38196 /* SearchResultsController.swift */,
 				490D348525BF29D000E94116 /* ItemDetailViewController.swift */,
+				49BC9EF725C64F3F00859AF6 /* ExpandDetailViewController.swift */,
 			);
 			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		49A8248F25C230440007D7D1 /* SearchManager */ = {
+			isa = PBXGroup;
+			children = (
+				4923AB0925C0A84200463E80 /* SearchCategories.swift */,
+				49A8248A25C22BF70007D7D1 /* SearchCategoriesWithQuery.swift */,
+				49A8248525C22B5A0007D7D1 /* SearchManager.swift */,
+			);
+			path = SearchManager;
 			sourceTree = "<group>";
 		};
 		49D9BE9A25BB863F00F59FDC /* Cells and Supplementary Views */ = {
@@ -207,8 +245,22 @@
 			children = (
 				49D9BE9B25BB865C00F59FDC /* MenuCell.swift */,
 				4918476225BCF0AE006AC15C /* TitleSupplementaryView.swift */,
+				49CA84AC25C5A5740015B125 /* ItemDetailCell.swift */,
 			);
 			path = "Cells and Supplementary Views";
+			sourceTree = "<group>";
+		};
+		86812339ECD0936CAA219BA3 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				CCB5689A34E055E858E81F8E /* Pods-Denizen.debug.xcconfig */,
+				434815BCC6C9A7C5EA9C8211 /* Pods-Denizen.release.xcconfig */,
+				4A5F3B01F3F0460F8025684E /* Pods-Denizen-DenizenUITests.debug.xcconfig */,
+				5D76C6B75C4EF9B52AE9062F /* Pods-Denizen-DenizenUITests.release.xcconfig */,
+				F3C183E55216EFF386C0A050 /* Pods-DenizenTests.debug.xcconfig */,
+				C20694D51BEE48829DBF9BAF /* Pods-DenizenTests.release.xcconfig */,
+			);
+			path = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -218,9 +270,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 490901C225B91DC100E38196 /* Build configuration list for PBXNativeTarget "Denizen" */;
 			buildPhases = (
+				759B8E3B0D090F3B777C9245 /* [CP] Check Pods Manifest.lock */,
 				4909019425B91DB900E38196 /* Sources */,
 				4909019525B91DB900E38196 /* Frameworks */,
 				4909019625B91DB900E38196 /* Resources */,
+				75EE98AC8CF90B8F57E6604C /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -235,6 +289,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 490901C525B91DC100E38196 /* Build configuration list for PBXNativeTarget "DenizenTests" */;
 			buildPhases = (
+				3EA4A9691AA000CB280EC5B5 /* [CP] Check Pods Manifest.lock */,
 				490901AA25B91DC100E38196 /* Sources */,
 				490901AB25B91DC100E38196 /* Frameworks */,
 				490901AC25B91DC100E38196 /* Resources */,
@@ -253,9 +308,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 490901C825B91DC100E38196 /* Build configuration list for PBXNativeTarget "DenizenUITests" */;
 			buildPhases = (
+				371109880AF2211ED51C1E60 /* [CP] Check Pods Manifest.lock */,
 				490901B525B91DC100E38196 /* Sources */,
 				490901B625B91DC100E38196 /* Frameworks */,
 				490901B725B91DC100E38196 /* Resources */,
+				4AE2354C0729AB72AC197E1C /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -336,19 +393,126 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		371109880AF2211ED51C1E60 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Denizen-DenizenUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		3EA4A9691AA000CB280EC5B5 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-DenizenTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		4AE2354C0729AB72AC197E1C /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Denizen-DenizenUITests/Pods-Denizen-DenizenUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Denizen-DenizenUITests/Pods-Denizen-DenizenUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Denizen-DenizenUITests/Pods-Denizen-DenizenUITests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		759B8E3B0D090F3B777C9245 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Denizen-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		75EE98AC8CF90B8F57E6604C /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Denizen/Pods-Denizen-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Denizen/Pods-Denizen-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Denizen/Pods-Denizen-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		4909019425B91DB900E38196 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				499CB57225BF1B450093BC07 /* ViewController + SearchBar.swift in Sources */,
+				49A8248625C22B5A0007D7D1 /* SearchManager.swift in Sources */,
 				490D348B25BF2CB200E94116 /* ViewController + ResultsUpdate.swift in Sources */,
 				49D9BE9C25BB865C00F59FDC /* MenuCell.swift in Sources */,
 				490D348625BF29D000E94116 /* ItemDetailViewController.swift in Sources */,
 				49993CD825BA14FC00091758 /* AppExtensions.swift in Sources */,
+				49A8248B25C22BF70007D7D1 /* SearchCategoriesWithQuery.swift in Sources */,
 				499D566825BE0E3F00FB2FDE /* CustomDataSource.swift in Sources */,
 				499D567F25BE308800FB2FDE /* WebServiceManager.swift in Sources */,
 				490901D025B9257B00E38196 /* SearchResultsController.swift in Sources */,
+				49BC9EF825C64F3F00859AF6 /* ExpandDetailViewController.swift in Sources */,
+				49CA84AD25C5A5740015B125 /* ItemDetailCell.swift in Sources */,
 				490901A025B91DB900E38196 /* ViewController.swift in Sources */,
 				4923AB0A25C0A84200463E80 /* SearchCategories.swift in Sources */,
 				4909019C25B91DB900E38196 /* AppDelegate.swift in Sources */,
@@ -529,6 +693,7 @@
 		};
 		490901C325B91DC100E38196 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CCB5689A34E055E858E81F8E /* Pods-Denizen.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -548,6 +713,7 @@
 		};
 		490901C425B91DC100E38196 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 434815BCC6C9A7C5EA9C8211 /* Pods-Denizen.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -567,6 +733,7 @@
 		};
 		490901C625B91DC100E38196 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F3C183E55216EFF386C0A050 /* Pods-DenizenTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -589,6 +756,7 @@
 		};
 		490901C725B91DC100E38196 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C20694D51BEE48829DBF9BAF /* Pods-DenizenTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -611,6 +779,7 @@
 		};
 		490901C925B91DC100E38196 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4A5F3B01F3F0460F8025684E /* Pods-Denizen-DenizenUITests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -631,6 +800,7 @@
 		};
 		490901CA25B91DC100E38196 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5D76C6B75C4EF9B52AE9062F /* Pods-Denizen-DenizenUITests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
