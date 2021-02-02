@@ -12,14 +12,14 @@ class ExpandDetailViewController: UIViewController {
     
     var itemInfo: ItemInfo!
     var constraints = [NSLayoutConstraint]()
+    var stackView: UIStackView!
 
     let label: PaddedLabel = {
         let label = PaddedLabel()
-        label.font = UIFont.boldSystemFont(ofSize: 15)
+        label.font = UIFont.boldSystemFont(ofSize: UIFont.labelFontSize)
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
         label.backgroundColor = .systemBackground
-        label.layer.cornerRadius = 10
         label.clipsToBounds = true
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -33,7 +33,6 @@ class ExpandDetailViewController: UIViewController {
         textView.isUserInteractionEnabled = true
         textView.isScrollEnabled = true
         textView.backgroundColor = .systemBackground
-        textView.layer.cornerRadius = 10
         textView.translatesAutoresizingMaskIntoConstraints = false
         return textView
     }()
@@ -48,36 +47,92 @@ class ExpandDetailViewController: UIViewController {
 
 extension ExpandDetailViewController {
     func configure() {
+         
         view.backgroundColor = UIColor(red: (243/255), green: (243/255), blue: (243/255), alpha: 1)
         
-        if let header = itemInfo.header {
-            label.text = header
-            view.addSubview(label)
-            
-            textView.text = itemInfo.body
-            view.addSubview(textView)
-            
-            constraints.append(contentsOf: [
-                label.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50),
-                label.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor, constant: 10),
-                label.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor, constant: -10),
-                label.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                label.heightAnchor.constraint(greaterThanOrEqualToConstant: 30),
-                textView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 50)
-            ])
-        } else {
-            textView.text = itemInfo.body
-            view.addSubview(textView)
-            
-            constraints.append(textView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50))
+        switch itemInfo.itemInfoType {
+            case .labelAndTextView:
+                label.text = itemInfo.header
+                label.layer.cornerRadius = 10
+                view.addSubview(label)
+                
+                textView.text = itemInfo.body
+                textView.layer.cornerRadius = 10
+                view.addSubview(textView)
+                
+                NSLayoutConstraint.activate([
+                    label.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50),
+                    label.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor, constant: 10),
+                    label.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor, constant: -10),
+                    label.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                    label.heightAnchor.constraint(greaterThanOrEqualToConstant: 30),
+                    
+                    textView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 50),
+                    textView.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor, constant: 10),
+                    textView.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor, constant: -10),
+                    textView.heightAnchor.constraint(equalToConstant: 200),
+                    textView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                ])
+            case .textViewOnly, .noType:
+                textView.text = itemInfo.body
+                textView.layer.cornerRadius = 10
+                view.addSubview(textView)
+                
+                NSLayoutConstraint.activate([
+                    textView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50),
+                    textView.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor, constant: 10),
+                    textView.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor, constant: -10),
+                    textView.heightAnchor.constraint(equalToConstant: 200),
+                    textView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                ])
+            case .dict:
+                if let dict = itemInfo.dict {
+                    stackView = UIStackView()
+                    stackView.axis = .vertical
+                    stackView.distribution = .fillEqually
+                    stackView.translatesAutoresizingMaskIntoConstraints = false
+                    view.addSubview(stackView)
+
+                    for (key, value) in dict {
+                        print("key", key)
+                        print("value", value)
+                        
+                        label.text = key
+                        
+                        if let text = value as? String {
+                            textView.text = text
+                        } else {
+                            textView.text = "null"
+                        }
+                        
+                        let containerView = UIView()
+                        containerView.translatesAutoresizingMaskIntoConstraints = false
+                        containerView.addSubview(label)
+                        containerView.addSubview(textView)
+                        stackView.addArrangedSubview(containerView)
+                        
+                        NSLayoutConstraint.activate([
+                            label.topAnchor.constraint(equalTo: containerView.topAnchor),
+                            label.widthAnchor.constraint(equalTo: containerView.widthAnchor),
+                            label.heightAnchor.constraint(equalTo: containerView.heightAnchor, multiplier: 0.3),
+                            
+                            textView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
+                            textView.widthAnchor.constraint(equalTo: containerView.widthAnchor),
+                            textView.heightAnchor.constraint(equalTo: containerView.heightAnchor, multiplier: 0.7),
+                            
+                            containerView.heightAnchor.constraint(equalToConstant: 100),
+                        ])
+                    }
+                                        
+                    NSLayoutConstraint.activate([
+                        stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50),
+                        stackView.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor, constant: 10),
+                        stackView.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor, constant: -10),
+                        stackView.heightAnchor.constraint(equalToConstant: 500),
+                        stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                    ])
+                }
         }
-        
-        constraints.append(contentsOf: [
-            textView.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor, constant: 10),
-            textView.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor, constant: -10),
-            textView.heightAnchor.constraint(equalToConstant: 200),            textView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-        ])
-        
-        NSLayoutConstraint.activate(constraints)
     }
+
 }

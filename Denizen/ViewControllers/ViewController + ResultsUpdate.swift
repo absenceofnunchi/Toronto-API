@@ -29,12 +29,12 @@ extension ViewController: UISearchResultsUpdating {
 
             let searchTextField = searchController.searchBar.searchTextField
             let searchToken = searchTextField.tokens[searchTextField.tokens.count - 1]
-            if let searchTokenValue = searchToken.representedObject as? NSNumber {
-                let suggestedSearch = SearchCategories.allCases[searchTokenValue.intValue]
-                fetchAndParse(suggestedSearch: suggestedSearch)
-            } else if let searchTokenValue = searchToken.representedObject as? SearchCategoriesWithQuery {
-                fetchWithQueryAndParse(searchCategory: searchTokenValue)
+            
+            if let searchTokenValue = searchToken.representedObject as? SearchCategories {
+                print("searchTokenValue", searchTokenValue)
+                fetchAndParse(suggestedSearch: searchTokenValue)
             }
+            
         }else {
             // now that we have the list from the selected token, we can further filter the list
             var filtered = suggestArray
@@ -62,18 +62,55 @@ extension ViewController: UISearchResultsUpdating {
     
     func fetchAndParse(suggestedSearch: SearchCategories) {
         navigationController?.activityStartAnimating(activityColor: UIColor.darkGray, backgroundColor: UIColor(red: 211/255, green: 211/255, blue: 211/255, alpha: 0.5))
-
-        suggestedSearch.fetchAPI(url: suggestedSearch.url , parameters: nil) { (responseObject, error) in
+        
+        var urlString: String!
+        var parameters: [String: String]!
+        
+        switch suggestedSearch {
+            case .tags:
+                urlString = URLScheme.baseURL + URLScheme.Subdomain.tags
+                fetchAPI(urlString: urlString, parameters: parameters, suggestedSearch: suggestedSearch)
+            case .packages:
+                urlString = URLScheme.baseURL + URLScheme.Subdomain.packages
+                fetchAPI(urlString: urlString, parameters: parameters, suggestedSearch: suggestedSearch)
+            case .recentlyChanged:
+                urlString = URLScheme.baseURL + URLScheme.Subdomain.recentlyChanged
+                fetchAPI(urlString: urlString, parameters: parameters, suggestedSearch: suggestedSearch)
+            case .qualityScores:
+                urlString = URLScheme.baseURL + URLScheme.Subdomain.qualityScores + URLScheme.Subdomain.id.qualityScoresId
+                fetchAPI(urlString: urlString, parameters: parameters, suggestedSearch: suggestedSearch)
+            case .tag(let title):
+                urlString = URLScheme.baseURL + Query.ActionType.packageSearch
+                parameters = [Query.Key.fq: Query.Filter.tags + ":" + title]
+                fetchAPI(urlString: urlString, parameters: parameters, suggestedSearch: suggestedSearch)
+            case .topics:
+                let topics = ["Finance", "Health", "Culture and tourism", "Environment", "Business", "Parks and recreation", "Permits and Licenses", "Water", "Garbage and recycling"]
+                
+                let fetchedDataArr = topics.map { FetchedData(title: $0, searchCategories: suggestedSearch)}
+                self.suggestArray += fetchedDataArr
+                loadSearchControllerData(with: fetchedDataArr)
+                self.searchResultsController.showSuggestedSearches = .additionalSuggest
+            case .topic(let title):
+                urlString = URLScheme.baseURL + Query.ActionType.packageSearch
+                parameters = [Query.Key.q: title]
+                fetchAPI(urlString: urlString, parameters: parameters, suggestedSearch: suggestedSearch)
+            default:
+                break
+        }
+    }
+    
+    func fetchAPI(urlString: String, parameters: [String: String]?, suggestedSearch: SearchCategories) {
+        WebServiceManager.shared.sendRequest(urlString: urlString, parameters: parameters) { (responseObject, error) in
             guard let responseObject = responseObject, error == nil else {
                 print("fetch and parse error",error?.localizedDescription ?? "Unknown error")
                 self.showAlertController(error: error)
                 return
             }
-
+            
             switch suggestedSearch {
                 case .tags:
                     if let results = responseObject["result"] as? [String] {
-                        let fetchedDataArr = results.map { FetchedData(title: $0, searchCategories: suggestedSearch, parameters: [suggestedSearch.queryKey: $0])}
+                        let fetchedDataArr = results.map { FetchedData(title: $0, searchCategories: suggestedSearch, parameters: [Query.Key.fq: $0])}
                         self.suggestArray += fetchedDataArr
                     }
                     self.loadSearchControllerData(with: self.suggestArray)
@@ -84,7 +121,7 @@ extension ViewController: UISearchResultsUpdating {
                     }
                 case .packages:
                     if let results = responseObject["result"] as? [String] {
-                        let fetchedDataArr = results.map { FetchedData(title: $0, searchCategories: suggestedSearch, parameters: [suggestedSearch.queryKey: $0])}
+                        let fetchedDataArr = results.map { FetchedData(title: $0, searchCategories: suggestedSearch, parameters: [Query.Key.fq: "name:" + $0])}
                         self.suggestArray += fetchedDataArr
                     }
                     self.loadSearchControllerData(with: self.suggestArray)
@@ -95,7 +132,7 @@ extension ViewController: UISearchResultsUpdating {
                                let package = data["package"] as? [String: Any],
                                let title = package["title"] as? String,
                                let id = package["id"] as? String {
-                                let parameters: [QueryKey: String] = [suggestedSearch.queryKey: id]
+                                let parameters: [String: String] = [Query.Key.id: id]
                                 let fetchedData = FetchedData(title: title, searchCategories: suggestedSearch, parameters: parameters)
                                 self.suggestArray.append(fetchedData)
                             }
@@ -106,12 +143,25 @@ extension ViewController: UISearchResultsUpdating {
                     if let result = responseObject["result"] as? [String: Any], let records = result["records"] as? [[String: Any]] {
                         records.forEach { (catalogue) in
                             if let package = catalogue["package"] as? String {
-                                let fetchedData = FetchedData(title: package, searchCategories: suggestedSearch, parameters: [suggestedSearch.queryKey: package])
+                                let fetchedData = FetchedData(title: package, searchCategories: suggestedSearch, parameters: [Query.Key.id: package])
                                 self.suggestArray.append(fetchedData)
                             }
                         }
                     }
                     self.loadSearchControllerData(with: self.suggestArray)
+                case .tag(_), .topic(_):
+                    if let result = responseObject["result"] as? [String: Any], let results = result["results"] as? [[String: Any]] {
+                        results.forEach { (item) in
+                            if let title = item["title"] as? String, let id = item["id"] as? String {
+                                // https:/ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/package_show?id=7e038ff9-b616-4070-9753-6f493b2cdbb0
+                                let fetchedData = FetchedData(title: title, searchCategories: suggestedSearch, parameters: [Query.Key.id: id])
+                                self.suggestArray.append(fetchedData)
+                            }
+                        }
+                        self.loadSearchControllerData(with: self.suggestArray)
+                    }
+                default:
+                    break
             }
         }
     }
@@ -132,31 +182,6 @@ extension ViewController: UISearchResultsUpdating {
                 }
             }))
             self.present(alertController, animated: true, completion: nil)
-        }
-    }
-    
-    // MARK: - fetch with query and parse
-    // https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/package_search?fq=tags:economy
-    
-    func fetchWithQueryAndParse(searchCategory: SearchCategoriesWithQuery) {
-        navigationController?.activityStartAnimating(activityColor: UIColor.darkGray, backgroundColor: UIColor(red: 211/255, green: 211/255, blue: 211/255, alpha: 0.5))
-        searchCategory.fetchAPI(url: searchCategory.urlWithQuery, parameters: searchCategory.parameters) { (responseObject, error) in
-            guard let responseObject = responseObject, error == nil else {
-                print("fetchWithQueryAndParse error",error?.localizedDescription ?? "Unknown error")
-                self.showAlertController(error: error)
-                return
-            }
-            print("run")
-            if let result = responseObject["result"] as? [String: Any], let results = result["results"] as? [[String: Any]] {
-                results.forEach { (item) in
-                    if let title = item["title"] as? String, let id = item["id"] as? String {
-                        // https:/ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/package_show?id=7e038ff9-b616-4070-9753-6f493b2cdbb0
-                        let fetchedData = FetchedData(title: title, queryValue: id)
-                        self.suggestArray.append(fetchedData)
-                    }
-                }
-                self.loadSearchControllerData(with: self.suggestArray)
-            }
         }
     }
     

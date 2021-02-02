@@ -37,7 +37,6 @@ extension UIViewController {
         activityIndicator.color = activityColor
         activityIndicator.startAnimating()
         activityIndicator.tag = 5000
-//        self.view.isUserInteractionEnabled = false
         
         backgroundView.addSubview(activityIndicator)
         self.view.addSubview(backgroundView)
@@ -53,14 +52,19 @@ extension UIViewController {
         DispatchQueue.main.async {
             if let background = self.view.viewWithTag(5000) {
                 background.removeFromSuperview()
-//                self.view.isUserInteractionEnabled = true
             }
         }
     }
     
     @objc func activityIndicatorTapped() {
-        print("tapped")
-        navigationController?.popToRootViewController(animated: true)
+        DispatchQueue.main.async {
+            if let background = self.view.viewWithTag(5000) {
+                background.removeFromSuperview()
+                if let navController = self as? UINavigationController {
+                    navController.popViewController(animated: true)
+                }
+            }
+        }
     }
 }
 

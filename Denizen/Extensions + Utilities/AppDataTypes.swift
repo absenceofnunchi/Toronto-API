@@ -38,24 +38,26 @@ struct URLScheme {
     }
 }
 
-enum QueryKey: String {
-    case id = "id"
-    case limit = "limit"
-    case fq = "fq"
+struct Query: Hashable {
+    struct ActionType {
+        static var tagShow = "tag_show"
+        static var packageShow = "package_show"
+        static var datastoreSearch = "datastore_search"
+        static var packageSearch = "package_search"
+    }
+    
+    struct Key {
+        static var id = "id"
+        static var limit = "limit"
+        static var fq = "fq"
+        static var q = "q"
+    }
+    
+    struct Filter {
+        static var tags = "tags"
+        static var none = ""
+    }
 }
-
-enum QueryFilter: String {
-    case tags = "tags"
-    case none = ""
-}
-
-enum ActionType: String {
-    case tagShow = "tag_show"
-    case packageShow = "package_show"
-    case datastoreSearch = "datastore_search"
-    case packageSearch = "package_search"
-}
-
 
 // MARK: - API fetched data types
 
@@ -65,6 +67,7 @@ class Item {
         case green = 1
         case blue = 2
         case yellow = 3
+        case orange = 4
     }
     
     var id: String!
@@ -77,19 +80,6 @@ class Item {
 
 class CatalogueQualityScores: Item {
     var package: String!
-    
-    //    let grade_norm: Medal
-    //    let _id: Int
-    //    let accessibility: Int
-    //    let completeness: Float
-    //    let freshness: Int
-    //    let grade: String
-    //    let metadata: Float
-    //    let recorded_at: Date
-    //    let score: Float
-    //    let score_norm: Float
-    //    let usability: Float
-    //    let version: String
     
     init(package: String, id: String) {
         super.init(id: id)
@@ -109,8 +99,8 @@ class RecentlyChanged: Item {
 struct FetchedData {
     var id: String? = nil
     let title: String
-    var searchCategories: SearchManager? = nil
-    var parameters: [QueryKey: String]? = nil
+    var searchCategories: SearchCategories? = nil
+    var parameters: [String: String]? = nil
     var queryValue: String? = nil
 }
 
@@ -123,7 +113,13 @@ enum SearchState {
 
 struct ItemInfo {
     let header: String?
-    let body: String
+    let body: String?
+    let dict: [String: AnyObject]?
+    let itemInfoType: ItemInfoType
+}
+
+enum ItemInfoType {
+    case textViewOnly, labelAndTextView, dict, noType
 }
 
 // MARK: - PaddedLabel
@@ -151,3 +147,30 @@ class PaddedLabel: UILabel {
 }
 
 
+// MARK: - SearchCategories
+/// SearchResultsController, WebServiceManager
+enum SearchCategories: Equatable {
+    case tags, packages, recentlyChanged, qualityScores, tagPackageShow, topics
+    case tag(String), topic(String)
+    
+    var value: String {
+        switch self {
+            case .tags:
+                return "Tags"
+            case .packages:
+                return "Packages"
+            case .recentlyChanged:
+                return "Recently Changed"
+            case .qualityScores:
+                return "Quality Scores"
+            case .tagPackageShow:
+                return "package_show"
+            case .topics:
+                return "Topics"
+            case .tag(let title):
+                return title
+            case .topic(let title):
+                return title
+        }
+    }
+}

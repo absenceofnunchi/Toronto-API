@@ -37,10 +37,31 @@ class ItemDetailViewController: UITableViewController {
 }
 
 extension ItemDetailViewController {
-    // https:/ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/package_show?id=7e038ff9-b616-4070-9753-6f493b2cdbb0
+    // tag: https:/ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/package_show?id=7e038ff9-b616-4070-9753-6f493b2cdbb0
+    // package: https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/package_search?fq=name:solid-waste-management-services-transfer-station-locations
     func fetchAPI() {
         navigationController?.activityStartAnimating(activityColor: UIColor.darkGray, backgroundColor: UIColor(red: 211/255, green: 211/255, blue: 211/255, alpha: 0.5))
-        WebServiceManager.shared.sendRequest(urlString: URLScheme.baseURL + ActionType.packageShow.rawValue, parameters: [QueryKey.id: fetchedData.queryValue ?? ""]) { (responseObject, error) in
+        
+        print("fetchedData", fetchedData)
+        var urlString: String!
+        var parameters = [String: String]()
+        if let params = fetchedData.parameters {
+            for (key, value) in params {
+                parameters.updateValue(value, forKey: key)
+            }
+        }
+        
+        switch fetchedData.searchCategories {
+            case .tag(_), .qualityScores, .recentlyChanged:
+                urlString = URLScheme.baseURL + Query.ActionType.packageShow
+            case .packages, .topic(_):
+                urlString = URLScheme.baseURL + Query.ActionType.packageSearch
+            default:
+                break
+        }
+        
+        print("urlstring", urlString)
+        WebServiceManager.shared.sendRequest(urlString: urlString, parameters: parameters) { (responseObject, error) in
             if let error = error {
                 DispatchQueue.main.async {
                     self.navigationController?.activityStopAnimating()
@@ -51,8 +72,9 @@ extension ItemDetailViewController {
                     self.present(alertController, animated: true, completion: nil)
                 }
             }
-            
+
             if let responseObject = responseObject {
+                print("response", responseObject)
                 let json = JSON(responseObject as [String: Any])
                 let myDictionary = self.json2dic(json)
                 if let result = myDictionary["result"] as? [String: AnyObject] {
@@ -64,11 +86,55 @@ extension ItemDetailViewController {
                     }
                 }
             } else {
-                print("no data")
+                DispatchQueue.main.async {
+                    self.navigationController?.activityStopAnimating()
+                    let alertController = UIAlertController(title: "No Data", message: nil, preferredStyle: .alert)
+                    alertController.addAction(UIAlertAction(title: "Go Back", style: .default, handler: { (_) in
+                        self.navigationController?.popViewController(animated: true)
+                    }))
+                    self.present(alertController, animated: true, completion: nil)
+                }
             }
-
         }
     }
+        
+        
+//        WebServiceManager.shared.sendRequest(urlString: URLScheme.baseURL + ActionType.packageShow.rawValue, parameters: [QueryKey.id: fetchedData.queryValue ?? ""]) { (responseObject, error) in
+//            if let error = error {
+//                DispatchQueue.main.async {
+//                    self.navigationController?.activityStopAnimating()
+//                    let alertController = UIAlertController(title: "Network Error", message: error.localizedDescription , preferredStyle: .alert)
+//                    alertController.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (_) in
+//                        self.navigationController?.popViewController(animated: true)
+//                    }))
+//                    self.present(alertController, animated: true, completion: nil)
+//                }
+//            }
+//
+//            if let responseObject = responseObject {
+//                print("response", responseObject)
+//                let json = JSON(responseObject as [String: Any])
+//                let myDictionary = self.json2dic(json)
+//                if let result = myDictionary["result"] as? [String: AnyObject] {
+//                    let resultArr = result.map { $0 }.sorted { $0.key < $1.key }
+//                    self.data.append(contentsOf: resultArr)
+//                    DispatchQueue.main.async {
+//                        self.navigationController?.activityStopAnimating()
+//                        self.tableView.reloadData()
+//                    }
+//                }
+//            } else {
+//                DispatchQueue.main.async {
+//                    self.navigationController?.activityStopAnimating()
+//                    let alertController = UIAlertController(title: "No Data", message: nil, preferredStyle: .alert)
+//                    alertController.addAction(UIAlertAction(title: "Go Back", style: .default, handler: { (_) in
+//                        self.navigationController?.popViewController(animated: true)
+//                    }))
+//                    self.present(alertController, animated: true, completion: nil)
+//                }
+//            }
+//        }
+//    }
     
     func json2dic(_ j: JSON) -> [String:AnyObject] {
         var post = [String:AnyObject]()
@@ -101,20 +167,38 @@ extension ItemDetailViewController {
         return 1
     }
     
+    /// The types to display are either [String: String] , [String: [String: String]] or [String: String: [String: String]]
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Cell.itemDetailCell, for: indexPath)
         cell.selectionStyle = .none
+        cell.accessoryType = .none
         
         let detail = data[indexPath.section]
         if detail.1 is [String: AnyObject] {
             let arr = (detail.1 as! [String: AnyObject]).map { $0 }.sorted { $0.key < $1.key }
-            print("arr", arr)
             let value = arr as [(String, AnyObject)]
             if value.count > 0 {
                 if let text = value[indexPath.row].1 as? String {
+//                    let text = value[indexPath.row].0 + ": " + text
+//                    let mas = NSMutableAttributedString(string: text)
+//                    let range = (mas.string as NSString).range(of: value[indexPath.row].0)
+//                    mas.addAttributes([.font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize)], range: range)
+                    
                     cell.textLabel?.text = value[indexPath.row].0 + ": " + text
                 } else {
-                    cell.textLabel?.text = value[indexPath.row].0 + ": null"
+                    
+                    var text: String!
+                    if value[indexPath.row].1 is Dictionary<String, Any> {
+                        text = value[indexPath.row].0
+                        cell.accessoryType = .disclosureIndicator
+                    } else {
+                        text = value[indexPath.row].0 + ": null"
+                    }
+                    
+//                    let mas = NSMutableAttributedString(string: text)
+//                    let range = (mas.string as NSString).range(of: value[indexPath.row].0)
+//                    mas.addAttributes([.font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize)], range: range)
+                    cell.textLabel?.text = text
                 }
             }
         } else {
@@ -122,6 +206,7 @@ extension ItemDetailViewController {
         }
         
         return cell
+
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -130,7 +215,9 @@ extension ItemDetailViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         var header: String!
-        var body: String!
+        var body: String! = nil
+        var detailDict: [String: AnyObject]! = nil
+        var itemInfoType: ItemInfoType = .noType
         
         let detail = data[indexPath.section]
         if detail.1 is [String: AnyObject] {
@@ -140,19 +227,34 @@ extension ItemDetailViewController {
                 if let text = value[indexPath.row].1 as? String {
                     header = value[indexPath.row].0
                     body = text
+                    itemInfoType = .labelAndTextView
                 } else {
-                    header = value[indexPath.row].0
-                    body = "null"
+                    if let dict = value[indexPath.row].1 as? Dictionary<String, AnyObject> {
+                        header = value[indexPath.row].0
+                        detailDict = dict
+                        itemInfoType = .dict
+                    } else {
+                        body = "null"
+                        itemInfoType = .noType
+                    }
                 }
             }
         } else {
             body = detail.1 as? String
+            itemInfoType = .textViewOnly
         }
         
-        let expandDetailVC = ExpandDetailViewController()
-        let itemInfo = ItemInfo(header: header, body: body)
-        expandDetailVC.itemInfo = itemInfo
-        navigationController?.pushViewController(expandDetailVC, animated: true)
+        
+        let itemInfo = ItemInfo(header: header, body: body, dict: detailDict, itemInfoType: itemInfoType)
+
+        if itemInfoType == .dict {
+            let expandTableVC = ExpandTableViewController()
+            expandTableVC.itemInfo = itemInfo
+            navigationController?.pushViewController(expandTableVC, animated: true)
+        } else {
+            let expandDetailVC = ExpandDetailViewController()
+            expandDetailVC.itemInfo = itemInfo
+            navigationController?.pushViewController(expandDetailVC, animated: true)
+        }
     }
 }
-

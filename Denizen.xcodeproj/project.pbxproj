@@ -19,7 +19,7 @@
 		490D348625BF29D000E94116 /* ItemDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490D348525BF29D000E94116 /* ItemDetailViewController.swift */; };
 		490D348B25BF2CB200E94116 /* ViewController + ResultsUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490D348A25BF2CB200E94116 /* ViewController + ResultsUpdate.swift */; };
 		4918476325BCF0AE006AC15C /* TitleSupplementaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4918476225BCF0AE006AC15C /* TitleSupplementaryView.swift */; };
-		4923AB0A25C0A84200463E80 /* SearchCategories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4923AB0925C0A84200463E80 /* SearchCategories.swift */; };
+		49794B6725C75DBC00D2B2B5 /* ExpandTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49794B6625C75DBC00D2B2B5 /* ExpandTableViewController.swift */; };
 		49993CD825BA14FC00091758 /* AppExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49993CD725BA14FC00091758 /* AppExtensions.swift */; };
 		49993CE025BA400A00091758 /* temp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49993CDF25BA400A00091758 /* temp.swift */; };
 		49993CE525BA54C200091758 /* AppProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49993CE425BA54C200091758 /* AppProtocols.swift */; };
@@ -28,8 +28,6 @@
 		499CB57225BF1B450093BC07 /* ViewController + SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499CB57125BF1B450093BC07 /* ViewController + SearchBar.swift */; };
 		499D566825BE0E3F00FB2FDE /* CustomDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499D566725BE0E3F00FB2FDE /* CustomDataSource.swift */; };
 		499D567F25BE308800FB2FDE /* WebServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499D567E25BE308800FB2FDE /* WebServiceManager.swift */; };
-		49A8248625C22B5A0007D7D1 /* SearchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A8248525C22B5A0007D7D1 /* SearchManager.swift */; };
-		49A8248B25C22BF70007D7D1 /* SearchCategoriesWithQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A8248A25C22BF70007D7D1 /* SearchCategoriesWithQuery.swift */; };
 		49BC9EF825C64F3F00859AF6 /* ExpandDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BC9EF725C64F3F00859AF6 /* ExpandDetailViewController.swift */; };
 		49CA84AD25C5A5740015B125 /* ItemDetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CA84AC25C5A5740015B125 /* ItemDetailCell.swift */; };
 		49D9BE9C25BB865C00F59FDC /* MenuCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D9BE9B25BB865C00F59FDC /* MenuCell.swift */; };
@@ -75,7 +73,7 @@
 		490D348525BF29D000E94116 /* ItemDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailViewController.swift; sourceTree = "<group>"; };
 		490D348A25BF2CB200E94116 /* ViewController + ResultsUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController + ResultsUpdate.swift"; sourceTree = "<group>"; };
 		4918476225BCF0AE006AC15C /* TitleSupplementaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleSupplementaryView.swift; sourceTree = "<group>"; };
-		4923AB0925C0A84200463E80 /* SearchCategories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCategories.swift; sourceTree = "<group>"; };
+		49794B6625C75DBC00D2B2B5 /* ExpandTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandTableViewController.swift; sourceTree = "<group>"; };
 		49993CD725BA14FC00091758 /* AppExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppExtensions.swift; sourceTree = "<group>"; };
 		49993CDF25BA400A00091758 /* temp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = temp.swift; sourceTree = "<group>"; };
 		49993CE425BA54C200091758 /* AppProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppProtocols.swift; sourceTree = "<group>"; };
@@ -84,8 +82,6 @@
 		499CB57125BF1B450093BC07 /* ViewController + SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController + SearchBar.swift"; sourceTree = "<group>"; };
 		499D566725BE0E3F00FB2FDE /* CustomDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomDataSource.swift; sourceTree = "<group>"; };
 		499D567E25BE308800FB2FDE /* WebServiceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebServiceManager.swift; sourceTree = "<group>"; };
-		49A8248525C22B5A0007D7D1 /* SearchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchManager.swift; sourceTree = "<group>"; };
-		49A8248A25C22BF70007D7D1 /* SearchCategoriesWithQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCategoriesWithQuery.swift; sourceTree = "<group>"; };
 		49BC9EF725C64F3F00859AF6 /* ExpandDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandDetailViewController.swift; sourceTree = "<group>"; };
 		49CA84AC25C5A5740015B125 /* ItemDetailCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailCell.swift; sourceTree = "<group>"; };
 		49D9BE9B25BB865C00F59FDC /* MenuCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuCell.swift; sourceTree = "<group>"; };
@@ -186,7 +182,6 @@
 		49993CD625BA14DE00091758 /* Extensions + Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				49A8248F25C230440007D7D1 /* SearchManager */,
 				49993CD725BA14FC00091758 /* AppExtensions.swift */,
 				49993CE425BA54C200091758 /* AppProtocols.swift */,
 				49993CEF25BA5AF900091758 /* AppDataTypes.swift */,
@@ -226,18 +221,9 @@
 				490901CF25B9257B00E38196 /* SearchResultsController.swift */,
 				490D348525BF29D000E94116 /* ItemDetailViewController.swift */,
 				49BC9EF725C64F3F00859AF6 /* ExpandDetailViewController.swift */,
+				49794B6625C75DBC00D2B2B5 /* ExpandTableViewController.swift */,
 			);
 			path = ViewControllers;
-			sourceTree = "<group>";
-		};
-		49A8248F25C230440007D7D1 /* SearchManager */ = {
-			isa = PBXGroup;
-			children = (
-				4923AB0925C0A84200463E80 /* SearchCategories.swift */,
-				49A8248A25C22BF70007D7D1 /* SearchCategoriesWithQuery.swift */,
-				49A8248525C22B5A0007D7D1 /* SearchManager.swift */,
-			);
-			path = SearchManager;
 			sourceTree = "<group>";
 		};
 		49D9BE9A25BB863F00F59FDC /* Cells and Supplementary Views */ = {
@@ -502,19 +488,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				499CB57225BF1B450093BC07 /* ViewController + SearchBar.swift in Sources */,
-				49A8248625C22B5A0007D7D1 /* SearchManager.swift in Sources */,
 				490D348B25BF2CB200E94116 /* ViewController + ResultsUpdate.swift in Sources */,
 				49D9BE9C25BB865C00F59FDC /* MenuCell.swift in Sources */,
 				490D348625BF29D000E94116 /* ItemDetailViewController.swift in Sources */,
 				49993CD825BA14FC00091758 /* AppExtensions.swift in Sources */,
-				49A8248B25C22BF70007D7D1 /* SearchCategoriesWithQuery.swift in Sources */,
 				499D566825BE0E3F00FB2FDE /* CustomDataSource.swift in Sources */,
 				499D567F25BE308800FB2FDE /* WebServiceManager.swift in Sources */,
+				49794B6725C75DBC00D2B2B5 /* ExpandTableViewController.swift in Sources */,
 				490901D025B9257B00E38196 /* SearchResultsController.swift in Sources */,
 				49BC9EF825C64F3F00859AF6 /* ExpandDetailViewController.swift in Sources */,
 				49CA84AD25C5A5740015B125 /* ItemDetailCell.swift in Sources */,
 				490901A025B91DB900E38196 /* ViewController.swift in Sources */,
-				4923AB0A25C0A84200463E80 /* SearchCategories.swift in Sources */,
 				4909019C25B91DB900E38196 /* AppDelegate.swift in Sources */,
 				49993CE525BA54C200091758 /* AppProtocols.swift in Sources */,
 				49993CF025BA5AF900091758 /* AppDataTypes.swift in Sources */,

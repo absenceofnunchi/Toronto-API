@@ -71,23 +71,6 @@ extension ViewController: UISearchBarDelegate {
         let cancelButton = UIBarButtonItem.appearance(whenContainedInInstancesOf: [UISearchBar.self])
         cancelButton.setTitlePositionAdjustment(UIOffset(horizontal: 0, vertical: 5), for: .default)
     }
-
-//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-//        let searchBarStatus: (Bool, Int) = (isTextFieldEmpty: searchText.isEmpty, tokenCount: searchBar.searchTextField.tokens.count)
-//        print(searchBarStatus)
-//        switch searchBarStatus {
-//            case (true, 0):
-//                setToSuggestedSearches()
-//            case (true, 1):
-//                if let searchTokenValue = searchBar.searchTextField.tokens[0].representedObject as? NSNumber {
-//                    if case let suggestedSearch = SearchCategories.allCases[searchTokenValue.intValue], suggestedSearch == .tags {
-//                        searchResultsController.showSuggestedSearches = .additionalSuggest
-//                    }
-//                }
-//            default:
-//                searchResultsController.showSuggestedSearches = .none
-//        }
-//    }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchBar.text!.isEmpty {
@@ -135,18 +118,22 @@ extension ViewController: SuggestedSearch {
         if let searchField = navigationItem.searchController?.searchBar.searchTextField {
             searchField.insertToken(token, at: searchField.tokens.count > 0 ? searchField.tokens.count : 0)
             
-            if let searchTokenValue = token.representedObject as? NSNumber {
-                // if the token is tags, then we need further filtering, so show the additional suggestion
-                if case let suggestedSearch = SearchCategories.allCases[searchTokenValue.intValue], suggestedSearch == .tags {
-//                    searchResultsController.showSuggestedSearches = .additionalSuggest
-                } else {
-                    // Hide the suggested searches now that we have a token.
-                    searchResultsController.showSuggestedSearches = .none
+            if let searchTokenValue = token.representedObject as? SearchCategories {
+                switch searchTokenValue {
+                    case .tags:
+                        searchResultsController.showSuggestedSearches = .additionalSuggest
+                    case .tag(_):
+                        if searchField.tokens.count == 2 {
+                            searchResultsController.showSuggestedSearches = .none
+                        }
+                    case .topics:
+                        searchResultsController.showSuggestedSearches = .additionalSuggest
+                    case .topic(_):
+                        searchResultsController.showSuggestedSearches = .none
+                    default:
+                        searchResultsController.showSuggestedSearches = .none
                 }
-            } else if let _ = token.representedObject as? SearchCategoriesWithQuery, searchField.tokens.count == 2 {
-                searchResultsController.showSuggestedSearches = .none
             }
-            
             // Update the search query with the newly inserted token
             updateSearchResults(for: searchController!)
         }

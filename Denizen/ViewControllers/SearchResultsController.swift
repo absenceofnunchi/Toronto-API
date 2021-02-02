@@ -46,6 +46,8 @@ class SearchResultsController: UITableViewController {
         return suggestedColor
     }
     
+    let searchCategoryArr = [SearchCategories.tags, SearchCategories.packages, SearchCategories.qualityScores, SearchCategories.recentlyChanged, SearchCategories.topics]
+    
     // categories i.e. tags, packages, quality score, etc
     var suggestedSearches: [String] {
         var s = [String]()
@@ -56,8 +58,8 @@ class SearchResultsController: UITableViewController {
                     s.append(fetchedData.title)
                 }
             case .suggested:
-                for category in SearchCategories.allCases {
-                    s.append(NSLocalizedString(category.rawValue, comment: ""))
+                for category in searchCategoryArr {
+                    s.append(NSLocalizedString(category.value, comment: ""))
                 }
         }
         return s
@@ -124,11 +126,13 @@ extension SearchResultsController {
         switch showSuggestedSearches {
             case .suggested:
                 // A suggested search was selected; inform our delegate that the selected search token was selected.
-                let tokenToInsert = searchToken(tokenValue: indexPath.row)
+                let tokenValue = searchCategoryArr[indexPath.row]
+                let tokenToInsert = searchToken(searchCategory: tokenValue, index: indexPath.row)
                 suggestedSearchDelegate.didSelectSuggestedSearch(token: tokenToInsert)
             case .additionalSuggest:
                 let title = fetchedDataArr[indexPath.row].title
-                let tokenToInsert = searchToken(title: title)
+                let searchCategory = fetchedDataArr[indexPath.row].searchCategories
+                let tokenToInsert = searchToken(searchCategory: searchCategory! ,title: title)
                 suggestedSearchDelegate.didSelectSuggestedSearch(token: tokenToInsert)
             case .none:
                 // A product was selected; inform our delgete that a product was selected to view.
@@ -149,13 +153,13 @@ extension SearchResultsController {
                 colorKind = Item.ColorKind.blue
             case 3:
                 colorKind = Item.ColorKind.yellow
+            case 4:
+                colorKind = Item.ColorKind.orange
             default:
                 break
         }
         return colorKind
     }
-    
-
 }
 
 // MARK: - Tokenize
@@ -186,12 +190,32 @@ extension SearchResultsController {
     }
     
     // search token for the additional suggested search
-    func searchToken(title: String) -> UISearchToken {
+    func searchToken(searchCategory: SearchCategories,title: String) -> UISearchToken {
         let tokenColor = SearchResultsController.suggestedColor(fromIndex: 6)
         let image = UIImage(systemName: "circle.fill")?.withTintColor(tokenColor, renderingMode: .alwaysOriginal)
         let searchToken = UISearchToken(icon: image, text: title)
-        let tag = SearchCategoriesWithQuery.tag(title)
-        searchToken.representedObject = tag
+        print("inside", searchCategory)
+        switch searchCategory {
+            case .tags:
+                let tag = SearchCategories.tag(title)
+                searchToken.representedObject = tag
+            case .topics:
+                let topic = SearchCategories.topic(title)
+                searchToken.representedObject = topic
+            default:
+                break
+        }
+        
+        return searchToken
+    }
+    
+    // Search a search token from an input value. This token is for the suggested search.
+    func searchToken(searchCategory: SearchCategories, index: Int) -> UISearchToken {
+        let tokenColor = SearchResultsController.suggestedColor(fromIndex: index)
+        let image = UIImage(systemName: "circle.fill")?.withTintColor(tokenColor, renderingMode: .alwaysOriginal)
+        let searchToken = UISearchToken(icon: image, text: searchCategory.value)
+        
+        searchToken.representedObject = searchCategory
         
         return searchToken
     }

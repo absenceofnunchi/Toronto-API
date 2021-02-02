@@ -81,13 +81,15 @@ extension CustomDataSource {
 extension CustomDataSource {
     func configureInitialData() {
         
-        let recentlyChanged = SearchCategories.recentlyChanged
-        recentlyChanged.fetchAPI(url: recentlyChanged.url, parameters: [.limit:"30"]) { (responseObject, error) in
+        let urlString = URLScheme.baseURL + URLScheme.Subdomain.recentlyChanged
+        let parameters = [Query.Key.limit: "30"]
+        
+        WebServiceManager.shared.sendRequest(urlString: urlString, parameters: parameters) { (responseObject, error) in
             guard let responseObject = responseObject, error == nil else {
                 print(error?.localizedDescription ?? "Unknown error")
                 return
             }
-
+            
             if let result = responseObject["result"] as? [[String: Any]] {
                 result.forEach { (package) in
                     if let data = package["data"] as? [String: Any],
@@ -99,6 +101,25 @@ extension CustomDataSource {
                 }
             }
         }
+            
+            
+//        recentlyChanged.fetchAPI(url: url, parameters: [.limit:"30"]) { (responseObject, error) in
+//            guard let responseObject = responseObject, error == nil else {
+//                print(error?.localizedDescription ?? "Unknown error")
+//                return
+//            }
+//
+//            if let result = responseObject["result"] as? [[String: Any]] {
+//                result.forEach { (package) in
+//                    if let data = package["data"] as? [String: Any],
+//                       let package = data["package"] as? [String: Any],
+//                       let title = package["title"] as? String,
+//                       let id = package["id"] as? String {
+//                        self.data.append(RecentlyChanged(title: title, id: id))
+//                    }
+//                }
+//            }
+//        }
 //        WebServiceManager.shared.sendRequest(subdomain: Subdomain.recentlyChanged, parameters: parameters) { (responseObject, error) in
 //            guard let responseObject = responseObject, error == nil else {
 //                print(error?.localizedDescription ?? "Unknown error")
