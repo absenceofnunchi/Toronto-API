@@ -310,18 +310,31 @@
 //        DispatchQueue.main.async(execute: collectionView.reloadData)
 //    }
 //}
-//
-//// MARK: - API request
-//extension ViewController {
-//    /// Create an API request
-//    /// - Parameter None
-//    /// - Throws None
-//    /// - Returns Void
-//    /// - Create an API request to the Catalogue Quality Scores
+
+
+//https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/package_search?fq=civic_issues:"Poverty reduction"+dataset_category:"Document"
+
+//https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/package_search?fq=state:%22active%22%20AND%20civic_issues:%22Poverty%20reduction%22
+//https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/package_search?fq=tags:%22aboriginal%22%20AND%20civic_issues:%22Poverty%20reduction%22
+//https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/package_search?fq=filter(state:%22active%22)+filter(civic_issues:%22Poverty%20reduction%22)
+//https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/package_search?fq=name:%22solid-waste-management-services-transfer-station-location+dataset_category:%22Document%22
+//https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/package_search?fq=civic_issues:%22Poverty%20reduction%22+dataset_category:%22Document%22
 //https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/resource_search?query=name:aboriginal
 //https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/package_search?fq=tags:economy
 // https:/ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/package_show?id=7e038ff9-b616-4070-9753-6f493b2cdbb0
 //https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/package_search?q=59de0a7d-86d0-40a3-80b8-75d213e902ab
+// this provides the list of civic issues
+//https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/package_search?facet.field=[%22civic_issues%22]&rows=0
+// individual civic issue
+// https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/package_search?fq=civic_issues:%22Poverty%20reduction%22
+// mlutiple queries
+// https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/package_search?q=Environment,poverty
+// mapJson, the ID is from https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/package_show?id=a154790c-4a8a-4d09-ab6b-535ddb646770 search and
+// from the "resources" key's "id"
+//https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/datastore_search?id=e25e9460-a0e8-469c-b9fb-9a4837ac6c1c
+// metadata modified desc
+// https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/package_search?q=Environment,poverty&sort=metadata_modified%20desc
+
 //    /// https://open.toronto.ca/dataset/catalogue-quality-scores/
 //    func configureAPIRequest(offsetBy: Int = 0) {
 //        //        let urlString = "https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/datastore_search?id=7b2830a7-1483-451f-8681-ef4942eedc34"

@@ -34,7 +34,6 @@ extension ViewController: UISearchResultsUpdating {
                 print("searchTokenValue", searchTokenValue)
                 fetchAndParse(suggestedSearch: searchTokenValue)
             }
-            
         }else {
             // now that we have the list from the selected token, we can further filter the list
             var filtered = suggestArray
@@ -58,14 +57,19 @@ extension ViewController: UISearchResultsUpdating {
         }
     }
     
+    // 1. .suggested: .tags -> .additionalSuggest
+    // 2. .additionalSuggest: tag(title) -> .none
+    // 3. .none: didSelectItem -> ItemDetail
+    
     // MARK:- fetchAndParse
     
     func fetchAndParse(suggestedSearch: SearchCategories) {
         navigationController?.activityStartAnimating(activityColor: UIColor.darkGray, backgroundColor: UIColor(red: 211/255, green: 211/255, blue: 211/255, alpha: 0.5))
+        self.suggestArray.removeAll()
         
         var urlString: String!
         var parameters: [String: String]!
-        
+
         switch suggestedSearch {
             case .tags:
                 urlString = URLScheme.baseURL + URLScheme.Subdomain.tags
@@ -82,25 +86,29 @@ extension ViewController: UISearchResultsUpdating {
             case .tag(let title):
                 urlString = URLScheme.baseURL + Query.ActionType.packageSearch
                 parameters = [Query.Key.fq: Query.Filter.tags + ":" + title]
+                
                 fetchAPI(urlString: urlString, parameters: parameters, suggestedSearch: suggestedSearch)
             case .topics:
-                let topics = ["Finance", "Health", "Culture and tourism", "Environment", "Business", "Parks and recreation", "Permits and Licenses", "Water", "Garbage and recycling"]
-                
-                let fetchedDataArr = topics.map { FetchedData(title: $0, searchCategories: suggestedSearch)}
-                self.suggestArray += fetchedDataArr
-                loadSearchControllerData(with: fetchedDataArr)
-                self.searchResultsController.showSuggestedSearches = .additionalSuggest
+                urlString = URLScheme.baseURL + Query.ActionType.packageSearch
+                parameters = [Query.Key.facetField: "[\u{22}topics\u{22}]"]
+//                parameters = [Query.Key.facetField: "[\u{22}topics\u{22}]", Query.Key.rows: "0"]
+                fetchAPI(urlString: urlString, parameters: parameters, suggestedSearch: suggestedSearch)
             case .topic(let title):
                 urlString = URLScheme.baseURL + Query.ActionType.packageSearch
                 parameters = [Query.Key.q: title]
                 fetchAPI(urlString: urlString, parameters: parameters, suggestedSearch: suggestedSearch)
+            case .civicIssues:
+                urlString = URLScheme.baseURL + Query.ActionType.packageSearch
+//                parameters = [Query.Key.facetField: "[\u{22}civic_issues\u{22}]", Query.Key.rows: "0"]
+                parameters = [Query.Key.facetField: "[\u{22}civic_issues\u{22}]"]
+                fetchAPI(urlString: urlString, parameters: parameters, filters: filters, suggestedSearch: suggestedSearch)
             default:
                 break
         }
     }
     
-    func fetchAPI(urlString: String, parameters: [String: String]?, suggestedSearch: SearchCategories) {
-        WebServiceManager.shared.sendRequest(urlString: urlString, parameters: parameters) { (responseObject, error) in
+    func fetchAPI(urlString: String, parameters: [String: String]?, filters: [Filter]? = nil, suggestedSearch: SearchCategories) {
+        WebServiceManager.shared.sendRequest(urlString: urlString, parameters: parameters, filters: filters) { (responseObject, error) in
             guard let responseObject = responseObject, error == nil else {
                 print("fetch and parse error",error?.localizedDescription ?? "Unknown error")
                 self.showAlertController(error: error)
@@ -160,6 +168,28 @@ extension ViewController: UISearchResultsUpdating {
                         }
                         self.loadSearchControllerData(with: self.suggestArray)
                     }
+                case .topics:
+                    if let result = responseObject["result"] as? [String: Any], let facets = result["facets"] as? [String: Any], let topics = facets["topics"] as? [String: Any] {
+                        topics.forEach { (item) in
+                            let fetchedData = FetchedData(title: item.key, searchCategories: suggestedSearch, parameters: [Query.Key.fq: "topics:" + "\"" + item.key + "\""])
+                            self.suggestArray.append(fetchedData)
+                        }
+                    }
+                    self.loadSearchControllerData(with: self.suggestArray)
+                    
+                    // when the token is deleted by backspace, the no row is selected, which means there is no change for the showSuggestedSearches to be toggled.
+                    DispatchQueue.main.async {
+                        self.searchResultsController.showSuggestedSearches = .additionalSuggest
+                    }
+                case .civicIssues:
+                    
+                    if let result = responseObject["result"] as? [String: Any], let facets = result["facets"] as? [String: Any], let civicIssues = facets["civic_issues"] as? [String: Any] {
+                        civicIssues.forEach { (item) in
+                            let fetchedData = FetchedData(title: item.key, searchCategories: suggestedSearch, parameters: [Query.Key.fq: "civic_issues:" + "\"" + item.key + "\""])
+                            self.suggestArray.append(fetchedData)
+                        }
+                    }
+                    self.loadSearchControllerData(with: self.suggestArray)
                 default:
                     break
             }
@@ -169,8 +199,8 @@ extension ViewController: UISearchResultsUpdating {
     // MARK: - Alert controller
     
     func showAlertController(error: Error?) {
-        navigationController?.activityStopAnimating()
         DispatchQueue.main.async {
+            self.navigationController?.activityStopAnimating()
             let alertController = UIAlertController(title: "Network Error", message: error?.localizedDescription ?? "Unknown Error", preferredStyle: .alert)
             alertController.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (_) in
                 if let searchField = self.navigationItem.searchController?.searchBar.searchTextField {

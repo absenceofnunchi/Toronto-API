@@ -4,6 +4,11 @@
 //
 //  Created by J C on 2021-01-25.
 //
+/*
+ Abstract:
+ SearchResultsController passes a value through a token to ViewController and ViewController passes the fetched data from API to ItemDetailViewController.
+ ItemDetailViewController displays the data and also pushes additional view controllers (ExpandDetail or ExpandTable) for details
+ */
 
 import UIKit
 import SwiftyJSON
@@ -36,13 +41,16 @@ class ItemDetailViewController: UITableViewController {
     }
 }
 
+// MARK: - fetchAPI
+
 extension ItemDetailViewController {
     // tag: https:/ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/package_show?id=7e038ff9-b616-4070-9753-6f493b2cdbb0
     // package: https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/package_search?fq=name:solid-waste-management-services-transfer-station-locations
+    // topic(): https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/package_show
+    // civic: https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/package_search?fq=civic_issues:%22Poverty%20reduction%22
     func fetchAPI() {
         navigationController?.activityStartAnimating(activityColor: UIColor.darkGray, backgroundColor: UIColor(red: 211/255, green: 211/255, blue: 211/255, alpha: 0.5))
         
-        print("fetchedData", fetchedData)
         var urlString: String!
         var parameters = [String: String]()
         if let params = fetchedData.parameters {
@@ -52,15 +60,14 @@ extension ItemDetailViewController {
         }
         
         switch fetchedData.searchCategories {
-            case .tag(_), .qualityScores, .recentlyChanged:
+            case .tag(_), .qualityScores, .recentlyChanged, .topic(_):
                 urlString = URLScheme.baseURL + Query.ActionType.packageShow
-            case .packages, .topic(_):
+            case .packages, .civicIssues:
                 urlString = URLScheme.baseURL + Query.ActionType.packageSearch
             default:
                 break
         }
         
-        print("urlstring", urlString)
         WebServiceManager.shared.sendRequest(urlString: urlString, parameters: parameters) { (responseObject, error) in
             if let error = error {
                 DispatchQueue.main.async {
@@ -74,7 +81,6 @@ extension ItemDetailViewController {
             }
 
             if let responseObject = responseObject {
-                print("response", responseObject)
                 let json = JSON(responseObject as [String: Any])
                 let myDictionary = self.json2dic(json)
                 if let result = myDictionary["result"] as? [String: AnyObject] {
@@ -97,44 +103,6 @@ extension ItemDetailViewController {
             }
         }
     }
-        
-        
-//        WebServiceManager.shared.sendRequest(urlString: URLScheme.baseURL + ActionType.packageShow.rawValue, parameters: [QueryKey.id: fetchedData.queryValue ?? ""]) { (responseObject, error) in
-//            if let error = error {
-//                DispatchQueue.main.async {
-//                    self.navigationController?.activityStopAnimating()
-//                    let alertController = UIAlertController(title: "Network Error", message: error.localizedDescription , preferredStyle: .alert)
-//                    alertController.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (_) in
-//                        self.navigationController?.popViewController(animated: true)
-//                    }))
-//                    self.present(alertController, animated: true, completion: nil)
-//                }
-//            }
-//
-//            if let responseObject = responseObject {
-//                print("response", responseObject)
-//                let json = JSON(responseObject as [String: Any])
-//                let myDictionary = self.json2dic(json)
-//                if let result = myDictionary["result"] as? [String: AnyObject] {
-//                    let resultArr = result.map { $0 }.sorted { $0.key < $1.key }
-//                    self.data.append(contentsOf: resultArr)
-//                    DispatchQueue.main.async {
-//                        self.navigationController?.activityStopAnimating()
-//                        self.tableView.reloadData()
-//                    }
-//                }
-//            } else {
-//                DispatchQueue.main.async {
-//                    self.navigationController?.activityStopAnimating()
-//                    let alertController = UIAlertController(title: "No Data", message: nil, preferredStyle: .alert)
-//                    alertController.addAction(UIAlertAction(title: "Go Back", style: .default, handler: { (_) in
-//                        self.navigationController?.popViewController(animated: true)
-//                    }))
-//                    self.present(alertController, animated: true, completion: nil)
-//                }
-//            }
-//        }
-//    }
     
     func json2dic(_ j: JSON) -> [String:AnyObject] {
         var post = [String:AnyObject]()
@@ -147,6 +115,8 @@ extension ItemDetailViewController {
         return post
     }
 }
+
+// MARK: - Datasource
 
 extension ItemDetailViewController {
     
@@ -246,7 +216,7 @@ extension ItemDetailViewController {
         
         
         let itemInfo = ItemInfo(header: header, body: body, dict: detailDict, itemInfoType: itemInfoType)
-
+        
         if itemInfoType == .dict {
             let expandTableVC = ExpandTableViewController()
             expandTableVC.itemInfo = itemInfo

@@ -24,7 +24,9 @@ class ViewController: UIViewController {
     var searchController: UISearchController!
     var searchResultsController: SearchResultsController!
     var suggestArray = [FetchedData]()
-
+    var optionsBarItem: UIBarButtonItem!
+    var filters = [Filter]()
+    
     private var collectionView: UICollectionView! = nil
     private var layoutType: Int = 1
     private let dataSource = CustomDataSource()
@@ -37,8 +39,9 @@ class ViewController: UIViewController {
         super.viewDidLoad()
 //        view.backgroundColor = UIColor(red: (247/255), green: (247/255), blue: (247/255), alpha: 1)
         
+        configureOptionsBar()
         configureHierarchy()
-        configureNavigationController()
+//        configureNavigationController()
         configureSearchController()
         configureSearchBar()
         configureCellRegister()
@@ -152,7 +155,7 @@ extension ViewController {
     /// - Creates a collection view and adds it to the main view as a subview
     func configureHierarchy() {
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createLayout(with: layoutType))
-        collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.backgroundColor = .systemBackground
         collectionView.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 0, right: 0)
         collectionView.delegate = dataSource
@@ -160,6 +163,13 @@ extension ViewController {
         collectionView.prefetchDataSource = dataSource
         collectionView.isPrefetchingEnabled = true
         view.addSubview(collectionView)
+        
+        NSLayoutConstraint.activate([
+            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50),
+            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+        ])
     }
 }
 
@@ -171,3 +181,7 @@ extension ViewController {
         collectionView.register(TitleSupplementaryView.self, forSupplementaryViewOfKind: ViewController.sectionHeaderElementKind, withReuseIdentifier: Cell.supplementaryCell)
     }
 }
+
+
+// filters
+// topics, civic_issues, owner_division (Publisher), refresh_rate, formats (Format), dataset_category (Type), last_refreshed (order)

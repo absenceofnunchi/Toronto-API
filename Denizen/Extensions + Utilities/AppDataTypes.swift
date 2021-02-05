@@ -14,6 +14,7 @@ struct Cell {
     static var menuCell = "menu-cell-reuse-identifier"
     static var supplementaryCell = "title-supplementary-reuse-identifier"
     static var itemDetailCell = "item-detail-cell-identifier"
+    static var filterCell = "filter-cell.identifier"
 }
 
 // MARK: - URL
@@ -51,6 +52,9 @@ struct Query: Hashable {
         static var limit = "limit"
         static var fq = "fq"
         static var q = "q"
+        static var facetField = "facet.field"
+        static var rows = "rows"
+        static var sort = "sort"
     }
     
     struct Filter {
@@ -101,7 +105,6 @@ struct FetchedData {
     let title: String
     var searchCategories: SearchCategories? = nil
     var parameters: [String: String]? = nil
-    var queryValue: String? = nil
 }
 
 enum SearchState {
@@ -150,7 +153,7 @@ class PaddedLabel: UILabel {
 // MARK: - SearchCategories
 /// SearchResultsController, WebServiceManager
 enum SearchCategories: Equatable {
-    case tags, packages, recentlyChanged, qualityScores, tagPackageShow, topics
+    case tags, packages, recentlyChanged, qualityScores, tagPackageShow, topics, civicIssues
     case tag(String), topic(String)
     
     var value: String {
@@ -171,6 +174,57 @@ enum SearchCategories: Equatable {
                 return title
             case .topic(let title):
                 return title
+            case .civicIssues:
+                return "Civic Issues"
+        }
+    }
+}
+
+// MARK: - Filter
+
+class Filter {
+    var title: FilterType!
+    var setting: String!
+    var url: String? {
+        if setting == "All" {
+            // no need for a parameter if it's default
+            return nil
+        } else {
+            if title == .orderBy {
+                return title.facet + "=" + setting
+            } else {
+                return title.facet + ":" + "\"" + setting + "\""
+            }
+        }
+    }
+    
+    init(title: FilterType, setting: String) {
+        self.title = title
+        self.setting = setting
+    }
+}
+
+// MARK: - Filter Type
+
+enum FilterType: String, CaseIterable {
+    case publisher = "Publisher"
+    case refreshRate = "Refresh Rate"
+    case format = "Format"
+    case type = "Type"
+    case orderBy = "Order By"
+    
+    var facet: String {
+        switch self {
+            case .publisher:
+                return "owner_division"
+            case .refreshRate:
+                return "refresh_rate"
+            case .format:
+                return "formats"
+            case .type:
+                return "dataset_category"
+            case .orderBy:
+                return "sort"
         }
     }
 }

@@ -18,6 +18,9 @@
 		490901D025B9257B00E38196 /* SearchResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490901CF25B9257B00E38196 /* SearchResultsController.swift */; };
 		490D348625BF29D000E94116 /* ItemDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490D348525BF29D000E94116 /* ItemDetailViewController.swift */; };
 		490D348B25BF2CB200E94116 /* ViewController + ResultsUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490D348A25BF2CB200E94116 /* ViewController + ResultsUpdate.swift */; };
+		490D4CDA25CA33E3008D9015 /* ViewController + OptionsBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490D4CD925CA33E3008D9015 /* ViewController + OptionsBar.swift */; };
+		490D4CEF25CA3F32008D9015 /* FilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490D4CEE25CA3F32008D9015 /* FilterViewController.swift */; };
+		490D4CF425CA607D008D9015 /* FilterSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490D4CF325CA607D008D9015 /* FilterSettingsTableViewController.swift */; };
 		4918476325BCF0AE006AC15C /* TitleSupplementaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4918476225BCF0AE006AC15C /* TitleSupplementaryView.swift */; };
 		49794B6725C75DBC00D2B2B5 /* ExpandTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49794B6625C75DBC00D2B2B5 /* ExpandTableViewController.swift */; };
 		49993CD825BA14FC00091758 /* AppExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49993CD725BA14FC00091758 /* AppExtensions.swift */; };
@@ -72,6 +75,9 @@
 		490901CF25B9257B00E38196 /* SearchResultsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsController.swift; sourceTree = "<group>"; };
 		490D348525BF29D000E94116 /* ItemDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailViewController.swift; sourceTree = "<group>"; };
 		490D348A25BF2CB200E94116 /* ViewController + ResultsUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController + ResultsUpdate.swift"; sourceTree = "<group>"; };
+		490D4CD925CA33E3008D9015 /* ViewController + OptionsBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController + OptionsBar.swift"; sourceTree = "<group>"; };
+		490D4CEE25CA3F32008D9015 /* FilterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterViewController.swift; sourceTree = "<group>"; };
+		490D4CF325CA607D008D9015 /* FilterSettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterSettingsTableViewController.swift; sourceTree = "<group>"; };
 		4918476225BCF0AE006AC15C /* TitleSupplementaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleSupplementaryView.swift; sourceTree = "<group>"; };
 		49794B6625C75DBC00D2B2B5 /* ExpandTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandTableViewController.swift; sourceTree = "<group>"; };
 		49993CD725BA14FC00091758 /* AppExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppExtensions.swift; sourceTree = "<group>"; };
@@ -216,12 +222,15 @@
 			isa = PBXGroup;
 			children = (
 				4909019F25B91DB900E38196 /* ViewController.swift */,
+				490D4CD925CA33E3008D9015 /* ViewController + OptionsBar.swift */,
 				499CB57125BF1B450093BC07 /* ViewController + SearchBar.swift */,
 				490D348A25BF2CB200E94116 /* ViewController + ResultsUpdate.swift */,
 				490901CF25B9257B00E38196 /* SearchResultsController.swift */,
 				490D348525BF29D000E94116 /* ItemDetailViewController.swift */,
 				49BC9EF725C64F3F00859AF6 /* ExpandDetailViewController.swift */,
 				49794B6625C75DBC00D2B2B5 /* ExpandTableViewController.swift */,
+				490D4CEE25CA3F32008D9015 /* FilterViewController.swift */,
+				490D4CF325CA607D008D9015 /* FilterSettingsTableViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -493,13 +502,16 @@
 				490D348625BF29D000E94116 /* ItemDetailViewController.swift in Sources */,
 				49993CD825BA14FC00091758 /* AppExtensions.swift in Sources */,
 				499D566825BE0E3F00FB2FDE /* CustomDataSource.swift in Sources */,
+				490D4CDA25CA33E3008D9015 /* ViewController + OptionsBar.swift in Sources */,
 				499D567F25BE308800FB2FDE /* WebServiceManager.swift in Sources */,
 				49794B6725C75DBC00D2B2B5 /* ExpandTableViewController.swift in Sources */,
+				490D4CF425CA607D008D9015 /* FilterSettingsTableViewController.swift in Sources */,
 				490901D025B9257B00E38196 /* SearchResultsController.swift in Sources */,
 				49BC9EF825C64F3F00859AF6 /* ExpandDetailViewController.swift in Sources */,
 				49CA84AD25C5A5740015B125 /* ItemDetailCell.swift in Sources */,
 				490901A025B91DB900E38196 /* ViewController.swift in Sources */,
 				4909019C25B91DB900E38196 /* AppDelegate.swift in Sources */,
+				490D4CEF25CA3F32008D9015 /* FilterViewController.swift in Sources */,
 				49993CE525BA54C200091758 /* AppProtocols.swift in Sources */,
 				49993CF025BA5AF900091758 /* AppDataTypes.swift in Sources */,
 				4909019E25B91DB900E38196 /* SceneDelegate.swift in Sources */,

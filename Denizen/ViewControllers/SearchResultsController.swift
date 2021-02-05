@@ -46,7 +46,7 @@ class SearchResultsController: UITableViewController {
         return suggestedColor
     }
     
-    let searchCategoryArr = [SearchCategories.tags, SearchCategories.packages, SearchCategories.qualityScores, SearchCategories.recentlyChanged, SearchCategories.topics]
+    let searchCategoryArr = [SearchCategories.tags, SearchCategories.packages, SearchCategories.qualityScores, SearchCategories.recentlyChanged, SearchCategories.topics, SearchCategories.civicIssues]
     
     // categories i.e. tags, packages, quality score, etc
     var suggestedSearches: [String] {
@@ -100,7 +100,7 @@ extension SearchResultsController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Cell.searchResultCell)!
-        
+
         switch showSuggestedSearches {
             case .suggested:
                 let suggestedTitle = NSMutableAttributedString(string: suggestedSearches[indexPath.row])
@@ -176,25 +176,24 @@ extension SearchResultsController {
         return suggestedSearches[fromIndex]
     }
     
-    // Search a search token from an input value. This token is for the suggested search.
-    func searchToken(tokenValue: Int) -> UISearchToken {
-        let tokenColor = SearchResultsController.suggestedColor(fromIndex: tokenValue)
-        let image = UIImage(systemName: "circle.fill")?.withTintColor(tokenColor, renderingMode: .alwaysOriginal)
-        let searchToken = UISearchToken(icon: image, text: suggestedTitle(fromIndex: tokenValue))
-        
-        // Set the color kind number as the token value.
-//        let color = SearchResultsController.colorKind(fromIndex: tokenValue).rawValue
-        searchToken.representedObject = NSNumber(value: tokenValue)
-        
-        return searchToken
-    }
+//    // Search a search token from an input value. This token is for the suggested search.
+//    func searchToken(tokenValue: Int) -> UISearchToken {
+//        let tokenColor = SearchResultsController.suggestedColor(fromIndex: tokenValue)
+//        let image = UIImage(systemName: "circle.fill")?.withTintColor(tokenColor, renderingMode: .alwaysOriginal)
+//        let searchToken = UISearchToken(icon: image, text: suggestedTitle(fromIndex: tokenValue))
+//
+//        // Set the color kind number as the token value.
+////        let color = SearchResultsController.colorKind(fromIndex: tokenValue).rawValue
+//        searchToken.representedObject = NSNumber(value: tokenValue)
+//
+//        return searchToken
+//    }
     
     // search token for the additional suggested search
     func searchToken(searchCategory: SearchCategories,title: String) -> UISearchToken {
         let tokenColor = SearchResultsController.suggestedColor(fromIndex: 6)
         let image = UIImage(systemName: "circle.fill")?.withTintColor(tokenColor, renderingMode: .alwaysOriginal)
         let searchToken = UISearchToken(icon: image, text: title)
-        print("inside", searchCategory)
         switch searchCategory {
             case .tags:
                 let tag = SearchCategories.tag(title)
@@ -214,7 +213,7 @@ extension SearchResultsController {
         let tokenColor = SearchResultsController.suggestedColor(fromIndex: index)
         let image = UIImage(systemName: "circle.fill")?.withTintColor(tokenColor, renderingMode: .alwaysOriginal)
         let searchToken = UISearchToken(icon: image, text: searchCategory.value)
-        
+
         searchToken.representedObject = searchCategory
         
         return searchToken

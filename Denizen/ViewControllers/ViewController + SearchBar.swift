@@ -67,15 +67,29 @@ extension ViewController: UISearchBarDelegate {
         searchTextField.layer.borderColor = UIColor(red: 224/255, green: 224/255, blue: 224/255, alpha: 1).cgColor
         searchTextField.frame = CGRect(origin: .zero, size: size)
         
+        let filterButton = UIButton.systemButton(with: UIImage(systemName: "line.horizontal.3.decrease.circle")!, target: self, action: #selector(leftViewButtonHandler))
+        filterButton.frame = CGRect(x: 0, y: 0, width: 50, height: searchTextField.frame.height)
+        filterButton.backgroundColor = .clear
+        searchTextField.leftView = filterButton
+        searchTextField.leftViewMode = .always
+        
         // cancel button location adjustment
         let cancelButton = UIBarButtonItem.appearance(whenContainedInInstancesOf: [UISearchBar.self])
         cancelButton.setTitlePositionAdjustment(UIOffset(horizontal: 0, vertical: 5), for: .default)
     }
     
+    @objc func leftViewButtonHandler() {
+//        let text = searchController.searchBar.searchTextField.text
+        let filterViewController = FilterViewController(style: .insetGrouped)
+        filterViewController.delegate = self
+        let navController = UINavigationController(rootViewController: filterViewController)
+        self.present(navController, animated: true, completion: nil)
+    }
+    
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchBar.text!.isEmpty {
             setToSuggestedSearches()
-        } else {
+        } else if searchBar.searchTextField.tokens.isEmpty {
             searchResultsController.showSuggestedSearches = .none
         }
     }
@@ -117,6 +131,7 @@ extension ViewController: SuggestedSearch {
     func didSelectSuggestedSearch(token: UISearchToken) {
         if let searchField = navigationItem.searchController?.searchBar.searchTextField {
             searchField.insertToken(token, at: searchField.tokens.count > 0 ? searchField.tokens.count : 0)
+            searchField.text = ""
             
             if let searchTokenValue = token.representedObject as? SearchCategories {
                 switch searchTokenValue {
@@ -145,5 +160,19 @@ extension ViewController: SuggestedSearch {
         let itemDetailVC = ItemDetailViewController()
         itemDetailVC.fetchedData = fetchedData
         navigationController?.pushViewController(itemDetailVC, animated: true)
+    }
+}
+
+// MARK: - Left view delegate
+
+extension ViewController: LeftViewDelegate {
+    func didApplyFilter(with filters: [Filter]) {
+        // add the newly acquired filters to the filters array property
+        filters.forEach { self.filters.append($0) }
+        
+        // run the search depending on what is present in the search field
+        if let searchField = navigationItem.searchController?.searchBar.searchTextField, searchField.tokens.count > 0 {
+            updateSearchResults(for: searchController!)
+        }
     }
 }
