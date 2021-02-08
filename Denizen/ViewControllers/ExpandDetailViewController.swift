@@ -42,6 +42,8 @@ class ExpandDetailViewController: UIViewController {
         view.backgroundColor = .systemBackground
         
         configure()
+        
+        print("expand detail")
     }
 }
 
@@ -76,6 +78,7 @@ extension ExpandDetailViewController {
             case .textViewOnly, .noType:
                 textView.text = itemInfo.body
                 textView.layer.cornerRadius = 10
+                textView.dataDetectorTypes = .link
                 view.addSubview(textView)
                 
                 NSLayoutConstraint.activate([
@@ -94,9 +97,7 @@ extension ExpandDetailViewController {
                     view.addSubview(stackView)
 
                     for (key, value) in dict {
-                        print("key", key)
-                        print("value", value)
-                        
+
                         label.text = key
                         
                         if let text = value as? String {

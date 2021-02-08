@@ -14,7 +14,8 @@ struct Cell {
     static var menuCell = "menu-cell-reuse-identifier"
     static var supplementaryCell = "title-supplementary-reuse-identifier"
     static var itemDetailCell = "item-detail-cell-identifier"
-    static var filterCell = "filter-cell.identifier"
+    static var filterCell = "filter-cell-identifier"
+    static var mapDetailCell = "map-detail-cell-identifier"
 }
 
 // MARK: - URL
@@ -191,7 +192,7 @@ class Filter {
             return nil
         } else {
             if title == .orderBy {
-                return title.facet + "=" + setting
+                return setting
             } else {
                 return title.facet + ":" + "\"" + setting + "\""
             }

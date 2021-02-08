@@ -103,17 +103,6 @@ extension ItemDetailViewController {
             }
         }
     }
-    
-    func json2dic(_ j: JSON) -> [String:AnyObject] {
-        var post = [String:AnyObject]()
-        for (key, object) in j {
-            post[key] = object.stringValue as AnyObject
-            if object.stringValue == "" {
-                post[key] = json2dic(object) as AnyObject
-            }
-        }
-        return post
-    }
 }
 
 // MARK: - Datasource

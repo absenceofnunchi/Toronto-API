@@ -12,14 +12,19 @@ class FilterViewController: UITableViewController {
     // topics, civic_issues, owner_division (Publisher), refresh_rate, formats (Format), dataset_category (Type), last_refreshed (order)
 
     weak var delegate: LeftViewDelegate?
-    var filters: [Filter] = {
+    let defaults = UserDefaults.standard
+    lazy var filters: [Filter] = {
         var data = [Filter]()
+        
         for filter in FilterType.allCases {
-            data.append(Filter(title: filter, setting: NSLocalizedString("All", comment: "")))
+            if let savedFilter = defaults.string(forKey: filter.rawValue) {
+                data.append(Filter(title: filter, setting: NSLocalizedString(savedFilter, comment: "")))
+            } else {
+                data.append(Filter(title: filter, setting: NSLocalizedString("All", comment: "")))
+            }
         }
         return data
     }()
-    
     
     override init(style: UITableView.Style) {
         super.init(style: style)
@@ -34,28 +39,54 @@ class FilterViewController: UITableViewController {
         
         title = "Filters"
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: Cell.filterCell)
-        configureNavigationItem()
+        self.navigationController?.presentationController?.delegate = self
+        
+        configureRightBarItem()
+        configureLeftBarItem()
     }
 }
 
 // MARK: - configureNavigationItem
 
 extension FilterViewController {
-    func configureNavigationItem() {
+    func configureRightBarItem() {
         let applyButton = UIButton(frame: CGRect(origin: .zero, size: CGSize(width: 80, height: 40)))
         applyButton.setTitle("Apply", for: .normal)
         applyButton.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
         applyButton.backgroundColor = .black
         applyButton.clipsToBounds = true
         applyButton.layer.cornerRadius = 10
+        applyButton.tag = 1
         
         let rightBarButton = UIBarButtonItem(customView: applyButton)
         self.navigationItem.rightBarButtonItem = rightBarButton
     }
     
+    func configureLeftBarItem() {
+        let leftBarButton = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector((buttonPressed)))
+        leftBarButton.tintColor = .black
+        leftBarButton.tag = 2
+        self.navigationItem.leftBarButtonItem = leftBarButton
+    }
+    
     @objc func buttonPressed(_ sender: UIButton) {
-        delegate?.didApplyFilter(with: filters)
-        dismiss(animated: true, completion: nil)
+        switch sender.tag {
+            case 1:
+                delegate?.didApplyFilter(with: filters)
+                dismiss(animated: true, completion: nil)
+            case 2:
+                for filter in FilterType.allCases {
+                    defaults.removeObject(forKey: filter.rawValue)
+                }
+                
+                filters.removeAll()
+                for filter in FilterType.allCases {
+                    filters.append(Filter(title: filter, setting: NSLocalizedString("All", comment: "")))
+                }
+                tableView.reloadData()
+            default:
+                break
+        }
     }
 }
 
@@ -101,7 +132,16 @@ extension FilterViewController: FilterDelegate {
     func didSelectFilter(selectedFilter: Filter, setting: String) {
         for case let filter in filters where filter.title == selectedFilter.title {
             filter.setting = setting
+            defaults.set(filter.setting, forKey: filter.title.rawValue)
             tableView.reloadData()
         }
+    }
+}
+
+// MARK: - UIAdaptivePresentationControllerDelegate
+
+extension FilterViewController: UIAdaptivePresentationControllerDelegate {
+    func presentationControllerWillDismiss(_ presentationController: UIPresentationController) {
+        delegate?.didApplyFilter(with: filters)
     }
 }

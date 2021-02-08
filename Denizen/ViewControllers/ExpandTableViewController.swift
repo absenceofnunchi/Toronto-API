@@ -10,6 +10,7 @@ import UIKit
 class ExpandTableViewController: UITableViewController {
     var itemInfo: ItemInfo!
     var data: [(String, AnyObject)]!
+    var resourceId: String!
     
     override func loadView() {
         super.loadView()
@@ -18,6 +19,8 @@ class ExpandTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        title = "Resource Detail"
         
         configure()
     }
@@ -89,7 +92,19 @@ extension ExpandTableViewController {
                 }
             }
         } else {
-            cell.textLabel?.text = detail.1 as? String
+            let text = detail.1 as? String
+            cell.textLabel?.text = text
+            
+            if text == "GeoJSON" {
+                for (key, value) in data {
+                    if key == "id" {
+                        if let resourceId = value as? String {
+                            self.resourceId = resourceId
+                            configureNavigationItem()
+                        }
+                    }
+                }
+            }
         }
         return cell
     }
@@ -137,5 +152,19 @@ extension ExpandTableViewController {
             expandDetailVC.itemInfo = itemInfo
             navigationController?.pushViewController(expandDetailVC, animated: true)
         }
+    }
+}
+
+extension ExpandTableViewController {
+    func configureNavigationItem() {
+        let rightBarButton = UIBarButtonItem(image: UIImage(systemName: "map"), style: .plain, target: self, action: #selector(barButtonHandler))
+        rightBarButton.tintColor = .systemGreen
+        self.navigationItem.rightBarButtonItem = rightBarButton
+    }
+    
+    @objc func barButtonHandler() {
+        let mapVC = MapViewController()
+        mapVC.resourceId = self.resourceId
+        self.navigationController?.pushViewController(mapVC, animated: true)
     }
 }

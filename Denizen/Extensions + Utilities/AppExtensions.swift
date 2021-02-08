@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftyJSON
 
 // MARK: - UIView
 
@@ -65,6 +66,17 @@ extension UIViewController {
                 }
             }
         }
+    }
+    
+    func json2dic(_ j: JSON) -> [String:AnyObject] {
+        var post = [String:AnyObject]()
+        for (key, object) in j {
+            post[key] = object.stringValue as AnyObject
+            if object.stringValue == "" {
+                post[key] = json2dic(object) as AnyObject
+            }
+        }
+        return post
     }
 }
 
@@ -139,4 +151,13 @@ extension UITableViewController {
         cell.imageView?.image = nil
     }
     
+}
+
+
+extension String {
+    func slice(from: String, to: String) -> String? {
+        guard let rangeFrom = range(of: from)?.upperBound else { return nil }
+        guard let rangeTo = self[rangeFrom...].range(of: to)?.lowerBound else { return nil }
+        return String(self[rangeFrom..<rangeTo])
+    }
 }

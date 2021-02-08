@@ -168,11 +168,17 @@ extension ViewController: SuggestedSearch {
 extension ViewController: LeftViewDelegate {
     func didApplyFilter(with filters: [Filter]) {
         // add the newly acquired filters to the filters array property
+        if self.filters.count > 0 {
+            self.filters.removeAll()
+        }
+        
         filters.forEach { self.filters.append($0) }
         
         // run the search depending on what is present in the search field
         if let searchField = navigationItem.searchController?.searchBar.searchTextField, searchField.tokens.count > 0 {
             updateSearchResults(for: searchController!)
         }
+        
+        searchResultsController.updateFilterButton()
     }
 }

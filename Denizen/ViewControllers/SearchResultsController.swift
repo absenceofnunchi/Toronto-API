@@ -20,6 +20,7 @@ class SearchResultsController: UITableViewController {
     
     var fetchedDataArr: [FetchedData]!
     weak var suggestedSearchDelegate: SuggestedSearch?
+    let defaults = UserDefaults.standard
     
     // colors for the tokens
     class func suggestedColor(fromIndex: Int) -> UIColor {
@@ -65,14 +66,61 @@ class SearchResultsController: UITableViewController {
         return s
     }
     
+    lazy var filterButton: UIButton = {
+        let filterButton = UIButton.systemButton(with: UIImage(systemName: "info.circle")!, target: self, action: #selector(filterButtonHandler))
+        filterButton.tintColor = .systemRed
+        filterButton.translatesAutoresizingMaskIntoConstraints = false
+        tableView.addSubview(filterButton)
+        
+        let svflg = tableView.frameLayoutGuide
+        NSLayoutConstraint.activate([
+            filterButton.topAnchor.constraint(equalTo: tableView.safeAreaLayoutGuide.topAnchor, constant: 8),
+            filterButton.trailingAnchor.constraint(equalTo: svflg.trailingAnchor, constant: -8),
+            filterButton.heightAnchor.constraint(equalToConstant: 35),
+            filterButton.widthAnchor.constraint(equalToConstant: 65)
+        ])
+        
+        return filterButton
+    }()
+    
+    @objc func filterButtonHandler() {
+        let alertController = UIAlertController(title: "", message: "The current search result being shown are filtered by your settings. Filters are not applicable to Packages, Quality Scores, and Recently Changed. Reset your filter settings to see the full result.", preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        self.present(alertController, animated: true, completion: nil)
+    }
+    
     // To hide/show the suggested searches before and after a token is selected
-    var showSuggestedSearches: SearchState = .none {
+    lazy var showSuggestedSearches: SearchState = .none {
         didSet {
             if oldValue != showSuggestedSearches {
                 tableView.reloadData()
             }
+            
+            switch showSuggestedSearches {
+                case .suggested:
+                    filterButton.isHidden = true
+                default:
+                    updateFilterButton()
+            }
         }
     }
+    
+    func updateFilterButton() {
+        var filterArr = [String]()
+        for filter in FilterType.allCases {
+            if let savedFilter = defaults.string(forKey: filter.rawValue) {
+                filterArr.append(savedFilter)
+            }
+        }
+        
+        if filterArr.count > 0 {
+            filterButton.isHidden = false
+        } else {
+            filterButton.isHidden = true
+        }
+    }
+    
+    // MARK: - viewDidLoad
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -175,19 +223,6 @@ extension SearchResultsController {
     func suggestedTitle(fromIndex: Int) -> String {
         return suggestedSearches[fromIndex]
     }
-    
-//    // Search a search token from an input value. This token is for the suggested search.
-//    func searchToken(tokenValue: Int) -> UISearchToken {
-//        let tokenColor = SearchResultsController.suggestedColor(fromIndex: tokenValue)
-//        let image = UIImage(systemName: "circle.fill")?.withTintColor(tokenColor, renderingMode: .alwaysOriginal)
-//        let searchToken = UISearchToken(icon: image, text: suggestedTitle(fromIndex: tokenValue))
-//
-//        // Set the color kind number as the token value.
-////        let color = SearchResultsController.colorKind(fromIndex: tokenValue).rawValue
-//        searchToken.representedObject = NSNumber(value: tokenValue)
-//
-//        return searchToken
-//    }
     
     // search token for the additional suggested search
     func searchToken(searchCategory: SearchCategories,title: String) -> UISearchToken {

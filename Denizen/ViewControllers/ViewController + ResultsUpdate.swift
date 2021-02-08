@@ -31,7 +31,6 @@ extension ViewController: UISearchResultsUpdating {
             let searchToken = searchTextField.tokens[searchTextField.tokens.count - 1]
             
             if let searchTokenValue = searchToken.representedObject as? SearchCategories {
-                print("searchTokenValue", searchTokenValue)
                 fetchAndParse(suggestedSearch: searchTokenValue)
             }
         }else {
@@ -92,11 +91,11 @@ extension ViewController: UISearchResultsUpdating {
                 urlString = URLScheme.baseURL + Query.ActionType.packageSearch
                 parameters = [Query.Key.facetField: "[\u{22}topics\u{22}]"]
 //                parameters = [Query.Key.facetField: "[\u{22}topics\u{22}]", Query.Key.rows: "0"]
-                fetchAPI(urlString: urlString, parameters: parameters, suggestedSearch: suggestedSearch)
+                fetchAPI(urlString: urlString, parameters: parameters, filters: filters, suggestedSearch: suggestedSearch)
             case .topic(let title):
                 urlString = URLScheme.baseURL + Query.ActionType.packageSearch
                 parameters = [Query.Key.q: title]
-                fetchAPI(urlString: urlString, parameters: parameters, suggestedSearch: suggestedSearch)
+                fetchAPI(urlString: urlString, parameters: parameters, filters: filters, suggestedSearch: suggestedSearch)
             case .civicIssues:
                 urlString = URLScheme.baseURL + Query.ActionType.packageSearch
 //                parameters = [Query.Key.facetField: "[\u{22}civic_issues\u{22}]", Query.Key.rows: "0"]
