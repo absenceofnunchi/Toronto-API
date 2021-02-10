@@ -225,11 +225,15 @@ extension ViewController: UISearchResultsUpdating {
     
     func loadSearchControllerData(with fetchedDataArr: [FetchedData]) {
         DispatchQueue.main.async {
-            if let searchResultsController = self.searchController.searchResultsController as? SearchResultsController {
-                self.navigationController?.activityStopAnimating()
-                searchResultsController.fetchedDataArr = fetchedDataArr
-                searchResultsController.tableView.reloadData()
-            }
+            self.navigationController?.activityStopAnimating()
+            self.searchResultsController.fetchedDataArr = fetchedDataArr
+            self.searchResultsController.tableView.reloadData()
         }
+        
+//        DispatchQueue.main.async {
+//            self.navigationController?.activityStopAnimating()
+//            self.searchResultDetailVC?.fetchedDataArr = fetchedDataArr
+//            self.searchResultDetailVC?.tableView.reloadData()
+//        }
     }
 }

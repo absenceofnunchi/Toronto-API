@@ -16,6 +16,7 @@ struct Cell {
     static var itemDetailCell = "item-detail-cell-identifier"
     static var filterCell = "filter-cell-identifier"
     static var mapDetailCell = "map-detail-cell-identifier"
+    static var searchResultTableCell = "search-result-table-cell"
 }
 
 // MARK: - URL

@@ -30,6 +30,8 @@ class ItemDetailViewController: UITableViewController {
         
         configureTableView()
         fetchAPI()
+        
+        title = fetchedData.title
     }
     
     func configureTableView() {
@@ -165,7 +167,6 @@ extension ItemDetailViewController {
         }
         
         return cell
-
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -203,17 +204,24 @@ extension ItemDetailViewController {
             itemInfoType = .textViewOnly
         }
         
-        
         let itemInfo = ItemInfo(header: header, body: body, dict: detailDict, itemInfoType: itemInfoType)
-        
         if itemInfoType == .dict {
             let expandTableVC = ExpandTableViewController()
             expandTableVC.itemInfo = itemInfo
-            navigationController?.pushViewController(expandTableVC, animated: true)
+            self.navigationController?.pushViewController(expandTableVC, animated: true)
         } else {
             let expandDetailVC = ExpandDetailViewController()
             expandDetailVC.itemInfo = itemInfo
-            navigationController?.pushViewController(expandDetailVC, animated: true)
+            self.navigationController?.pushViewController(expandDetailVC, animated: true)
+        }
+    }
+    
+    func navigate(to vc: UIViewController) {
+        guard let windowInterfaceOrientation = ItemDetailViewController.windowInterfaceOrientation else { return }
+        if windowInterfaceOrientation.isLandscape {
+            self.showDetailViewController(vc, sender: self)
+        } else {
+            self.navigationController?.pushViewController(vc, animated: true)
         }
     }
 }

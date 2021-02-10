@@ -78,6 +78,10 @@ extension UIViewController {
         }
         return post
     }
+    
+    static var windowInterfaceOrientation: UIInterfaceOrientation? {
+        return UIApplication.shared.windows.first?.windowScene?.interfaceOrientation
+    }
 }
 
 

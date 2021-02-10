@@ -148,7 +148,10 @@ extension SearchResultsController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Cell.searchResultCell)!
-
+        
+        if SearchResultsController.windowInterfaceOrientation!.isLandscape {
+            cell.selectionStyle = .gray
+        }
         switch showSuggestedSearches {
             case .suggested:
                 let suggestedTitle = NSMutableAttributedString(string: suggestedSearches[indexPath.row])
@@ -169,7 +172,7 @@ extension SearchResultsController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let suggestedSearchDelegate = suggestedSearchDelegate else { return }
         tableView.deselectRow(at: indexPath, animated: true)
-
+        
         // Make sure we are showing suggested searches before notifying which token was selected
         switch showSuggestedSearches {
             case .suggested:
@@ -248,7 +251,7 @@ extension SearchResultsController {
         let tokenColor = SearchResultsController.suggestedColor(fromIndex: index)
         let image = UIImage(systemName: "circle.fill")?.withTintColor(tokenColor, renderingMode: .alwaysOriginal)
         let searchToken = UISearchToken(icon: image, text: searchCategory.value)
-
+        
         searchToken.representedObject = searchCategory
         
         return searchToken

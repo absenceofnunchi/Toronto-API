@@ -7,9 +7,9 @@
 /*
  Abstract:
  defines the search controller, which involves,
-    1. set the apepearance of the search bar and the search text field
-    2. set the search results controller
-    3. define what happens when the user taps on the items from search results controller
+ 1. set the apepearance of the search bar and the search text field
+ 2. set the search results controller
+ 3. define what happens when the user taps on the items from search results controller
  */
 
 import UIKit
@@ -49,15 +49,15 @@ extension ViewController: UISearchBarDelegate {
         searchBar.tintColor = .black
         searchBar.searchBarStyle = .minimal
         
-//        // set the search bar height
+        //        // set the search bar height
         let size = CGSize(width: 1, height: 50)
-//        let renderer = UIGraphicsImageRenderer(size: size)
-//        let image = renderer.image { (_) in
-//            UIColor.white.setFill()
-//            let rect = UIBezierPath(rect: CGRect(origin: .zero, size: size))
-//            rect.fill()
-//        }
-//        searchBar.setSearchFieldBackgroundImage(image, for: .normal)
+        //        let renderer = UIGraphicsImageRenderer(size: size)
+        //        let image = renderer.image { (_) in
+        //            UIColor.white.setFill()
+        //            let rect = UIBezierPath(rect: CGRect(origin: .zero, size: size))
+        //            rect.fill()
+        //        }
+        //        searchBar.setSearchFieldBackgroundImage(image, for: .normal)
         
         // search text field attributes
         let searchTextField = searchBar.searchTextField
@@ -79,7 +79,7 @@ extension ViewController: UISearchBarDelegate {
     }
     
     @objc func leftViewButtonHandler() {
-//        let text = searchController.searchBar.searchTextField.text
+        //        let text = searchController.searchBar.searchTextField.text
         let filterViewController = FilterViewController(style: .insetGrouped)
         filterViewController.delegate = self
         let navController = UINavigationController(rootViewController: filterViewController)
@@ -95,7 +95,7 @@ extension ViewController: UISearchBarDelegate {
     }
     
     func setToSuggestedSearches() {
-
+        
         // Show suggested searches only if we don't have a search token in the search field.
         if searchController.searchBar.searchTextField.tokens.isEmpty {
             searchResultsController.showSuggestedSearches = .suggested
@@ -132,7 +132,7 @@ extension ViewController: SuggestedSearch {
         if let searchField = navigationItem.searchController?.searchBar.searchTextField {
             searchField.insertToken(token, at: searchField.tokens.count > 0 ? searchField.tokens.count : 0)
             searchField.text = ""
-            
+
             if let searchTokenValue = token.representedObject as? SearchCategories {
                 switch searchTokenValue {
                     case .tags:
@@ -152,6 +152,22 @@ extension ViewController: SuggestedSearch {
             // Update the search query with the newly inserted token
             updateSearchResults(for: searchController!)
         }
+//        guard let windowInterfaceOrientation = ViewController.windowInterfaceOrientation else { return }
+//
+//        if windowInterfaceOrientation.isLandscape {
+//            // activate landscape changes
+//
+//        } else {
+//            // activate portrait changes
+//
+//        }
+//
+//        let searchResultDetailVC = SearchResultDetailTableViewController()
+//        let button = self.splitViewController?.displayModeButtonItem
+//        searchResultDetailVC.navigationItem.leftBarButtonItem = button
+//        searchResultDetailVC.navigationItem.leftItemsSupplementBackButton = true
+//        let nav = UINavigationController(rootViewController: searchResultDetailVC)
+//        self.showDetailViewController(nav, sender: self)
     }
     
     // SearchResultscontroller selected an item so navigate to that item
@@ -159,7 +175,17 @@ extension ViewController: SuggestedSearch {
         // Set up the detail view controller to show
         let itemDetailVC = ItemDetailViewController()
         itemDetailVC.fetchedData = fetchedData
-        navigationController?.pushViewController(itemDetailVC, animated: true)
+        
+        let nav = UINavigationController(rootViewController: itemDetailVC)
+        
+        if ViewController.windowInterfaceOrientation!.isLandscape {
+            let button = self.splitViewController?.displayModeButtonItem
+            itemDetailVC.navigationItem.leftBarButtonItem = button
+            itemDetailVC.navigationItem.leftItemsSupplementBackButton = true
+            self.showDetailViewController(nav, sender: self)
+        } else {
+            navigationController?.pushViewController(itemDetailVC, animated: true)
+        }
     }
 }
 

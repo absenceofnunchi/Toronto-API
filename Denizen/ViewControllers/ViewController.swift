@@ -26,6 +26,7 @@ class ViewController: UIViewController {
     var suggestArray = [FetchedData]()
     var optionsBarItem: UIBarButtonItem!
     var filters = [Filter]()
+//    var searchResultDetailVC: SearchResultDetailTableViewController!
     
     private var collectionView: UICollectionView! = nil
     private var layoutType: Int = 1
@@ -39,10 +40,10 @@ class ViewController: UIViewController {
         super.viewDidLoad()
 //        view.backgroundColor = UIColor(red: (247/255), green: (247/255), blue: (247/255), alpha: 1)
         
+        configureSearchController()
         configureOptionsBar()
         configureHierarchy()
 //        configureNavigationController()
-        configureSearchController()
         configureSearchBar()
         configureCellRegister()
     }
@@ -57,6 +58,8 @@ extension ViewController {
         
         let rightBarButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(rightBarButtonHandler))
         navigationItem.rightBarButtonItem = rightBarButton
+        
+        self.navigationController?.navigationBar.backgroundColor = .green
     }
     
     @objc func rightBarButtonHandler() {
