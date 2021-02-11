@@ -42,8 +42,6 @@ class ExpandDetailViewController: UIViewController {
         view.backgroundColor = .systemBackground
         
         configure()
-        
-        print("expand detail")
     }
 }
 

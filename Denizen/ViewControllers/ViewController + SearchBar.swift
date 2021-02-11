@@ -49,22 +49,13 @@ extension ViewController: UISearchBarDelegate {
         searchBar.tintColor = .black
         searchBar.searchBarStyle = .minimal
         
-        //        // set the search bar height
-        let size = CGSize(width: 1, height: 50)
-        //        let renderer = UIGraphicsImageRenderer(size: size)
-        //        let image = renderer.image { (_) in
-        //            UIColor.white.setFill()
-        //            let rect = UIBezierPath(rect: CGRect(origin: .zero, size: size))
-        //            rect.fill()
-        //        }
-        //        searchBar.setSearchFieldBackgroundImage(image, for: .normal)
-        
         // search text field attributes
         let searchTextField = searchBar.searchTextField
         searchTextField.borderStyle = .roundedRect
         searchTextField.layer.cornerRadius = 8
         searchTextField.layer.borderWidth = 1
         searchTextField.layer.borderColor = UIColor(red: 224/255, green: 224/255, blue: 224/255, alpha: 1).cgColor
+        let size = CGSize(width: 1, height: 50)
         searchTextField.frame = CGRect(origin: .zero, size: size)
         
         let filterButton = UIButton.systemButton(with: UIImage(systemName: "line.horizontal.3.decrease.circle")!, target: self, action: #selector(leftViewButtonHandler))
@@ -95,13 +86,13 @@ extension ViewController: UISearchBarDelegate {
     }
     
     func setToSuggestedSearches() {
-        
         // Show suggested searches only if we don't have a search token in the search field.
         if searchController.searchBar.searchTextField.tokens.isEmpty {
             searchResultsController.showSuggestedSearches = .suggested
             
             // We are no longer interested in cell navigating, since we are now showing the suggested searches.
             searchResultsController.tableView.delegate = searchResultsController
+            self.splitViewController?.detailViewController?.createAnnotation(searchCateogry: .none)
         }
     }
     
@@ -116,7 +107,6 @@ extension ViewController: UISearchBarDelegate {
 // Use these delegate functions for additional control over the search controller.
 
 extension ViewController: UISearchControllerDelegate {
-    
     // We are being asked to present the search controller, so from the start - show suggested searches.
     func presentSearchController(_ searchController: UISearchController) {
         searchController.showsSearchResultsController = true
@@ -137,37 +127,24 @@ extension ViewController: SuggestedSearch {
                 switch searchTokenValue {
                     case .tags:
                         searchResultsController.showSuggestedSearches = .additionalSuggest
+                        self.splitViewController?.detailViewController?.createAnnotation(searchCateogry: searchTokenValue)
                     case .tag(_):
                         if searchField.tokens.count == 2 {
                             searchResultsController.showSuggestedSearches = .none
                         }
                     case .topics:
                         searchResultsController.showSuggestedSearches = .additionalSuggest
+                        self.splitViewController?.detailViewController?.createAnnotation(searchCateogry: searchTokenValue)
                     case .topic(_):
                         searchResultsController.showSuggestedSearches = .none
                     default:
                         searchResultsController.showSuggestedSearches = .none
+                        self.splitViewController?.detailViewController?.createAnnotation(searchCateogry: searchTokenValue)
                 }
             }
             // Update the search query with the newly inserted token
             updateSearchResults(for: searchController!)
         }
-//        guard let windowInterfaceOrientation = ViewController.windowInterfaceOrientation else { return }
-//
-//        if windowInterfaceOrientation.isLandscape {
-//            // activate landscape changes
-//
-//        } else {
-//            // activate portrait changes
-//
-//        }
-//
-//        let searchResultDetailVC = SearchResultDetailTableViewController()
-//        let button = self.splitViewController?.displayModeButtonItem
-//        searchResultDetailVC.navigationItem.leftBarButtonItem = button
-//        searchResultDetailVC.navigationItem.leftItemsSupplementBackButton = true
-//        let nav = UINavigationController(rootViewController: searchResultDetailVC)
-//        self.showDetailViewController(nav, sender: self)
     }
     
     // SearchResultscontroller selected an item so navigate to that item
@@ -182,9 +159,22 @@ extension ViewController: SuggestedSearch {
             let button = self.splitViewController?.displayModeButtonItem
             itemDetailVC.navigationItem.leftBarButtonItem = button
             itemDetailVC.navigationItem.leftItemsSupplementBackButton = true
-            self.showDetailViewController(nav, sender: self)
+            itemDetailVC.navigationItem.hidesBackButton = true
+
+            if let nav2 = self.splitViewController?.viewControllers[1] as? UINavigationController {
+                nav2.pushViewController(itemDetailVC, animated: true)
+            }
+            
+//            self.showDetailViewController(nav, sender: self)
         } else {
-            navigationController?.pushViewController(itemDetailVC, animated: true)
+            if self.traitCollection.horizontalSizeClass == .compact {
+                navigationController?.pushViewController(itemDetailVC, animated: true)
+            } else {
+                let button = self.splitViewController?.displayModeButtonItem
+                itemDetailVC.navigationItem.leftBarButtonItem = button
+                itemDetailVC.navigationItem.leftItemsSupplementBackButton = true
+                self.showDetailViewController(nav, sender: self)
+            }
         }
     }
 }
@@ -206,5 +196,16 @@ extension ViewController: LeftViewDelegate {
         }
         
         searchResultsController.updateFilterButton()
+    }
+}
+
+extension ViewController {
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        
+        if let nav = self.splitViewController?.viewControllers[1] as? UINavigationController {
+            nav.popToRootViewController(animated: true)
+        }
+        
+        self.splitViewController?.detailViewController?.createAnnotation(searchCateogry: .none)
     }
 }

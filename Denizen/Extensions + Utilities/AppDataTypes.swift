@@ -36,7 +36,7 @@ struct URLScheme {
         static var tagShow = "tag_show"
         
         struct id {
-            static var qualityScoresId = "?id=22f223e7-73f7-4842-935c-80a0ba5c3e5b"
+            static var qualityScoresId = "22f223e7-73f7-4842-935c-80a0ba5c3e5b"
         }
     }
 }
@@ -130,7 +130,6 @@ enum ItemInfoType {
 // MARK: - PaddedLabel
 
 class PaddedLabel: UILabel {
-    
     var topInset: CGFloat = 15.0
     var bottomInset: CGFloat = 15.0
     var leftInset: CGFloat = 15.0

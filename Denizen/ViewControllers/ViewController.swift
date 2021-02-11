@@ -15,7 +15,7 @@ import UIKit
 
 class ViewController: UIViewController {
     // MARK:- Properties
-    
+
     static let sectionHeaderElementKind = "section-header-element-kind"
     
     // The suffix portion of the user activity type for this view controller.
@@ -26,7 +26,7 @@ class ViewController: UIViewController {
     var suggestArray = [FetchedData]()
     var optionsBarItem: UIBarButtonItem!
     var filters = [Filter]()
-//    var searchResultDetailVC: SearchResultDetailTableViewController!
+    var gradientLayer: GradientLayer!
     
     private var collectionView: UICollectionView! = nil
     private var layoutType: Int = 1
@@ -43,7 +43,7 @@ class ViewController: UIViewController {
         configureSearchController()
         configureOptionsBar()
         configureHierarchy()
-//        configureNavigationController()
+        configureNavigationController()
         configureSearchBar()
         configureCellRegister()
     }
@@ -56,10 +56,9 @@ extension ViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = "Denizen"
         
-        let rightBarButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(rightBarButtonHandler))
-        navigationItem.rightBarButtonItem = rightBarButton
-        
-        self.navigationController?.navigationBar.backgroundColor = .green
+        //        let rightBarButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(rightBarButtonHandler))
+        //        navigationItem.rightBarButtonItem = rightBarButton
+        applyImageBackgroundToTheNavigationBar()
     }
     
     @objc func rightBarButtonHandler() {
@@ -70,8 +69,28 @@ extension ViewController {
         } else {
             layoutType += 1
         }
-
+        
         self.collectionView.setCollectionViewLayout(self.createLayout(with: layoutType), animated: true, completion: nil)
+    }
+    
+    func applyImageBackgroundToTheNavigationBar() {
+        var updatedFrame = self.navigationController!.navigationBar.bounds
+        updatedFrame.size.height += view.window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 100
+
+        gradientLayer = GradientLayer(updatedFrame: updatedFrame)
+        gradientLayer.setNeedsDisplay()
+        
+        let renderer = UIGraphicsImageRenderer(size: gradientLayer.bounds.size)
+        let image = renderer.image { (ctx) in
+            let cgContext = ctx.cgContext
+            gradientLayer.render(in: cgContext)
+        }
+        self.navigationController!.navigationBar.setBackgroundImage(image, for: UIBarMetrics.default)
+        
+        let appearance = navigationController!.navigationBar.standardAppearance.copy()
+        appearance.backgroundImage = image
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
     }
 }
 
@@ -168,7 +187,7 @@ extension ViewController {
         view.addSubview(collectionView)
         
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50),
+            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),

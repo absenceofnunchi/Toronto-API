@@ -81,6 +81,7 @@ extension ViewController: UISearchResultsUpdating {
                 fetchAPI(urlString: urlString, parameters: parameters, suggestedSearch: suggestedSearch)
             case .qualityScores:
                 urlString = URLScheme.baseURL + URLScheme.Subdomain.qualityScores + URLScheme.Subdomain.id.qualityScoresId
+                parameters = [Query.Key.id: URLScheme.Subdomain.id.qualityScoresId]
                 fetchAPI(urlString: urlString, parameters: parameters, suggestedSearch: suggestedSearch)
             case .tag(let title):
                 urlString = URLScheme.baseURL + Query.ActionType.packageSearch

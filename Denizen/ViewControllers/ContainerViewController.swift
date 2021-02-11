@@ -32,21 +32,22 @@ class ContainerViewController: UIViewController {
 extension ContainerViewController: UISplitViewControllerDelegate {
     func configureSplitVC() {
         svc.delegate = self
+        svc.view.backgroundColor = .white
         
         // master
         let vc = ViewController()
         let nav1 = UINavigationController(rootViewController: vc)
         
         // detail
-        let searchResultDetailVC = SearchResultDetailTableViewController()
-        searchResultDetailVC.title = "Detail"
-        let nav2 = UINavigationController(rootViewController: searchResultDetailVC)
+        let detailViewController = DetailViewController()
+        let nav2 = UINavigationController(rootViewController: detailViewController)
+        nav2.view.tag = 2000
         
         svc.viewControllers = [nav1, nav2]
         
-        let button = svc.displayModeButtonItem
-        searchResultDetailVC.navigationItem.leftBarButtonItem = button
-        searchResultDetailVC.navigationItem.leftItemsSupplementBackButton = true
+//        let button = svc.displayModeButtonItem
+//        detailViewController.navigationItem.leftBarButtonItem = button
+//        detailViewController.navigationItem.leftItemsSupplementBackButton = true
         
         self.addChild(svc)
         self.view.addSubview(svc.view)
