@@ -84,27 +84,30 @@ class Item {
     }
 }
 
-class CatalogueQualityScores: Item {
-    var package: String!
-    
-    init(package: String, id: String) {
-        super.init(id: id)
-        self.package = package
-    }
-}
+//class CatalogueQualityScores: Item {
+//    var package: String!
+//    
+//    init(package: String, id: String) {
+//        super.init(id: id)
+//        self.package = package
+//    }
+//}
+//
+//class RecentlyChanged: Item {
+//    var title: String!
+//    var date: String!
+//    
+//    init(title: String, id: String, date: String) {
+//        super.init(id: id)
+//        self.title = title
+//        self.date = date
+//    }
+//}
 
-class RecentlyChanged: Item {
-    var title: String!
-    
-    init(title: String, id: String) {
-        super.init(id: id)
-        self.title = title
-    }
-}
-
-struct FetchedData {
+struct FetchedData: Hashable {
     var id: String? = nil
     let title: String
+    var date: String? = nil
     var searchCategories: SearchCategories? = nil
     var parameters: [String: String]? = nil
 }
@@ -153,7 +156,7 @@ class PaddedLabel: UILabel {
 
 // MARK: - SearchCategories
 /// SearchResultsController, WebServiceManager
-enum SearchCategories: Equatable {
+enum SearchCategories: Equatable, Hashable {
     case tags, packages, recentlyChanged, qualityScores, tagPackageShow, topics, civicIssues
     case tag(String), topic(String)
     

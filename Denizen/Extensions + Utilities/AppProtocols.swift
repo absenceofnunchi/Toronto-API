@@ -27,5 +27,5 @@ protocol FilterDelegate: AnyObject {
 // MARK: - left view delegate
 // Passes the value to be applied as a filter from FilterViewController to ViewController
 protocol LeftViewDelegate: AnyObject {
-    func didApplyFilter(with filters: [Filter])
+    func didApplyFilter()
 }

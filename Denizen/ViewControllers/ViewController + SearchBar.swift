@@ -92,14 +92,22 @@ extension ViewController: UISearchBarDelegate {
             
             // We are no longer interested in cell navigating, since we are now showing the suggested searches.
             searchResultsController.tableView.delegate = searchResultsController
-            self.splitViewController?.detailViewController?.createAnnotation(searchCateogry: .none)
+            
+            if isLandscape {
+                self.splitViewController?.detailViewController?.createAnnotation(searchCateogry: .none)
+            }
         }
     }
     
+    // User tapped the Done button in the keyboard.
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        // User tapped the Done button in the keyboard.
-        searchController.dismiss(animated: true, completion: nil)
-        searchBar.text = ""
+        keyboardDismissed()
+
+        guard let text = searchController.searchBar.text, let searchField = searchField else { return }
+        
+        if !text.isEmpty && searchField.tokens.isEmpty, let text = searchField.text {
+            fetchAndParse(suggestedSearch: .tag(text))
+        }
     }
 }
 
@@ -119,27 +127,48 @@ extension ViewController: UISearchControllerDelegate {
 extension ViewController: SuggestedSearch {
     // SearchResultsController selected a suggested search, so we need to apply the search token.
     func didSelectSuggestedSearch(token: UISearchToken) {
-        if let searchField = navigationItem.searchController?.searchBar.searchTextField {
+        if let searchField = searchField {
             searchField.insertToken(token, at: searchField.tokens.count > 0 ? searchField.tokens.count : 0)
             searchField.text = ""
-
+            
             if let searchTokenValue = token.representedObject as? SearchCategories {
                 switch searchTokenValue {
                     case .tags:
                         searchResultsController.showSuggestedSearches = .additionalSuggest
-                        self.splitViewController?.detailViewController?.createAnnotation(searchCateogry: searchTokenValue)
+                        
+                        if isLandscape {
+                            if self.splitViewController?.detailViewController == nil {
+                                replaceDetailVC(searchCategory: searchTokenValue)
+                            }
+                            
+                            self.splitViewController?.detailViewController?.createAnnotation(searchCateogry: searchTokenValue)
+                        }
                     case .tag(_):
                         if searchField.tokens.count == 2 {
                             searchResultsController.showSuggestedSearches = .none
                         }
                     case .topics:
                         searchResultsController.showSuggestedSearches = .additionalSuggest
-                        self.splitViewController?.detailViewController?.createAnnotation(searchCateogry: searchTokenValue)
+                        
+                        if isLandscape {
+                            if self.splitViewController?.detailViewController == nil {
+                                print("searchTokenValue before", searchTokenValue)
+                                replaceDetailVC(searchCategory: searchTokenValue)
+                            }
+                            self.splitViewController?.detailViewController?.createAnnotation(searchCateogry: searchTokenValue)
+                        }
                     case .topic(_):
                         searchResultsController.showSuggestedSearches = .none
                     default:
                         searchResultsController.showSuggestedSearches = .none
-                        self.splitViewController?.detailViewController?.createAnnotation(searchCateogry: searchTokenValue)
+                        
+                        if isLandscape {
+                            if self.splitViewController?.detailViewController == nil {
+                                replaceDetailVC(searchCategory: searchTokenValue)
+                            }
+                            
+                            self.splitViewController?.detailViewController?.createAnnotation(searchCateogry: searchTokenValue)
+                        }
                 }
             }
             // Update the search query with the newly inserted token
@@ -152,46 +181,20 @@ extension ViewController: SuggestedSearch {
         // Set up the detail view controller to show
         let itemDetailVC = ItemDetailViewController()
         itemDetailVC.fetchedData = fetchedData
-        
+        let button = self.splitViewController?.displayModeButtonItem
+        itemDetailVC.navigationItem.leftBarButtonItem = button
+        itemDetailVC.navigationItem.leftItemsSupplementBackButton = true
         let nav = UINavigationController(rootViewController: itemDetailVC)
-        
-        if ViewController.windowInterfaceOrientation!.isLandscape {
-            let button = self.splitViewController?.displayModeButtonItem
-            itemDetailVC.navigationItem.leftBarButtonItem = button
-            itemDetailVC.navigationItem.leftItemsSupplementBackButton = true
-            itemDetailVC.navigationItem.hidesBackButton = true
-
-            if let nav2 = self.splitViewController?.viewControllers[1] as? UINavigationController {
-                nav2.pushViewController(itemDetailVC, animated: true)
-            }
-            
-//            self.showDetailViewController(nav, sender: self)
-        } else {
-            if self.traitCollection.horizontalSizeClass == .compact {
-                navigationController?.pushViewController(itemDetailVC, animated: true)
-            } else {
-                let button = self.splitViewController?.displayModeButtonItem
-                itemDetailVC.navigationItem.leftBarButtonItem = button
-                itemDetailVC.navigationItem.leftItemsSupplementBackButton = true
-                self.showDetailViewController(nav, sender: self)
-            }
-        }
+        self.showDetailViewController(nav, sender: self)
     }
 }
 
 // MARK: - Left view delegate
 
 extension ViewController: LeftViewDelegate {
-    func didApplyFilter(with filters: [Filter]) {
-        // add the newly acquired filters to the filters array property
-        if self.filters.count > 0 {
-            self.filters.removeAll()
-        }
-        
-        filters.forEach { self.filters.append($0) }
-        
+    func didApplyFilter() {
         // run the search depending on what is present in the search field
-        if let searchField = navigationItem.searchController?.searchBar.searchTextField, searchField.tokens.count > 0 {
+        if let searchField = searchField, searchField.tokens.count > 0 {
             updateSearchResults(for: searchController!)
         }
         
@@ -199,13 +202,27 @@ extension ViewController: LeftViewDelegate {
     }
 }
 
+// MARK: - Search bar cancel button clicked
+
 extension ViewController {
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        
-        if let nav = self.splitViewController?.viewControllers[1] as? UINavigationController {
-            nav.popToRootViewController(animated: true)
+        if isLandscape {
+            replaceDetailVC(searchCategory: nil)
         }
-        
-        self.splitViewController?.detailViewController?.createAnnotation(searchCateogry: .none)
+    }
+    
+    func replaceDetailVC(searchCategory: SearchCategories?) {
+        if let navControllers = self.splitViewController?.viewControllers[1] {
+            let existingVC = (navControllers as! UINavigationController).viewControllers[0]
+            existingVC.willMove(toParent: nil)
+            existingVC.removeFromParent()
+            
+            // add
+            let detailViewController = DetailViewController()
+            let nav = UINavigationController(rootViewController: detailViewController)
+            self.showDetailViewController(nav, sender: self)
+            self.splitViewController?.detailViewController?.createAnnotation(searchCateogry: searchCategory)
+            NotificationCenter.default.post(name: .detailDismissed, object:self)
+        }
     }
 }

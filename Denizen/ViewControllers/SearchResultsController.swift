@@ -55,8 +55,10 @@ class SearchResultsController: UITableViewController {
         
         switch showSuggestedSearches {
             case .none, .additionalSuggest:
-                for fetchedData in fetchedDataArr {
-                    s.append(fetchedData.title)
+                if let fetchedDataArr = fetchedDataArr {
+                    for fetchedData in fetchedDataArr {
+                        s.append(fetchedData.title)
+                    }
                 }
             case .suggested:
                 for category in searchCategoryArr {
@@ -126,6 +128,8 @@ class SearchResultsController: UITableViewController {
         super.viewDidLoad()
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: Cell.searchResultCell)
         tableView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)
+        
+        print("fetched", fetchedDataArr)
     }
 }
 
@@ -152,6 +156,7 @@ extension SearchResultsController {
         if SearchResultsController.windowInterfaceOrientation!.isLandscape {
             cell.selectionStyle = .gray
         }
+        
         switch showSuggestedSearches {
             case .suggested:
                 let suggestedTitle = NSMutableAttributedString(string: suggestedSearches[indexPath.row])

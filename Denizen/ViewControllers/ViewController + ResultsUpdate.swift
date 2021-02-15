@@ -21,19 +21,18 @@ extension ViewController: UISearchResultsUpdating {
     // Called when the search bar's text has changed or when the search bar becomes first responder.
     
     func updateSearchResults(for searchController: UISearchController) {
-        guard let text = searchController.searchBar.text else { return }
-        
+        guard let text = searchController.searchBar.text, let searchField = searchField else { return }
+
         // fetch the API from one of SearchCategories as long as a token is selected and the text field is empty
-        if text.isEmpty, !searchController.searchBar.searchTextField.tokens.isEmpty  {
+        if text.isEmpty, !searchField.tokens.isEmpty  {
             suggestArray.removeAll()
 
-            let searchTextField = searchController.searchBar.searchTextField
-            let searchToken = searchTextField.tokens[searchTextField.tokens.count - 1]
+            let searchToken = searchField.tokens[searchField.tokens.count - 1]
             
             if let searchTokenValue = searchToken.representedObject as? SearchCategories {
                 fetchAndParse(suggestedSearch: searchTokenValue)
             }
-        }else {
+        } else if !searchField.tokens.isEmpty && !text.isEmpty {
             // now that we have the list from the selected token, we can further filter the list
             var filtered = suggestArray
             
@@ -68,6 +67,14 @@ extension ViewController: UISearchResultsUpdating {
         
         var urlString: String!
         var parameters: [String: String]!
+        var filters = [Filter]()
+        for filter in FilterType.allCases {
+            if let savedFilter = defaults.string(forKey: filter.rawValue) {
+                filters.append(Filter(title: filter, setting: NSLocalizedString(savedFilter, comment: "")))
+            } else {
+                filters.append(Filter(title: filter, setting: NSLocalizedString("All", comment: "")))
+            }
+        }
 
         switch suggestedSearch {
             case .tags:
@@ -80,34 +87,33 @@ extension ViewController: UISearchResultsUpdating {
                 urlString = URLScheme.baseURL + URLScheme.Subdomain.recentlyChanged
                 fetchAPI(urlString: urlString, parameters: parameters, suggestedSearch: suggestedSearch)
             case .qualityScores:
-                urlString = URLScheme.baseURL + URLScheme.Subdomain.qualityScores + URLScheme.Subdomain.id.qualityScoresId
+                urlString = URLScheme.baseURL + URLScheme.Subdomain.qualityScores
                 parameters = [Query.Key.id: URLScheme.Subdomain.id.qualityScoresId]
                 fetchAPI(urlString: urlString, parameters: parameters, suggestedSearch: suggestedSearch)
             case .tag(let title):
                 urlString = URLScheme.baseURL + Query.ActionType.packageSearch
                 parameters = [Query.Key.fq: Query.Filter.tags + ":" + title]
-                
-                fetchAPI(urlString: urlString, parameters: parameters, suggestedSearch: suggestedSearch)
+                fetchAPI(urlString: urlString, parameters: parameters, suggestedSearch: suggestedSearch, filters: filters)
             case .topics:
                 urlString = URLScheme.baseURL + Query.ActionType.packageSearch
                 parameters = [Query.Key.facetField: "[\u{22}topics\u{22}]"]
 //                parameters = [Query.Key.facetField: "[\u{22}topics\u{22}]", Query.Key.rows: "0"]
-                fetchAPI(urlString: urlString, parameters: parameters, filters: filters, suggestedSearch: suggestedSearch)
+                fetchAPI(urlString: urlString, parameters: parameters, suggestedSearch: suggestedSearch, filters: filters)
             case .topic(let title):
                 urlString = URLScheme.baseURL + Query.ActionType.packageSearch
                 parameters = [Query.Key.q: title]
-                fetchAPI(urlString: urlString, parameters: parameters, filters: filters, suggestedSearch: suggestedSearch)
+                fetchAPI(urlString: urlString, parameters: parameters, suggestedSearch: suggestedSearch, filters: filters)
             case .civicIssues:
                 urlString = URLScheme.baseURL + Query.ActionType.packageSearch
 //                parameters = [Query.Key.facetField: "[\u{22}civic_issues\u{22}]", Query.Key.rows: "0"]
                 parameters = [Query.Key.facetField: "[\u{22}civic_issues\u{22}]"]
-                fetchAPI(urlString: urlString, parameters: parameters, filters: filters, suggestedSearch: suggestedSearch)
+                fetchAPI(urlString: urlString, parameters: parameters, suggestedSearch: suggestedSearch, filters: filters)
             default:
                 break
         }
     }
     
-    func fetchAPI(urlString: String, parameters: [String: String]?, filters: [Filter]? = nil, suggestedSearch: SearchCategories) {
+    func fetchAPI(urlString: String, parameters: [String: String]?, suggestedSearch: SearchCategories, filters: [Filter]? = nil) {
         WebServiceManager.shared.sendRequest(urlString: urlString, parameters: parameters, filters: filters) { (responseObject, error) in
             guard let responseObject = responseObject, error == nil else {
                 print("fetch and parse error",error?.localizedDescription ?? "Unknown error")
@@ -203,7 +209,7 @@ extension ViewController: UISearchResultsUpdating {
             self.navigationController?.activityStopAnimating()
             let alertController = UIAlertController(title: "Network Error", message: error?.localizedDescription ?? "Unknown Error", preferredStyle: .alert)
             alertController.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (_) in
-                if let searchField = self.navigationItem.searchController?.searchBar.searchTextField {
+                if let searchField = self.searchField {
                     var count = searchField.tokens.count
                     while count > 0 {
                         searchField.removeToken(at: count - 1)
@@ -225,16 +231,13 @@ extension ViewController: UISearchResultsUpdating {
     /// - Loads the search results controller with the data fetched from the API request as well as the SearchCategories.
     
     func loadSearchControllerData(with fetchedDataArr: [FetchedData]) {
+        // remove duplicates, but keep the order
+        let deduped = Array(NSOrderedSet(array: fetchedDataArr)) as! [FetchedData]
+        
         DispatchQueue.main.async {
             self.navigationController?.activityStopAnimating()
-            self.searchResultsController.fetchedDataArr = fetchedDataArr
+            self.searchResultsController.fetchedDataArr = deduped
             self.searchResultsController.tableView.reloadData()
         }
-        
-//        DispatchQueue.main.async {
-//            self.navigationController?.activityStopAnimating()
-//            self.searchResultDetailVC?.fetchedDataArr = fetchedDataArr
-//            self.searchResultDetailVC?.tableView.reloadData()
-//        }
     }
 }

@@ -19,6 +19,7 @@ class ItemDetailViewController: UITableViewController {
     
     var fetchedData: FetchedData!
     var data = [(String, AnyObject)]()
+    var url: URL!
 
     override func loadView() {
         super.loadView()
@@ -27,11 +28,17 @@ class ItemDetailViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        NotificationCenter.default.addObserver(self, selector: #selector(urlFetched), name: .urlFetched, object: nil)
         
         configureTableView()
         fetchAPI()
+        configureShareButton()
         
         title = fetchedData.title
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: .urlFetched, object: nil)
     }
     
     func configureTableView() {
@@ -68,6 +75,18 @@ extension ItemDetailViewController {
                 urlString = URLScheme.baseURL + Query.ActionType.packageSearch
             default:
                 break
+        }
+        
+        guard urlString != nil else {
+            DispatchQueue.main.async {
+                self.navigationController?.activityStopAnimating()
+                let alertController = UIAlertController(title: "Network Error", message: "Please try again.", preferredStyle: .alert)
+                alertController.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (_) in
+                    self.navigationController?.popViewController(animated: true)
+                }))
+                self.present(alertController, animated: true, completion: nil)
+            }
+            return
         }
         
         WebServiceManager.shared.sendRequest(urlString: urlString, parameters: parameters) { (responseObject, error) in
@@ -222,6 +241,33 @@ extension ItemDetailViewController {
             self.showDetailViewController(vc, sender: self)
         } else {
             self.navigationController?.pushViewController(vc, animated: true)
+        }
+    }
+}
+
+// MARK: - Share button
+
+extension ItemDetailViewController {
+    func configureShareButton() {
+        let shareButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(share))
+        shareButton.tintColor = UIColor(red: 175/255, green: 122/255, blue: 197/255, alpha: 1)
+        navigationItem.rightBarButtonItem = shareButton
+    }
+    
+    @objc func share(_ sender: UIButton) {
+        guard let url = self.url else { return }
+        let shareSheetVC = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+        present(shareSheetVC, animated: true, completion: nil)
+        
+        if let pop = shareSheetVC.popoverPresentationController {
+            pop.sourceView = sender
+            pop.sourceRect = sender.bounds
+        }
+    }
+    
+    @objc func urlFetched(notification: NSNotification) {
+        if let fetchedURL = notification.userInfo?["url"] as? URL {
+            self.url = fetchedURL
         }
     }
 }

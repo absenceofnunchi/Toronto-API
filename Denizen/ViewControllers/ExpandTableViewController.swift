@@ -8,25 +8,26 @@
 import UIKit
 
 class ExpandTableViewController: UITableViewController {
-    var itemInfo: ItemInfo!
+    var itemInfo: ItemInfo?
     var data: [(String, AnyObject)]!
     var resourceId: String!
     
     override func loadView() {
         super.loadView()
-        self.tableView = UITableView(frame: self.tableView.frame, style: .grouped)
+        self.tableView = UITableView(frame: self.tableView.frame, style: .grouped)        
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         title = "Resource Detail"
-        
+        self.edgesForExtendedLayout = []
+
         configure()
     }
     
     func configure() {
-        if let dict = itemInfo.dict {
+        if let dict = itemInfo?.dict {
             if dict.isEmpty {
                 let alertController = UIAlertController(title: "No Data", message: nil, preferredStyle: .alert)
                 alertController.addAction(UIAlertAction(title: "Go Back", style: .default, handler: { (_) in
@@ -35,7 +36,7 @@ class ExpandTableViewController: UITableViewController {
 
                 self.present(alertController, animated: true, completion: nil)
             } else {
-                title = itemInfo.header ?? ""
+                title = itemInfo?.header ?? ""
                 data = dict.map { $0 }.sorted { $0.key < $1.key }
             }
         }
@@ -140,7 +141,6 @@ extension ExpandTableViewController {
             itemInfoType = .textViewOnly
         }
         
-        
         let itemInfo = ItemInfo(header: header, body: body, dict: detailDict, itemInfoType: itemInfoType)
         
         if itemInfoType == .dict {
@@ -158,7 +158,7 @@ extension ExpandTableViewController {
 extension ExpandTableViewController {
     func configureNavigationItem() {
         let rightBarButton = UIBarButtonItem(image: UIImage(systemName: "map"), style: .plain, target: self, action: #selector(barButtonHandler))
-        rightBarButton.tintColor = .systemGreen
+        rightBarButton.tintColor = UIColor(red: 175/255, green: 122/255, blue: 197/255, alpha: 1)
         self.navigationItem.rightBarButtonItem = rightBarButton
     }
     

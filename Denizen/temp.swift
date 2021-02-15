@@ -656,3 +656,19 @@
 //    }
 //}
 //
+
+
+
+
+// the search bar doesn't show in the beginning - fixed
+// way to dismiss keyboard - fixed
+// when the phone is in a portrait and goes to expand and then to landscape, the expand is in the left side - not fixed
+// duplicate results - fixed
+// menu navigation button
+// default page - fixed
+// search by words - fixed
+// share - fixed
+// bookmark
+// toronto open data authors api?
+// the activity indicator is out of place when going from portrait to landscape
+// device landscape mode or the orientation landscape mode or both

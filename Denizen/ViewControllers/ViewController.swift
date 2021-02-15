@@ -20,17 +20,36 @@ class ViewController: UIViewController {
     
     // The suffix portion of the user activity type for this view controller.
     static let activitySuffix = "mainRestored "
-    
+
     var searchController: UISearchController!
     var searchResultsController: SearchResultsController!
-    var suggestArray = [FetchedData]()
+    var suggestArray = [FetchedData]()    
     var optionsBarItem: UIBarButtonItem!
-    var filters = [Filter]()
-    var gradientLayer: GradientLayer!
+    let defaults = UserDefaults.standard
+    var searchField: UISearchTextField? {
+        return navigationItem.searchController?.searchBar.searchTextField
+    }
+    var layoutType: Int = 1
+    var collectionView: UICollectionView! = nil
+    private var accessoryDoneButton: UIBarButtonItem!
+    private var accessoryToolBar: UIToolbar!
     
-    private var collectionView: UICollectionView! = nil
-    private var layoutType: Int = 1
-    private let dataSource = CustomDataSource()
+    // data source
+    var supplementaryView: UICollectionReusableView!
+    var offsetBy: Int = 0
+    var Y_OF_HEADER_VIEW: CGFloat! = 0
+    var data = [FetchedData]() {
+        didSet {
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
+        }
+    }
+    let urlString = URLScheme.baseURL + URLScheme.Subdomain.recentlyChanged
+    var isLandscape = UIApplication.shared.statusBarOrientation.isLandscape
+    
+    // api request
+    let OFFSET_CONSTANT = 30
     
     override var prefersStatusBarHidden: Bool { true }
     
@@ -39,13 +58,21 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 //        view.backgroundColor = UIColor(red: (247/255), green: (247/255), blue: (247/255), alpha: 1)
-        
+        NotificationCenter.default.addObserver(self, selector: #selector(ViewController.rotated), name: UIDevice.orientationDidChangeNotification, object: nil)
+
         configureSearchController()
         configureOptionsBar()
         configureHierarchy()
         configureNavigationController()
         configureSearchBar()
         configureCellRegister()
+        configureKeyboardDismiss()
+        configureInitialData()
+        rotated()
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: UIDevice.orientationDidChangeNotification, object: nil)
     }
 }
 
@@ -55,9 +82,9 @@ extension ViewController {
     func configureNavigationController() {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = "Denizen"
-        
-        //        let rightBarButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(rightBarButtonHandler))
-        //        navigationItem.rightBarButtonItem = rightBarButton
+        navigationItem.hidesSearchBarWhenScrolling = false
+        extendedLayoutIncludesOpaqueBars = true
+
         applyImageBackgroundToTheNavigationBar()
     }
     
@@ -77,7 +104,7 @@ extension ViewController {
         var updatedFrame = self.navigationController!.navigationBar.bounds
         updatedFrame.size.height += view.window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 100
 
-        gradientLayer = GradientLayer(updatedFrame: updatedFrame)
+        let gradientLayer = GradientLayer(updatedFrame: updatedFrame)
         gradientLayer.setNeedsDisplay()
         
         let renderer = UIGraphicsImageRenderer(size: gradientLayer.bounds.size)
@@ -102,7 +129,7 @@ extension ViewController {
     /// - Throws None
     /// - Returns UICollectionViewLayout
     /// - Creates layouts dynamically, 1, 2, or 3 columns. Event from right bar button
-    private func createLayout(with layoutType: Int = 1) -> UICollectionViewLayout {
+    func createLayout(with layoutType: Int = 1) -> UICollectionViewLayout {
         // group
         var group: NSCollectionLayoutGroup!
         switch layoutType {
@@ -138,7 +165,7 @@ extension ViewController {
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         item.contentInsets = NSDirectionalEdgeInsets(top: 2, leading: 2, bottom: 2, trailing: 2)
         
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(200))
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(100))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 1)
         
         return group
@@ -180,9 +207,9 @@ extension ViewController {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.backgroundColor = .systemBackground
         collectionView.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 0, right: 0)
-        collectionView.delegate = dataSource
-        collectionView.dataSource = dataSource
-        collectionView.prefetchDataSource = dataSource
+        collectionView.delegate = self
+        collectionView.dataSource = self
+//        collectionView.prefetchDataSource = self
         collectionView.isPrefetchingEnabled = true
         view.addSubview(collectionView)
         
@@ -201,5 +228,31 @@ extension ViewController {
     func configureCellRegister() {
         collectionView.register(MenuCell.self, forCellWithReuseIdentifier: Cell.menuCell)
         collectionView.register(TitleSupplementaryView.self, forSupplementaryViewOfKind: ViewController.sectionHeaderElementKind, withReuseIdentifier: Cell.supplementaryCell)
+    }
+}
+
+// MARK: - Keyboard dissmiss
+
+extension ViewController {
+    func configureKeyboardDismiss() {
+        accessoryDoneButton = UIBarButtonItem(image: UIImage(systemName: "chevron.down")!, style: .plain, target: self, action: #selector(keyboardDismissed))
+        accessoryToolBar = UIToolbar(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 44))
+        accessoryToolBar.items = [accessoryDoneButton]
+        searchField?.inputAccessoryView = accessoryToolBar
+    }
+    
+    @objc func keyboardDismissed() {
+        searchField?.resignFirstResponder()
+    }
+}
+
+extension ViewController {
+    @objc func rotated() {
+        let size = UIScreen.main.bounds.size
+        if size.width < size.height {
+            self.isLandscape = false
+        } else {
+            self.isLandscape = true
+        }
     }
 }

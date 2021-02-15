@@ -16,12 +16,19 @@ class DetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        createAnnotation(searchCateogry: searchCategory)
+        view.backgroundColor = .systemBackground
+        view.tag = 5000
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        createAnnotation(searchCateogry: searchCategory)
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -45,7 +52,7 @@ extension DetailViewController {
                 labelText = "Packages are datasets!"
                 animationName = "2"
             case .qualityScores:
-                labelText = "The Data Quality Score reflects, in the form of a Gold, Silver or Bronze badge."
+                labelText = "The Data Quality Score reflects, \nin the form of a Gold, Silver or Bronze badge."
                 animationName = "3"
             case .recentlyChanged:
                 labelText = "An activity stream of recently changed datasets."
@@ -57,7 +64,7 @@ extension DetailViewController {
                 labelText = "Datasets filered by civic issues."
                 animationName = "6"
             default:
-                labelText = "Default Text"
+                labelText = "Start searching!"
                 animationName = "10"
                 break
         }
@@ -113,7 +120,3 @@ extension  DetailViewController {
         ])
     }
 }
-
-
-//        let a = animationView.logHierarchyKeypaths()
-//        print(a)

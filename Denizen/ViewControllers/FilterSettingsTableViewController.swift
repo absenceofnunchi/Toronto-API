@@ -51,7 +51,6 @@ extension FilterSettingsTableViewController {
                 return
             }
             self.parse(responseObject: responseObject, facet: self.data.title.facet)
-            
         }
     }
     

@@ -72,7 +72,7 @@ extension FilterViewController {
     @objc func buttonPressed(_ sender: UIButton) {
         switch sender.tag {
             case 1:
-                delegate?.didApplyFilter(with: filters)
+                delegate?.didApplyFilter()
                 dismiss(animated: true, completion: nil)
             case 2:
                 for filter in FilterType.allCases {
@@ -142,6 +142,6 @@ extension FilterViewController: FilterDelegate {
 
 extension FilterViewController: UIAdaptivePresentationControllerDelegate {
     func presentationControllerWillDismiss(_ presentationController: UIPresentationController) {
-        delegate?.didApplyFilter(with: filters)
+        delegate?.didApplyFilter()
     }
 }

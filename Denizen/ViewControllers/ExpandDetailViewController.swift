@@ -42,8 +42,11 @@ class ExpandDetailViewController: UIViewController {
         view.backgroundColor = .systemBackground
         
         configure()
+        self.edgesForExtendedLayout = []
+        
+        configureShareButton()
     }
-}
+  }
 
 extension ExpandDetailViewController {
     func configure() {
@@ -133,5 +136,25 @@ extension ExpandDetailViewController {
                 }
         }
     }
+}
 
+// MARK: - Share button
+
+extension ExpandDetailViewController {
+    func configureShareButton() {
+        let shareButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(share))
+        shareButton.tintColor = UIColor(red: 175/255, green: 122/255, blue: 197/255, alpha: 1)
+        navigationItem.rightBarButtonItem = shareButton
+    }
+    
+    @objc func share(_ sender: UIButton) {
+        guard let textView = textView.text else { return }
+        let shareSheetVC = UIActivityViewController(activityItems: [textView], applicationActivities: nil)
+        present(shareSheetVC, animated: true, completion: nil)
+        
+        if let pop = shareSheetVC.popoverPresentationController {
+            pop.sourceView = sender
+            pop.sourceRect = sender.bounds
+        }
+    }
 }
