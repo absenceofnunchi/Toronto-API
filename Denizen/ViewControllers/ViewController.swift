@@ -31,6 +31,12 @@ class ViewController: UIViewController {
     }
     var layoutType: Int = 1
     var collectionView: UICollectionView! = nil
+    var favouriteView: UICollectionView! = nil
+    var collectionViewDataSource: CollectionViewDataSource!
+    var favouritesDataSource: FavouritesDataSource!
+    var tabBar: UITabBar!
+    var tabNumber = 1
+    var constraints: [NSLayoutConstraint]!
     private var accessoryDoneButton: UIBarButtonItem!
     private var accessoryToolBar: UIToolbar!
     
@@ -46,34 +52,46 @@ class ViewController: UIViewController {
         }
     }
     let urlString = URLScheme.baseURL + URLScheme.Subdomain.recentlyChanged
-    var isLandscape = UIApplication.shared.statusBarOrientation.isLandscape
-    
     // api request
     let OFFSET_CONSTANT = 30
-    
     override var prefersStatusBarHidden: Bool { true }
+    var isInitialLoad = false
     
     // MARK: - viewDidLoad
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        isInitialLoad = true
 //        view.backgroundColor = UIColor(red: (247/255), green: (247/255), blue: (247/255), alpha: 1)
-        NotificationCenter.default.addObserver(self, selector: #selector(ViewController.rotated), name: UIDevice.orientationDidChangeNotification, object: nil)
+        collectionViewDataSource = CollectionViewDataSource()
+        collectionViewDataSource.dataSourceDelegate = self
 
+        
         configureSearchController()
         configureOptionsBar()
-        configureHierarchy()
+        configureTabBar()
+        configureCollectionViewHierarchy()
         configureNavigationController()
         configureSearchBar()
-        configureCellRegister()
+        configureCollectionCellRegister()
         configureKeyboardDismiss()
-        configureInitialData()
-        rotated()
+        
+        constraints = [
+            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0),
+            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: tabBar.topAnchor)
+        ]
+        NSLayoutConstraint.activate(constraints)
     }
     
-    deinit {
-        NotificationCenter.default.removeObserver(self, name: UIDevice.orientationDidChangeNotification, object: nil)
+    override func viewDidAppear(_ animated: Bool) {
+        if let delegate = UIApplication.shared.delegate as? AppDelegate {
+            let orientation: UIInterfaceOrientationMask = .all
+            delegate.supportedOrientation = orientation
+        }
     }
+
 }
 
 // MARK:- Navigation controller
@@ -146,7 +164,7 @@ extension ViewController {
         // section
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = 20
-        section.contentInsets = NSDirectionalEdgeInsets(top: 30, leading: 20, bottom: 0, trailing: 20)
+        section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
         
         // section header
         let headerFooterSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(50))
@@ -196,38 +214,70 @@ extension ViewController {
 
 // MARK:- Hierarchy
 
-extension ViewController {
+extension ViewController: DataSourceDelegate {
     /// Creates a collection view
     /// - Parameter None
     /// - Throws None
     /// - Returns Void
     /// - Creates a collection view and adds it to the main view as a subview
-    func configureHierarchy() {
+    func configureCollectionViewHierarchy() {
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createLayout(with: layoutType))
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.backgroundColor = .systemBackground
         collectionView.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 0, right: 0)
-        collectionView.delegate = self
-        collectionView.dataSource = self
-//        collectionView.prefetchDataSource = self
+        collectionView.delegate = collectionViewDataSource
+        collectionView.dataSource = collectionViewDataSource
         collectionView.isPrefetchingEnabled = true
-        view.addSubview(collectionView)
         
-        NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0),
-            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-        ])
+        if isInitialLoad {
+            view.addSubview(collectionView)
+        }
+    }
+    
+    func configureFavouriteViewHierarchy() {
+        favouriteView = UICollectionView(frame: view.bounds, collectionViewLayout: createLayout(with: layoutType))
+        favouriteView.translatesAutoresizingMaskIntoConstraints = false
+        favouriteView.backgroundColor = .systemBackground
+        favouriteView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        favouritesDataSource = FavouritesDataSource(dataSourceDelegate: self)
+        favouriteView.delegate = favouritesDataSource
+        favouriteView.dataSource = favouritesDataSource
+    }
+    
+    func didSelectCellAtIndexPath(at indexPath: IndexPath, with fetchedData: FetchedData){
+        let itemDetailVC = ItemDetailViewController()
+        itemDetailVC.fetchedData = fetchedData
+        
+        let button = self.splitViewController?.displayModeButtonItem
+        itemDetailVC.navigationItem.leftBarButtonItem = button
+        itemDetailVC.navigationItem.leftItemsSupplementBackButton = true
+        itemDetailVC.dataSourceDelegate = favouritesDataSource
+        
+        let nav = UINavigationController(rootViewController: itemDetailVC)
+        self.showDetailViewController(nav, sender: self)
+    }
+    
+    func didFetchData() {
+        DispatchQueue.main.async {
+            if self.tabNumber == 1 {
+                self.collectionView.reloadData()
+            } else {
+                self.favouriteView.reloadData()
+            }
+        }
     }
 }
 
 // MARK: - Cell register
 
 extension ViewController {
-    func configureCellRegister() {
+    func configureCollectionCellRegister() {
         collectionView.register(MenuCell.self, forCellWithReuseIdentifier: Cell.menuCell)
         collectionView.register(TitleSupplementaryView.self, forSupplementaryViewOfKind: ViewController.sectionHeaderElementKind, withReuseIdentifier: Cell.supplementaryCell)
+    }
+    
+    func configureFavouritesCellRegister() {
+        favouriteView.register(MenuCell.self, forCellWithReuseIdentifier: Cell.favouriteCell)
     }
 }
 
@@ -243,16 +293,5 @@ extension ViewController {
     
     @objc func keyboardDismissed() {
         searchField?.resignFirstResponder()
-    }
-}
-
-extension ViewController {
-    @objc func rotated() {
-        let size = UIScreen.main.bounds.size
-        if size.width < size.height {
-            self.isLandscape = false
-        } else {
-            self.isLandscape = true
-        }
     }
 }

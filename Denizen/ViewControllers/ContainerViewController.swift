@@ -10,10 +10,9 @@ import UIKit
 class ContainerViewController: UIViewController {
     var svc = UISplitViewController()
     var didInitialSetup = false
+    var detailChosen = false
     var nav1: UINavigationController!
     var nav2: UINavigationController!
-    var interVC: UIViewController!
-    var detailChosen = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,12 +36,10 @@ class ContainerViewController: UIViewController {
 extension ContainerViewController {
     func configureObserver() {
         NotificationCenter.default.addObserver(forName: .detailChosen, object: nil, queue: nil) { (_) in
-            print("notification true")
             self.detailChosen = true
         }
         
         NotificationCenter.default.addObserver(forName: .detailDismissed, object: nil, queue: nil) { (_) in
-            print("notification false")
             self.detailChosen = false
         }
     }
@@ -58,12 +55,10 @@ extension ContainerViewController: UISplitViewControllerDelegate {
         // master
         let vc = ViewController()
         nav1 = UINavigationController(rootViewController: vc)
-        nav1.view.tag = 1000
         
         // detail
         let detailViewController = DetailViewController()
         nav2 = UINavigationController(rootViewController: detailViewController)
-        nav2.view.tag = 2000
         
         svc.viewControllers = [nav1, nav2]
         
@@ -79,10 +74,8 @@ extension ContainerViewController: UISplitViewControllerDelegate {
     
     func splitViewController(_ svc: UISplitViewController, collapseSecondary vc2: UIViewController, onto vc1: UIViewController) -> Bool {
         if self.detailChosen {
-            print("detail chosen true")
             return false
         }
-        print("detail chosen false")
         return true
     }
 
@@ -101,11 +94,9 @@ extension ContainerViewController: UISplitViewControllerDelegate {
     }
     
     func splitViewControllerDidCollapse(_ svc: UISplitViewController) {
-        
     }
     
     func splitViewControllerDidExpand(_ svc: UISplitViewController) {
-
     }
     
     func splitViewController(_ svc: UISplitViewController, displayModeForExpandingToProposedDisplayMode proposedDisplayMode: UISplitViewController.DisplayMode) -> UISplitViewController.DisplayMode {

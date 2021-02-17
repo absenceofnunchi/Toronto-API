@@ -17,11 +17,11 @@ import UIKit
 
 class SearchResultsController: UITableViewController {
     // MARK: - Properties
-    
+
     var fetchedDataArr: [FetchedData]!
     weak var suggestedSearchDelegate: SuggestedSearch?
     let defaults = UserDefaults.standard
-    
+
     // colors for the tokens
     class func suggestedColor(fromIndex: Int) -> UIColor {
         var suggestedColor: UIColor!
@@ -43,16 +43,16 @@ class SearchResultsController: UITableViewController {
             default:
                 suggestedColor = UIColor.cyan
         }
-        
+
         return suggestedColor
     }
-    
+
     let searchCategoryArr = [SearchCategories.tags, SearchCategories.packages, SearchCategories.qualityScores, SearchCategories.recentlyChanged, SearchCategories.topics, SearchCategories.civicIssues]
-    
+
     // categories i.e. tags, packages, quality score, etc
     var suggestedSearches: [String] {
         var s = [String]()
-        
+
         switch showSuggestedSearches {
             case .none, .additionalSuggest:
                 if let fetchedDataArr = fetchedDataArr {
@@ -67,13 +67,13 @@ class SearchResultsController: UITableViewController {
         }
         return s
     }
-    
+
     lazy var filterButton: UIButton = {
         let filterButton = UIButton.systemButton(with: UIImage(systemName: "info.circle")!, target: self, action: #selector(filterButtonHandler))
         filterButton.tintColor = .systemRed
         filterButton.translatesAutoresizingMaskIntoConstraints = false
         tableView.addSubview(filterButton)
-        
+
         let svflg = tableView.frameLayoutGuide
         NSLayoutConstraint.activate([
             filterButton.topAnchor.constraint(equalTo: tableView.safeAreaLayoutGuide.topAnchor, constant: 8),
@@ -81,23 +81,23 @@ class SearchResultsController: UITableViewController {
             filterButton.heightAnchor.constraint(equalToConstant: 35),
             filterButton.widthAnchor.constraint(equalToConstant: 65)
         ])
-        
+
         return filterButton
     }()
-    
+
     @objc func filterButtonHandler() {
         let alertController = UIAlertController(title: "", message: "The current search result being shown are filtered by your settings. Filters are not applicable to Packages, Quality Scores, and Recently Changed. Reset your filter settings to see the full result.", preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         self.present(alertController, animated: true, completion: nil)
     }
-    
+
     // To hide/show the suggested searches before and after a token is selected
     lazy var showSuggestedSearches: SearchState = .none {
         didSet {
             if oldValue != showSuggestedSearches {
                 tableView.reloadData()
             }
-            
+
             switch showSuggestedSearches {
                 case .suggested:
                     filterButton.isHidden = true
@@ -106,7 +106,7 @@ class SearchResultsController: UITableViewController {
             }
         }
     }
-    
+
     func updateFilterButton() {
         var filterArr = [String]()
         for filter in FilterType.allCases {
@@ -114,33 +114,35 @@ class SearchResultsController: UITableViewController {
                 filterArr.append(savedFilter)
             }
         }
-        
+
         if filterArr.count > 0 {
             filterButton.isHidden = false
         } else {
             filterButton.isHidden = true
         }
     }
-    
+
     // MARK: - viewDidLoad
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: Cell.searchResultCell)
         tableView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)
-        
-        print("fetched", fetchedDataArr)
     }
 }
 
 // MARK: - Table view data source
 
 extension SearchResultsController {
-    
+
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return suggestedSearches.count
     }
-    
+
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch showSuggestedSearches {
             case .suggested:
@@ -149,35 +151,39 @@ extension SearchResultsController {
                 return ""
         }
     }
-    
+
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Cell.searchResultCell)!
-        
+
         if SearchResultsController.windowInterfaceOrientation!.isLandscape {
             cell.selectionStyle = .gray
         }
-        
+
         switch showSuggestedSearches {
             case .suggested:
                 let suggestedTitle = NSMutableAttributedString(string: suggestedSearches[indexPath.row])
                 suggestedTitle.addAttribute(.foregroundColor, value: UIColor.label, range: NSRange(location: 0, length: suggestedTitle.length))
                 cell.textLabel?.attributedText = suggestedTitle
-                
+
                 let image = suggestedImage(fromIndex: indexPath.row)
                 let tintableImage = image.withRenderingMode(.alwaysOriginal)
                 cell.imageView?.image = tintableImage
             case .none, .additionalSuggest:
-                let item = fetchedDataArr[indexPath.row].title
-                configureCell(cell, forItemTitle: item)
+                if fetchedDataArr.count > 0 {
+                    let item = fetchedDataArr[indexPath.row].title
+//                    configureCell(cell, forItemTitle: item)
+                    cell.textLabel?.text = item
+                    cell.imageView?.image = nil
+                }
         }
-        
+
         return cell
     }
-    
+
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let suggestedSearchDelegate = suggestedSearchDelegate else { return }
         tableView.deselectRow(at: indexPath, animated: true)
-        
+
         // Make sure we are showing suggested searches before notifying which token was selected
         switch showSuggestedSearches {
             case .suggested:
@@ -186,17 +192,21 @@ extension SearchResultsController {
                 let tokenToInsert = searchToken(searchCategory: tokenValue, index: indexPath.row)
                 suggestedSearchDelegate.didSelectSuggestedSearch(token: tokenToInsert)
             case .additionalSuggest:
-                let title = fetchedDataArr[indexPath.row].title
-                let searchCategory = fetchedDataArr[indexPath.row].searchCategories
-                let tokenToInsert = searchToken(searchCategory: searchCategory! ,title: title)
-                suggestedSearchDelegate.didSelectSuggestedSearch(token: tokenToInsert)
+                if fetchedDataArr.count > 0 {
+                    let title = fetchedDataArr[indexPath.row].title
+                    let searchCategory = fetchedDataArr[indexPath.row].searchCategories
+                    let tokenToInsert = searchToken(searchCategory: searchCategory! ,title: title)
+                    suggestedSearchDelegate.didSelectSuggestedSearch(token: tokenToInsert)
+                }
             case .none:
                 // A product was selected; inform our delgete that a product was selected to view.
-                let selected = fetchedDataArr[indexPath.row]
-                suggestedSearchDelegate.didSelectItem(fetchedData: selected)
+                if fetchedDataArr.count > 0 {
+                    let selected = fetchedDataArr[indexPath.row]
+                    suggestedSearchDelegate.didSelectItem(fetchedData: selected)
+                }
         }
     }
-    
+
     // Given a table cell row number index, return its color number equivalent.
     class func colorKind(fromIndex: Int) -> Item.ColorKind {
         var colorKind: Item.ColorKind!
@@ -226,12 +236,12 @@ extension SearchResultsController {
         let color = SearchResultsController.suggestedColor(fromIndex: fromIndex)
         return (UIImage(systemName: "magnifyingglass.circle.fill")?.withTintColor(color))!
     }
-    
+
     // titles for the tokens
     func suggestedTitle(fromIndex: Int) -> String {
         return suggestedSearches[fromIndex]
     }
-    
+
     // search token for the additional suggested search
     func searchToken(searchCategory: SearchCategories,title: String) -> UISearchToken {
         let tokenColor = SearchResultsController.suggestedColor(fromIndex: 6)
@@ -250,15 +260,15 @@ extension SearchResultsController {
         
         return searchToken
     }
-    
+
     // Search a search token from an input value. This token is for the suggested search.
     func searchToken(searchCategory: SearchCategories, index: Int) -> UISearchToken {
         let tokenColor = SearchResultsController.suggestedColor(fromIndex: index)
         let image = UIImage(systemName: "circle.fill")?.withTintColor(tokenColor, renderingMode: .alwaysOriginal)
         let searchToken = UISearchToken(icon: image, text: searchCategory.value)
-        
+
         searchToken.representedObject = searchCategory
-        
+
         return searchToken
     }
 }

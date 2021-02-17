@@ -188,7 +188,6 @@ extension ViewController: UISearchResultsUpdating {
                         self.searchResultsController.showSuggestedSearches = .additionalSuggest
                     }
                 case .civicIssues:
-                    
                     if let result = responseObject["result"] as? [String: Any], let facets = result["facets"] as? [String: Any], let civicIssues = facets["civic_issues"] as? [String: Any] {
                         civicIssues.forEach { (item) in
                             let fetchedData = FetchedData(title: item.key, searchCategories: suggestedSearch, parameters: [Query.Key.fq: "civic_issues:" + "\"" + item.key + "\""])

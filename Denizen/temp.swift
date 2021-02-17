@@ -672,3 +672,4 @@
 // toronto open data authors api?
 // the activity indicator is out of place when going from portrait to landscape
 // device landscape mode or the orientation landscape mode or both
+// delete url fetch observer

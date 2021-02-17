@@ -18,9 +18,15 @@ class ItemDetailViewController: UITableViewController {
     // MARK:- Properties
     
     var fetchedData: FetchedData!
-    var data = [(String, AnyObject)]()
-    var url: URL!
-
+    var dataSourceDelegate: FavouritesDataSource?
+    private var data = [(String, AnyObject)]()
+    private var url: URL!
+    private var shareButton: UIBarButtonItem!
+    private var favouriteButton: UIBarButtonItem!
+    private let defaults = UserDefaults.standard
+    private var unarchivedData = [FetchedData]()
+    private var isAlreadyFavourited = false
+    
     override func loadView() {
         super.loadView()
         self.tableView = UITableView(frame: self.tableView.frame, style: .grouped)
@@ -28,17 +34,14 @@ class ItemDetailViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        NotificationCenter.default.addObserver(self, selector: #selector(urlFetched), name: .urlFetched, object: nil)
         
         configureTableView()
-        fetchAPI()
-        configureShareButton()
         
-        title = fetchedData.title
-    }
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self, name: .urlFetched, object: nil)
+        if let fetchedData = fetchedData {
+            fetchAPI()
+            title = fetchedData.title
+        }
+        configureNavigationItems()
     }
     
     func configureTableView() {
@@ -62,7 +65,7 @@ extension ItemDetailViewController {
         
         var urlString: String!
         var parameters = [String: String]()
-        if let params = fetchedData.parameters {
+        if let fetchedData = fetchedData, let params = fetchedData.parameters {
             for (key, value) in params {
                 parameters.updateValue(value, forKey: key)
             }
@@ -100,7 +103,7 @@ extension ItemDetailViewController {
                     self.present(alertController, animated: true, completion: nil)
                 }
             }
-
+            
             if let responseObject = responseObject {
                 let json = JSON(responseObject as [String: Any])
                 let myDictionary = self.json2dic(json)
@@ -129,7 +132,6 @@ extension ItemDetailViewController {
 // MARK: - Datasource
 
 extension ItemDetailViewController {
-    
     override func numberOfSections(in tableView: UITableView) -> Int {
         return data.count
     }
@@ -159,10 +161,10 @@ extension ItemDetailViewController {
             let value = arr as [(String, AnyObject)]
             if value.count > 0 {
                 if let text = value[indexPath.row].1 as? String {
-//                    let text = value[indexPath.row].0 + ": " + text
-//                    let mas = NSMutableAttributedString(string: text)
-//                    let range = (mas.string as NSString).range(of: value[indexPath.row].0)
-//                    mas.addAttributes([.font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize)], range: range)
+                    //                    let text = value[indexPath.row].0 + ": " + text
+                    //                    let mas = NSMutableAttributedString(string: text)
+                    //                    let range = (mas.string as NSString).range(of: value[indexPath.row].0)
+                    //                    mas.addAttributes([.font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize)], range: range)
                     
                     cell.textLabel?.text = value[indexPath.row].0 + ": " + text
                 } else {
@@ -175,9 +177,9 @@ extension ItemDetailViewController {
                         text = value[indexPath.row].0 + ": null"
                     }
                     
-//                    let mas = NSMutableAttributedString(string: text)
-//                    let range = (mas.string as NSString).range(of: value[indexPath.row].0)
-//                    mas.addAttributes([.font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize)], range: range)
+                    //                    let mas = NSMutableAttributedString(string: text)
+                    //                    let range = (mas.string as NSString).range(of: value[indexPath.row].0)
+                    //                    mas.addAttributes([.font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize)], range: range)
                     cell.textLabel?.text = text
                 }
             }
@@ -245,29 +247,87 @@ extension ItemDetailViewController {
     }
 }
 
-// MARK: - Share button
+// MARK: - Navigation Items
 
 extension ItemDetailViewController {
-    func configureShareButton() {
-        let shareButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(share))
-        shareButton.tintColor = UIColor(red: 175/255, green: 122/255, blue: 197/255, alpha: 1)
-        navigationItem.rightBarButtonItem = shareButton
-    }
-    
-    @objc func share(_ sender: UIButton) {
-        guard let url = self.url else { return }
-        let shareSheetVC = UIActivityViewController(activityItems: [url], applicationActivities: nil)
-        present(shareSheetVC, animated: true, completion: nil)
+    func configureNavigationItems() {
+        do {
+            if let savedFavourites = defaults.object(forKey: Keys.favourites) as? Data {
+                let decoded = try JSONDecoder().decode([FetchedData].self, from: savedFavourites)
+                unarchivedData.removeAll()
+                unarchivedData = decoded
+                for data in decoded where data.title == fetchedData.title {
+                    isAlreadyFavourited = true
+                }
+            }
+        } catch (let error){
+            print(error)
+        }
         
-        if let pop = shareSheetVC.popoverPresentationController {
-            pop.sourceView = sender
-            pop.sourceRect = sender.bounds
+        setNavigationItems()
+    }
+
+    @objc func buttonHandler(_ sender: UIButton) {
+        switch sender.tag {
+            case 1:
+                guard let url = self.url else { return }
+                let shareSheetVC = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+                present(shareSheetVC, animated: true, completion: nil)
+                
+                if let pop = shareSheetVC.popoverPresentationController {
+                    pop.sourceView = self.view
+                    pop.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.height, width: 0, height: 0)
+                    pop.permittedArrowDirections = []
+                }
+            case 2:
+                if isAlreadyFavourited {
+                    // delete if it already exists
+                    unarchivedData.removeAll { $0.title == fetchedData.title }
+                } else {
+                    // only save if it doesn't already exist
+                    unarchivedData.append(fetchedData)
+                }
+                
+                defaults.removeObject(forKey: Keys.favourites)
+
+                do {
+                    let archived = try JSONEncoder().encode(unarchivedData)
+                    defaults.set(archived, forKey: Keys.favourites)
+                    defaults.synchronize()
+                } catch (let error) {
+                    print("archiving error: \(error)")
+                }
+                
+                isAlreadyFavourited.toggle()
+                setNavigationItems()
+                
+                dataSourceDelegate?.configureInitialData()
+            default:
+                break
         }
     }
     
-    @objc func urlFetched(notification: NSNotification) {
-        if let fetchedURL = notification.userInfo?["url"] as? URL {
-            self.url = fetchedURL
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        setNavigationItems()
+    }
+    
+    func setNavigationItems() {
+        let actionImage = UIImage(systemName: "square.and.arrow.up")?.withTintColor(UIColor.lightGray, renderingMode: .alwaysTemplate)
+        let starImage = UIImage(systemName: isAlreadyFavourited ? "star.fill" : "star")
+        
+        shareButton = UIBarButtonItem(image: actionImage, style: .plain, target: self, action: #selector(buttonHandler(_:)))
+        shareButton.tag = 1
+        
+        favouriteButton = UIBarButtonItem(image: starImage, style: .plain, target: self, action: #selector(buttonHandler(_:)))
+        favouriteButton.tag = 2
+        if UIDevice.current.orientation.isLandscape {
+            shareButton.tintColor = .lightGray
+            favouriteButton.tintColor = isAlreadyFavourited ? .yellow : .lightGray
+        } else {
+            shareButton.tintColor = .white
+            favouriteButton.tintColor = isAlreadyFavourited ? .yellow : .white
         }
+        
+        navigationItem.rightBarButtonItems = [shareButton, favouriteButton]
     }
 }

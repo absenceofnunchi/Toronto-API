@@ -17,7 +17,6 @@ class DetailViewController: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = .systemBackground
-        view.tag = 5000
     }
     
     override func viewWillAppear(_ animated: Bool) {

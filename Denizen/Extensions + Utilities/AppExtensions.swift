@@ -189,5 +189,4 @@ extension Notification.Name {
     // for detail view controller to be brought foward when collapsed
     static let detailChosen = Notification.Name("detailChosen")
     static let detailDismissed = Notification.Name("detailDismissed")
-    static let urlFetched = Notification.Name("urlFetched")
 }

@@ -26,6 +26,8 @@
 		490D4CF425CA607D008D9015 /* FilterSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490D4CF325CA607D008D9015 /* FilterSettingsTableViewController.swift */; };
 		49173F4525D6FD0900C2710C /* ViewController + DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49173F4425D6FD0900C2710C /* ViewController + DataSource.swift */; };
 		4918476325BCF0AE006AC15C /* TitleSupplementaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4918476225BCF0AE006AC15C /* TitleSupplementaryView.swift */; };
+		492B145425DA07BA0083D3AB /* FavouriteCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492B145325DA07BA0083D3AB /* FavouriteCollectionViewController.swift */; };
+		492B145925DA0AFF0083D3AB /* FavouriteVC + Datasource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492B145825DA0AFF0083D3AB /* FavouriteVC + Datasource.swift */; };
 		496A8EEA25D49E6200B390C0 /* 2.json in Resources */ = {isa = PBXBuildFile; fileRef = 496A8EDE25D49E6000B390C0 /* 2.json */; };
 		496A8EEB25D49E6200B390C0 /* 5.json in Resources */ = {isa = PBXBuildFile; fileRef = 496A8EDF25D49E6000B390C0 /* 5.json */; };
 		496A8EEC25D49E6200B390C0 /* 7.json in Resources */ = {isa = PBXBuildFile; fileRef = 496A8EE025D49E6000B390C0 /* 7.json */; };
@@ -44,14 +46,17 @@
 		49993CE525BA54C200091758 /* AppProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49993CE425BA54C200091758 /* AppProtocols.swift */; };
 		49993CEB25BA553100091758 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49993CEA25BA553100091758 /* MapKit.framework */; };
 		49993CF025BA5AF900091758 /* AppDataTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49993CEF25BA5AF900091758 /* AppDataTypes.swift */; };
-		499D566825BE0E3F00FB2FDE /* CustomDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499D566725BE0E3F00FB2FDE /* CustomDataSource.swift */; };
+		499D566825BE0E3F00FB2FDE /* CollectionViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499D566725BE0E3F00FB2FDE /* CollectionViewDataSource.swift */; };
 		499D567F25BE308800FB2FDE /* WebServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499D567E25BE308800FB2FDE /* WebServiceManager.swift */; };
+		499EB18025DC74FD006D0F18 /* FavouritesDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499EB17F25DC74FD006D0F18 /* FavouritesDataSource.swift */; };
 		49BC9EF825C64F3F00859AF6 /* ExpandDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BC9EF725C64F3F00859AF6 /* ExpandDetailViewController.swift */; };
 		49CA84AD25C5A5740015B125 /* ItemDetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CA84AC25C5A5740015B125 /* ItemDetailCell.swift */; };
 		49CE395D25D06BBB00660673 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CE395C25D06BBB00660673 /* MapViewController.swift */; };
 		49CE396225D0D91B00660673 /* MapTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CE396125D0D91B00660673 /* MapTableViewController.swift */; };
 		49D9BE9C25BB865C00F59FDC /* MenuCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D9BE9B25BB865C00F59FDC /* MenuCell.swift */; };
 		49E317B525D4565200129EA0 /* GradientLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E317B425D4565200129EA0 /* GradientLayer.swift */; };
+		49FF0B7225DAC422008CB0B2 /* CustomTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FF0B7125DAC422008CB0B2 /* CustomTabBarController.swift */; };
+		49FF0B7725DAE71A008CB0B2 /* ViewController+TabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FF0B7625DAE71A008CB0B2 /* ViewController+TabBar.swift */; };
 		86CB5BDB5C47A74273118E92 /* Pods_DenizenTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 861951D686F8AE113AB2733D /* Pods_DenizenTests.framework */; };
 		BB01434DCCA7020476E8DBB8 /* Pods_Denizen_DenizenUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 579498E343E5D25F7720BFC9 /* Pods_Denizen_DenizenUITests.framework */; };
 		E74CF363FCC8108FDEDB3D47 /* Pods_Denizen.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5078C9CA5C8D025890357525 /* Pods_Denizen.framework */; };
@@ -101,6 +106,8 @@
 		490D4CF325CA607D008D9015 /* FilterSettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterSettingsTableViewController.swift; sourceTree = "<group>"; };
 		49173F4425D6FD0900C2710C /* ViewController + DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController + DataSource.swift"; sourceTree = "<group>"; };
 		4918476225BCF0AE006AC15C /* TitleSupplementaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleSupplementaryView.swift; sourceTree = "<group>"; };
+		492B145325DA07BA0083D3AB /* FavouriteCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouriteCollectionViewController.swift; sourceTree = "<group>"; };
+		492B145825DA0AFF0083D3AB /* FavouriteVC + Datasource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FavouriteVC + Datasource.swift"; sourceTree = "<group>"; };
 		496A8EDE25D49E6000B390C0 /* 2.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 2.json; sourceTree = "<group>"; };
 		496A8EDF25D49E6000B390C0 /* 5.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 5.json; sourceTree = "<group>"; };
 		496A8EE025D49E6000B390C0 /* 7.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 7.json; sourceTree = "<group>"; };
@@ -119,14 +126,17 @@
 		49993CE425BA54C200091758 /* AppProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppProtocols.swift; sourceTree = "<group>"; };
 		49993CEA25BA553100091758 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		49993CEF25BA5AF900091758 /* AppDataTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDataTypes.swift; sourceTree = "<group>"; };
-		499D566725BE0E3F00FB2FDE /* CustomDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomDataSource.swift; sourceTree = "<group>"; };
+		499D566725BE0E3F00FB2FDE /* CollectionViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewDataSource.swift; sourceTree = "<group>"; };
 		499D567E25BE308800FB2FDE /* WebServiceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebServiceManager.swift; sourceTree = "<group>"; };
+		499EB17F25DC74FD006D0F18 /* FavouritesDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesDataSource.swift; sourceTree = "<group>"; };
 		49BC9EF725C64F3F00859AF6 /* ExpandDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandDetailViewController.swift; sourceTree = "<group>"; };
 		49CA84AC25C5A5740015B125 /* ItemDetailCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailCell.swift; sourceTree = "<group>"; };
 		49CE395C25D06BBB00660673 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		49CE396125D0D91B00660673 /* MapTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapTableViewController.swift; sourceTree = "<group>"; };
 		49D9BE9B25BB865C00F59FDC /* MenuCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuCell.swift; sourceTree = "<group>"; };
 		49E317B425D4565200129EA0 /* GradientLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientLayer.swift; sourceTree = "<group>"; };
+		49FF0B7125DAC422008CB0B2 /* CustomTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarController.swift; sourceTree = "<group>"; };
+		49FF0B7625DAE71A008CB0B2 /* ViewController+TabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+TabBar.swift"; sourceTree = "<group>"; };
 		4A5F3B01F3F0460F8025684E /* Pods-Denizen-DenizenUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Denizen-DenizenUITests.debug.xcconfig"; path = "Target Support Files/Pods-Denizen-DenizenUITests/Pods-Denizen-DenizenUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		5078C9CA5C8D025890357525 /* Pods_Denizen.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Denizen.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		579498E343E5D25F7720BFC9 /* Pods_Denizen_DenizenUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Denizen_DenizenUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -193,9 +203,9 @@
 			children = (
 				4909019B25B91DB900E38196 /* AppDelegate.swift */,
 				4909019D25B91DB900E38196 /* SceneDelegate.swift */,
-				499D566725BE0E3F00FB2FDE /* CustomDataSource.swift */,
 				49993CDF25BA400A00091758 /* temp.swift */,
 				49E317B425D4565200129EA0 /* GradientLayer.swift */,
+				499EB17B25DC74D7006D0F18 /* Data Sources */,
 				496A8ED725D49AE200B390C0 /* Resources */,
 				499D566625BE0E1800FB2FDE /* ViewControllers */,
 				49D9BE9A25BB863F00F59FDC /* Cells and Supplementary Views */,
@@ -279,11 +289,13 @@
 			isa = PBXGroup;
 			children = (
 				490BB81725D1AA5C000AA6CF /* ContainerViewController.swift */,
+				49FF0B7125DAC422008CB0B2 /* CustomTabBarController.swift */,
 				4909019F25B91DB900E38196 /* ViewController.swift */,
 				490D4CD925CA33E3008D9015 /* ViewController + OptionsBar.swift */,
 				49173F4425D6FD0900C2710C /* ViewController + DataSource.swift */,
 				490BB81C25D1E660000AA6CF /* ViewController + SearchBar.swift */,
 				490D348A25BF2CB200E94116 /* ViewController + ResultsUpdate.swift */,
+				49FF0B7625DAE71A008CB0B2 /* ViewController+TabBar.swift */,
 				490BB82625D1E7B2000AA6CF /* SearchResultsController.swift */,
 				490BB81225D1A6C7000AA6CF /* DetailViewController.swift */,
 				490D348525BF29D000E94116 /* ItemDetailViewController.swift */,
@@ -293,8 +305,19 @@
 				490D4CF325CA607D008D9015 /* FilterSettingsTableViewController.swift */,
 				49CE395C25D06BBB00660673 /* MapViewController.swift */,
 				49CE396125D0D91B00660673 /* MapTableViewController.swift */,
+				492B145325DA07BA0083D3AB /* FavouriteCollectionViewController.swift */,
+				492B145825DA0AFF0083D3AB /* FavouriteVC + Datasource.swift */,
 			);
 			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		499EB17B25DC74D7006D0F18 /* Data Sources */ = {
+			isa = PBXGroup;
+			children = (
+				499D566725BE0E3F00FB2FDE /* CollectionViewDataSource.swift */,
+				499EB17F25DC74FD006D0F18 /* FavouritesDataSource.swift */,
+			);
+			path = "Data Sources";
 			sourceTree = "<group>";
 		};
 		49D9BE9A25BB863F00F59FDC /* Cells and Supplementary Views */ = {
@@ -572,15 +595,18 @@
 			files = (
 				490D348B25BF2CB200E94116 /* ViewController + ResultsUpdate.swift in Sources */,
 				49D9BE9C25BB865C00F59FDC /* MenuCell.swift in Sources */,
+				49FF0B7225DAC422008CB0B2 /* CustomTabBarController.swift in Sources */,
 				490D348625BF29D000E94116 /* ItemDetailViewController.swift in Sources */,
 				49993CD825BA14FC00091758 /* AppExtensions.swift in Sources */,
 				490BB81325D1A6C7000AA6CF /* DetailViewController.swift in Sources */,
 				49CE396225D0D91B00660673 /* MapTableViewController.swift in Sources */,
-				499D566825BE0E3F00FB2FDE /* CustomDataSource.swift in Sources */,
+				499D566825BE0E3F00FB2FDE /* CollectionViewDataSource.swift in Sources */,
+				499EB18025DC74FD006D0F18 /* FavouritesDataSource.swift in Sources */,
 				490D4CDA25CA33E3008D9015 /* ViewController + OptionsBar.swift in Sources */,
 				499D567F25BE308800FB2FDE /* WebServiceManager.swift in Sources */,
 				49E317B525D4565200129EA0 /* GradientLayer.swift in Sources */,
 				49794B6725C75DBC00D2B2B5 /* ExpandTableViewController.swift in Sources */,
+				49FF0B7725DAE71A008CB0B2 /* ViewController+TabBar.swift in Sources */,
 				490D4CF425CA607D008D9015 /* FilterSettingsTableViewController.swift in Sources */,
 				490BB81D25D1E660000AA6CF /* ViewController + SearchBar.swift in Sources */,
 				490BB82725D1E7B2000AA6CF /* SearchResultsController.swift in Sources */,
@@ -588,10 +614,12 @@
 				49BC9EF825C64F3F00859AF6 /* ExpandDetailViewController.swift in Sources */,
 				49CA84AD25C5A5740015B125 /* ItemDetailCell.swift in Sources */,
 				49173F4525D6FD0900C2710C /* ViewController + DataSource.swift in Sources */,
+				492B145425DA07BA0083D3AB /* FavouriteCollectionViewController.swift in Sources */,
 				490901A025B91DB900E38196 /* ViewController.swift in Sources */,
 				4909019C25B91DB900E38196 /* AppDelegate.swift in Sources */,
 				490D4CEF25CA3F32008D9015 /* FilterViewController.swift in Sources */,
 				49993CE525BA54C200091758 /* AppProtocols.swift in Sources */,
+				492B145925DA0AFF0083D3AB /* FavouriteVC + Datasource.swift in Sources */,
 				49993CF025BA5AF900091758 /* AppDataTypes.swift in Sources */,
 				4909019E25B91DB900E38196 /* SceneDelegate.swift in Sources */,
 				490BB81825D1AA5C000AA6CF /* ContainerViewController.swift in Sources */,

@@ -17,6 +17,7 @@ struct Cell {
     static var filterCell = "filter-cell-identifier"
     static var mapDetailCell = "map-detail-cell-identifier"
     static var searchResultTableCell = "search-result-table-cell"
+    static var favouriteCell = "favourite-reuse-identifier"
 }
 
 // MARK: - URL
@@ -104,12 +105,137 @@ class Item {
 //    }
 //}
 
-struct FetchedData: Hashable {
+struct Keys {
+    static var id = "id"
+    static var title = "title"
+    static var date = "date"
+    static var searchCategories = "seachCategories"
+    static var parameters = "parameters"
+    static var favourites = "favourties"
+}
+
+//class FetchedData: NSObject, NSCoding {
+//    let uuid = UUID()
+//    var id: String? = nil
+//    let title: String
+//    var date: String? = nil
+//    var searchCategories: SearchCategories? = nil
+//    var parameters: [String: String]? = nil
+//
+//    init(id: String? = nil, title: String, date: String? = nil, searchCategories: SearchCategories? = nil, parameters: [String: String]? = nil) {
+//        self.id = id
+//        self.title = title
+//        self.date = date
+//        self.searchCategories = searchCategories
+//        self.parameters = parameters
+//    }
+//
+////    required convenience init(coder aDecoder: NSCoder) {
+////        let id = aDecoder.decodeObject(forKey: Keys.id.rawValue) as! String
+////        let title = aDecoder.decodeObject(forKey: Keys.title.rawValue) as! String
+////        let date = aDecoder.decodeObject(forKey: Keys.date.rawValue) as! String
+////        let searchCategories = aDecoder.decodeObject(forKey: Keys.searchCategories.rawValue) as! SearchCategories
+////        let parameters = aDecoder.decodeObject(forKey: Keys.parameters.rawValue) as! [String: String]
+////        self.init(id: id, title: title, date: date, searchCategories: searchCategories, parameters: parameters)
+////    }
+//
+//    required convenience init?(coder aDecoder: NSCoder) {
+//        guard let id = aDecoder.decodeObject(forKey: Keys.id) as? String,
+//              let title = aDecoder.decodeObject(forKey: Keys.title) as? String,
+//              let date = aDecoder.decodeObject(forKey: Keys.date) as? String,
+////              let searchCategories = aDecoder.decodeObject(forKey: Keys.searchCategories) as? SearchCategories,
+//              let parameters = aDecoder.decodeObject(forKey: Keys.parameters) as? [String: String] else { return nil }
+//
+//        self.init(id: id, title: title, date: date, parameters: parameters)
+//    }
+//
+////    public func encode(with coder: NSCoder) {
+////        coder.encode(id, forKey: Keys.id)
+////        coder.encode(title, forKey: Keys.title)
+////        coder.encode(date, forKey: Keys.date)
+////        coder.encode(searchCategories, forKey: Keys.searchCategories)
+////        coder.encode(parameters, forKey: Keys.parameters)
+////    }
+//
+//    public func encode(with coder: NSCoder) {
+//        if let id = id {
+//            coder.encode(id, forKey: Keys.id)
+//        }
+//        coder.encode(title, forKey: Keys.title)
+//        if let date = date {
+//            coder.encode(date, forKey: Keys.date)
+//        }
+////        if let searchCategories = searchCategories {
+////            coder.encode(searchCategories, forKey: Keys.searchCategories)
+////        }
+//        if let parameters = parameters {
+//            coder.encode(parameters, forKey: Keys.parameters)
+//        }
+//    }
+//
+////    static func == (lhs: FetchedData, rhs: FetchedData) -> Bool {
+////        return lhs.uuid == rhs.uuid
+////    }
+//
+////    func hash(into hasher: inout Hasher) {
+////        hasher.combine(uuid)
+////    }
+//}
+
+class FetchedData: Codable, Equatable {
+    let uuid = UUID()
     var id: String? = nil
     let title: String
     var date: String? = nil
     var searchCategories: SearchCategories? = nil
     var parameters: [String: String]? = nil
+    
+    private enum CodingKeys: String, CodingKey {
+        case id, title, date, searchCategories,parameters
+    }
+    
+    init(id: String? = nil, title: String, date: String? = nil, searchCategories: SearchCategories? = nil, parameters: [String: String]? = nil) {
+        self.id = id
+        self.title = title
+        self.date = date
+        self.searchCategories = searchCategories
+        self.parameters = parameters
+    }
+
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        title = try container.decode(String.self, forKey: .title)
+        date = try container.decode(String.self, forKey: .date)
+        searchCategories = try container.decode(SearchCategories.self, forKey: .searchCategories)
+        parameters = try container.decode([String: String].self, forKey: .parameters)
+    }
+
+    func encode(with encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        
+        if let id = id {
+            try container.encode(id, forKey: .id)
+        }
+        
+        try container.encode(title, forKey: .title)
+        
+        if let date = date {
+            try container.encode(date, forKey: .date)
+        }
+        
+        if let searchCategories = searchCategories {
+            try container.encode(searchCategories, forKey: .searchCategories)
+        }
+        
+        if let parameters = parameters {
+            try container.encode(parameters, forKey: .parameters)
+        }
+    }
+    
+    static func == (lhs: FetchedData, rhs: FetchedData) -> Bool {
+        return lhs.uuid == rhs.uuid
+    }
 }
 
 enum SearchState {
@@ -156,9 +282,52 @@ class PaddedLabel: UILabel {
 
 // MARK: - SearchCategories
 /// SearchResultsController, WebServiceManager
-enum SearchCategories: Equatable, Hashable {
-    case tags, packages, recentlyChanged, qualityScores, tagPackageShow, topics, civicIssues
-    case tag(String), topic(String)
+//enum SearchCategories: Equatable, Hashable, Codable {
+//    init(from decoder: Decoder) throws {
+//        <#code#>
+//    }
+//
+//    func encode(to encoder: Encoder) throws {
+//        <#code#>
+//    }
+//
+//    case tags, packages, recentlyChanged, qualityScores, tagPackageShow, topics, civicIssues
+//    case tag(String), topic(String)
+//
+//    var value: String {
+//        switch self {
+//            case .tags:
+//                return "Tags"
+//            case .packages:
+//                return "Packages"
+//            case .recentlyChanged:
+//                return "Recently Changed"
+//            case .qualityScores:
+//                return "Quality Scores"
+//            case .tagPackageShow:
+//                return "package_show"
+//            case .topics:
+//                return "Topics"
+//            case .tag(let title):
+//                return title
+//            case .topic(let title):
+//                return title
+//            case .civicIssues:
+//                return "Civic Issues"
+//        }
+//    }
+//}
+
+enum SearchCategories: Equatable, Hashable, Codable {
+    case tags
+    case packages
+    case recentlyChanged
+    case qualityScores
+    case tagPackageShow
+    case topics
+    case civicIssues
+    case tag(String)
+    case topic(String)
     
     var value: String {
         switch self {
@@ -180,6 +349,76 @@ enum SearchCategories: Equatable, Hashable {
                 return title
             case .civicIssues:
                 return "Civic Issues"
+        }
+    }
+}
+
+extension SearchCategories {
+//    private enum CodingKeys: String, CodingKey {
+//        case tags, packages, recentlyChanged, qualityScores, tagPackageShow, topics, tag, topic, civicIssues
+//    }
+    
+    enum Key: CodingKey {
+        case rawValue
+        case associatedValue
+    }
+     
+    enum CodingError: Error {
+        case unknownValue
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: Key.self)
+        let rawValue = try container.decode(Int.self, forKey: .rawValue)
+        switch rawValue {
+            case 0:
+                self = .tags
+            case 1:
+                self = .packages
+            case 2:
+                self = .recentlyChanged
+            case 3:
+                self = .qualityScores
+            case 4:
+                self = .tagPackageShow
+            case 5:
+                self = .topics
+            case 6:
+                let title = try container.decode(String.self, forKey: .associatedValue)
+                self = .tag(title)
+            case 7:
+                let title = try container.decode(String.self, forKey: .associatedValue)
+                self = .topic(title)
+            case 8:
+                self = .civicIssues
+            default:
+                throw CodingError.unknownValue
+        }
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: Key.self)
+        switch self {
+            case .tags:
+                try container.encode(0, forKey: .rawValue)
+            case .packages:
+                try container.encode(1, forKey: .rawValue)
+            case .recentlyChanged:
+                try container.encode(2, forKey: .rawValue)
+            case .qualityScores:
+                try container.encode(3, forKey: .rawValue)
+            case .tagPackageShow:
+                try container.encode(4, forKey: .rawValue)
+            case .topics:
+                try container.encode(5, forKey: .rawValue)
+            case .tag(let title):
+                try container.encode(6, forKey: .rawValue)
+                try container.encode(title, forKey: .associatedValue)
+            case .topic(let title):
+                try container.encode(7, forKey: .rawValue)
+                try container.encode(title, forKey: .associatedValue)
+            case .civicIssues:
+                try container.encode(8, forKey: .rawValue)
         }
     }
 }

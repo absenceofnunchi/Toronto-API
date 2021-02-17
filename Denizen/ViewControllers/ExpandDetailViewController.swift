@@ -143,7 +143,7 @@ extension ExpandDetailViewController {
 extension ExpandDetailViewController {
     func configureShareButton() {
         let shareButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(share))
-        shareButton.tintColor = UIColor(red: 175/255, green: 122/255, blue: 197/255, alpha: 1)
+        shareButton.tintColor = .lightGray
         navigationItem.rightBarButtonItem = shareButton
     }
     

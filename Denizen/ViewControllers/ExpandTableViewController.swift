@@ -158,7 +158,7 @@ extension ExpandTableViewController {
 extension ExpandTableViewController {
     func configureNavigationItem() {
         let rightBarButton = UIBarButtonItem(image: UIImage(systemName: "map"), style: .plain, target: self, action: #selector(barButtonHandler))
-        rightBarButton.tintColor = UIColor(red: 175/255, green: 122/255, blue: 197/255, alpha: 1)
+        rightBarButton.tintColor = .lightGray
         self.navigationItem.rightBarButtonItem = rightBarButton
     }
     

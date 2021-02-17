@@ -29,3 +29,9 @@ protocol FilterDelegate: AnyObject {
 protocol LeftViewDelegate: AnyObject {
     func didApplyFilter()
 }
+
+// MARK: - Data source delegate
+protocol DataSourceDelegate: AnyObject {
+    func didSelectCellAtIndexPath(at indexPath: IndexPath, with fetchedData: FetchedData)
+    func didFetchData()
+}
