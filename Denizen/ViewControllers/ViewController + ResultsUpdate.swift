@@ -108,6 +108,25 @@ extension ViewController: UISearchResultsUpdating {
 //                parameters = [Query.Key.facetField: "[\u{22}civic_issues\u{22}]", Query.Key.rows: "0"]
                 parameters = [Query.Key.facetField: "[\u{22}civic_issues\u{22}]"]
                 fetchAPI(urlString: urlString, parameters: parameters, suggestedSearch: suggestedSearch, filters: filters)
+            case .notices:
+                urlString = "http://app.toronto.ca/nm/notices.json"
+                parameters = ["noticeDateFrom": "2020-01-01", "locationId": "1"]
+                fetchAPI(urlString: urlString, parameters: parameters, suggestedSearch: suggestedSearch)
+            case .admins:
+                urlString = URLScheme.baseURL + Query.ActionType.userList
+                fetchAPI(urlString: urlString, parameters: nil, suggestedSearch: suggestedSearch)
+            case .vocabularyList:
+                urlString = URLScheme.baseURL + Query.ActionType.vocabularyList
+                fetchAPI(urlString: urlString, parameters: nil, suggestedSearch: suggestedSearch)
+            case .helpShow:
+//                urlString = URLScheme.baseURL + Query.ActionType.helpShow
+//                fetchAPI(urlString: urlString, parameters: nil, suggestedSearch: suggestedSearch)
+                let helpList = [Query.ActionType.tagShow, Query.ActionType.packageShow, Query.ActionType.datastoreSearch, Query.ActionType.packageSearch, Query.ActionType.userList, Query.ActionType.userShow, Query.ActionType.vocabularyList]
+                helpList.forEach { (item) in
+                    let data = FetchedData(id: nil, title: item, searchCategories: suggestedSearch, parameters: [Query.Key.name: item])
+                    self.suggestArray.append(data)
+                }
+                self.loadSearchControllerData(with: self.suggestArray)
             default:
                 break
         }
@@ -135,6 +154,7 @@ extension ViewController: UISearchResultsUpdating {
                     }
                 case .packages:
                     if let results = responseObject["result"] as? [String] {
+                        
                         let fetchedDataArr = results.map { FetchedData(title: $0, searchCategories: suggestedSearch, parameters: [Query.Key.fq: "name:" + $0])}
                         self.suggestArray += fetchedDataArr
                     }
@@ -192,6 +212,53 @@ extension ViewController: UISearchResultsUpdating {
                         civicIssues.forEach { (item) in
                             let fetchedData = FetchedData(title: item.key, searchCategories: suggestedSearch, parameters: [Query.Key.fq: "civic_issues:" + "\"" + item.key + "\""])
                             self.suggestArray.append(fetchedData)
+                        }
+                    }
+                    self.loadSearchControllerData(with: self.suggestArray)
+                case .notices:
+                    if let records = responseObject["Records"] as? [[String: Any]] {
+                        records.forEach { (record) in
+                            if let title = record["title"], let id = record["noticeId"] {
+                                let fetchedData = FetchedData(id: String(describing: id), title: title as! String, searchCategories: suggestedSearch)
+                                self.suggestArray.append(fetchedData)
+                            }
+                        }
+                    }
+                    self.loadSearchControllerData(with: self.suggestArray)
+                case .admins:
+                    if let results = responseObject["result"] as? [[String: Any]] {
+                        results.forEach { (result) in
+                            if let fullName = result["fullname"] as? String, let id = result["id"] as? String {
+                                let fetchedData = FetchedData(id: id, title: fullName, searchCategories: suggestedSearch, parameters: [Query.Key.id: id])
+                                self.suggestArray.append(fetchedData)
+                            }
+                        }
+                    }
+                    self.loadSearchControllerData(with: self.suggestArray)
+                case .vocabularyList:
+                    if let results = responseObject["result"] as? [[String: Any]] {
+                        results.forEach { (result) in
+                            if let name = result["name"] as? String, let id = result["id"] as? String {
+                                let fetchedData = FetchedData(id: id, title: name, searchCategories: suggestedSearch, parameters: [Query.Key.id: id])
+                                self.suggestArray.append(fetchedData)
+                            }
+                        }
+                    }
+                    self.loadSearchControllerData(with: self.suggestArray)
+                case .helpShow:
+                    let helpList = [Query.ActionType.tagShow, Query.ActionType.packageShow, Query.ActionType.datastoreSearch, Query.ActionType.packageSearch, Query.ActionType.userList, Query.ActionType.userShow, Query.ActionType.vocabularyList]
+                    helpList.forEach { (item) in
+                        let data = FetchedData(id: nil, title: item, searchCategories: suggestedSearch, parameters: [Query.Key.name: item])
+                        self.suggestArray.append(data)
+                    }
+                    self.loadSearchControllerData(with: self.suggestArray)
+                case .packageAutocomplete:
+                    if let results = responseObject["result"] as? [[String: Any]] {
+                        results.forEach { (result) in
+                            if let name = result["name"] as? String {
+                                let fetchedData = FetchedData(title: name, searchCategories: suggestedSearch, parameters: [Query.Key.fq: "name" + name])
+                                self.suggestArray.append(fetchedData)
+                            }
                         }
                     }
                     self.loadSearchControllerData(with: self.suggestArray)

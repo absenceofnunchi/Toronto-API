@@ -32,6 +32,7 @@ struct URLScheme {
         static var packages = "package_list"
         static var recentlyChanged = "recently_changed_packages_activity_list"
         static var qualityScores = "datastore_search"
+        static var packageAutocomplete = "package_autocomplete"
         
         // full JSON representation
         static var tagShow = "tag_show"
@@ -48,6 +49,10 @@ struct Query: Hashable {
         static var packageShow = "package_show"
         static var datastoreSearch = "datastore_search"
         static var packageSearch = "package_search"
+        static var userList = "user_list"
+        static var userShow = "user_show"
+        static var vocabularyList = "vocabulary_list"
+        static var helpShow = "help_show"
     }
     
     struct Key {
@@ -58,6 +63,7 @@ struct Query: Hashable {
         static var facetField = "facet.field"
         static var rows = "rows"
         static var sort = "sort"
+        static var name = "name"
     }
     
     struct Filter {
@@ -191,7 +197,7 @@ class FetchedData: Codable, Equatable {
     var parameters: [String: String]? = nil
     
     private enum CodingKeys: String, CodingKey {
-        case id, title, date, searchCategories,parameters
+        case id, title, date, searchCategories, parameters
     }
     
     init(id: String? = nil, title: String, date: String? = nil, searchCategories: SearchCategories? = nil, parameters: [String: String]? = nil) {
@@ -204,11 +210,11 @@ class FetchedData: Codable, Equatable {
 
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decode(String.self, forKey: .id)
+        id = try? container.decode(String.self, forKey: .id)
         title = try container.decode(String.self, forKey: .title)
-        date = try container.decode(String.self, forKey: .date)
-        searchCategories = try container.decode(SearchCategories.self, forKey: .searchCategories)
-        parameters = try container.decode([String: String].self, forKey: .parameters)
+        date = try? container.decode(String.self, forKey: .date)
+        searchCategories = try? container.decode(SearchCategories.self, forKey: .searchCategories)
+        parameters = try? container.decode([String: String].self, forKey: .parameters)
     }
 
     func encode(with encoder: Encoder) throws {
@@ -239,7 +245,7 @@ class FetchedData: Codable, Equatable {
 }
 
 enum SearchState {
-    case none, suggested, additionalSuggest
+    case none, suggested, additionalSuggest, notices
 }
 
 // MARK: - ItemInfo
@@ -328,6 +334,12 @@ enum SearchCategories: Equatable, Hashable, Codable {
     case civicIssues
     case tag(String)
     case topic(String)
+    case notices
+    case admins
+    case vocabularyList
+    case helpShow
+    case licenses
+    case packageAutocomplete
     
     var value: String {
         switch self {
@@ -349,15 +361,23 @@ enum SearchCategories: Equatable, Hashable, Codable {
                 return title
             case .civicIssues:
                 return "Civic Issues"
+            case .notices:
+                return "Notices"
+            case .admins:
+                return "Admins"
+            case .vocabularyList:
+                return "Vocabulary List"
+            case .helpShow:
+                return "Help"
+            case .licenses:
+                return "Licenses"
+            case .packageAutocomplete:
+                return "Package Autocomplete"
         }
     }
 }
 
 extension SearchCategories {
-//    private enum CodingKeys: String, CodingKey {
-//        case tags, packages, recentlyChanged, qualityScores, tagPackageShow, topics, tag, topic, civicIssues
-//    }
-    
     enum Key: CodingKey {
         case rawValue
         case associatedValue
@@ -391,6 +411,18 @@ extension SearchCategories {
                 self = .topic(title)
             case 8:
                 self = .civicIssues
+            case 9:
+                self = .notices
+            case 10:
+                self = .admins
+            case 11:
+                self = .vocabularyList
+            case 12:
+                self = .helpShow
+            case 13:
+                self = .licenses
+            case 14:
+                self = .packageAutocomplete
             default:
                 throw CodingError.unknownValue
         }
@@ -419,6 +451,19 @@ extension SearchCategories {
                 try container.encode(title, forKey: .associatedValue)
             case .civicIssues:
                 try container.encode(8, forKey: .rawValue)
+            case .notices:
+                try container.encode(9, forKey: .rawValue)
+            case .admins:
+                try container.encode(10, forKey: .rawValue)
+            case .vocabularyList:
+                try container.encode(11, forKey: .rawValue)
+            case .helpShow:
+                try container.encode(12, forKey: .rawValue)
+            case .licenses:
+                try container.encode(13, forKey: .rawValue)
+            case .packageAutocomplete:
+                try container.encode(14, forKey: .rawValue)
+                
         }
     }
 }
@@ -471,3 +516,4 @@ enum FilterType: String, CaseIterable {
         }
     }
 }
+

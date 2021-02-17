@@ -668,8 +668,9 @@
 // default page - fixed
 // search by words - fixed
 // share - fixed
-// bookmark
+// bookmark - fixed
 // toronto open data authors api?
 // the activity indicator is out of place when going from portrait to landscape
 // device landscape mode or the orientation landscape mode or both
-// delete url fetch observer
+// delete url fetch observer - fixed
+// different icons for the landscape default page

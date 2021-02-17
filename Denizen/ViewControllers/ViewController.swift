@@ -34,7 +34,7 @@ class ViewController: UIViewController {
     var favouriteView: UICollectionView! = nil
     var collectionViewDataSource: CollectionViewDataSource!
     var favouritesDataSource: FavouritesDataSource!
-    var tabBar: UITabBar!
+    var tabBar: CustomTabBar!
     var tabNumber = 1
     var constraints: [NSLayoutConstraint]!
     private var accessoryDoneButton: UIBarButtonItem!
@@ -62,10 +62,8 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         isInitialLoad = true
-//        view.backgroundColor = UIColor(red: (247/255), green: (247/255), blue: (247/255), alpha: 1)
         collectionViewDataSource = CollectionViewDataSource()
         collectionViewDataSource.dataSourceDelegate = self
-
         
         configureSearchController()
         configureOptionsBar()
@@ -80,9 +78,9 @@ class ViewController: UIViewController {
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: tabBar.topAnchor)
+            collectionView.bottomAnchor.constraint(equalTo: tabBar.topAnchor, constant: -1)
         ]
-        NSLayoutConstraint.activate(constraints)
+        NSLayoutConstraint.activate(constraints)        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -104,18 +102,6 @@ extension ViewController {
         extendedLayoutIncludesOpaqueBars = true
 
         applyImageBackgroundToTheNavigationBar()
-    }
-    
-    @objc func rightBarButtonHandler() {
-        collectionView.setContentOffset(CGPoint(x: 0, y: -100), animated: false)
-        
-        if layoutType == 3 {
-            layoutType = 1
-        } else {
-            layoutType += 1
-        }
-        
-        self.collectionView.setCollectionViewLayout(self.createLayout(with: layoutType), animated: true, completion: nil)
     }
     
     func applyImageBackgroundToTheNavigationBar() {
@@ -223,21 +209,22 @@ extension ViewController: DataSourceDelegate {
     func configureCollectionViewHierarchy() {
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createLayout(with: layoutType))
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.backgroundColor = .systemBackground
+//        collectionView.backgroundColor = .systemBackground
+        collectionView.backgroundColor = UIColor(red: (247/255), green: (247/255), blue: (247/255), alpha: 1)
         collectionView.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 0, right: 0)
         collectionView.delegate = collectionViewDataSource
         collectionView.dataSource = collectionViewDataSource
         collectionView.isPrefetchingEnabled = true
         
         if isInitialLoad {
-            view.addSubview(collectionView)
+            view.insertSubview(collectionView, belowSubview: tabBar)
         }
     }
     
     func configureFavouriteViewHierarchy() {
         favouriteView = UICollectionView(frame: view.bounds, collectionViewLayout: createLayout(with: layoutType))
         favouriteView.translatesAutoresizingMaskIntoConstraints = false
-        favouriteView.backgroundColor = .systemBackground
+        favouriteView.backgroundColor = UIColor(red: (247/255), green: (247/255), blue: (247/255), alpha: 1)
         favouriteView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         favouritesDataSource = FavouritesDataSource(dataSourceDelegate: self)
         favouriteView.delegate = favouritesDataSource
@@ -245,16 +232,31 @@ extension ViewController: DataSourceDelegate {
     }
     
     func didSelectCellAtIndexPath(at indexPath: IndexPath, with fetchedData: FetchedData){
-        let itemDetailVC = ItemDetailViewController()
-        itemDetailVC.fetchedData = fetchedData
-        
-        let button = self.splitViewController?.displayModeButtonItem
-        itemDetailVC.navigationItem.leftBarButtonItem = button
-        itemDetailVC.navigationItem.leftItemsSupplementBackButton = true
-        itemDetailVC.dataSourceDelegate = favouritesDataSource
-        
-        let nav = UINavigationController(rootViewController: itemDetailVC)
-        self.showDetailViewController(nav, sender: self)
+        NotificationCenter.default.post(name:.detailChosen, object:self)
+
+        if fetchedData.searchCategories == .notices {
+            let webViewController = WebViewController()
+            webViewController.fetchedData = fetchedData
+            
+            let button = self.splitViewController?.displayModeButtonItem
+            webViewController.navigationItem.leftBarButtonItem = button
+            webViewController.navigationItem.leftItemsSupplementBackButton = true
+            webViewController.dataSourceDelegate = favouritesDataSource
+            
+            let nav = UINavigationController(rootViewController: webViewController)
+            self.showDetailViewController(nav, sender: self)
+        } else {
+            let itemDetailVC = ItemDetailViewController()
+            itemDetailVC.fetchedData = fetchedData
+            
+            let button = self.splitViewController?.displayModeButtonItem
+            itemDetailVC.navigationItem.leftBarButtonItem = button
+            itemDetailVC.navigationItem.leftItemsSupplementBackButton = true
+            itemDetailVC.dataSourceDelegate = favouritesDataSource
+            
+            let nav = UINavigationController(rootViewController: itemDetailVC)
+            self.showDetailViewController(nav, sender: self)
+        }
     }
     
     func didFetchData() {
@@ -278,6 +280,7 @@ extension ViewController {
     
     func configureFavouritesCellRegister() {
         favouriteView.register(MenuCell.self, forCellWithReuseIdentifier: Cell.favouriteCell)
+        favouriteView.register(TitleSupplementaryView.self, forSupplementaryViewOfKind: ViewController.sectionHeaderElementKind, withReuseIdentifier: Cell.supplementaryCell)
     }
 }
 

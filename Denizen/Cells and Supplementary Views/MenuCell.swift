@@ -53,7 +53,7 @@ extension MenuCell {
         contentView.addSubview(dateLabel)
         dateLabel.font = UIFont.preferredFont(forTextStyle: .caption1)
         
-        let inset = CGFloat(5)
+        let inset = CGFloat(10)
         NSLayoutConstraint.activate([
             // title label
             titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: inset),

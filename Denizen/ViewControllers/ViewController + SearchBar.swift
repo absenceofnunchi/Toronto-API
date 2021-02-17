@@ -109,7 +109,11 @@ extension ViewController: UISearchBarDelegate {
         guard let text = searchController.searchBar.text, let searchField = searchField else { return }
         
         if !text.isEmpty && searchField.tokens.isEmpty, let text = searchField.text {
-            fetchAndParse(suggestedSearch: .tag(text))
+//            fetchAndParse(suggestedSearch: .tag(text))
+            
+            let urlString = URLScheme.baseURL + "package_autocomplete"
+            let parameters = [Query.Key.q: text]
+            fetchAPI(urlString: urlString, parameters: parameters, suggestedSearch: .packageAutocomplete)
         }
     }
 }
@@ -161,9 +165,10 @@ extension ViewController: SuggestedSearch {
                         }
                     case .topic(_):
                         searchResultsController.showSuggestedSearches = .none
+                    case .notices:
+                        searchResultsController.showSuggestedSearches = .notices
                     default:
                         searchResultsController.showSuggestedSearches = .none
-
                         if UIDevice.current.orientation.isLandscape {
                             if self.splitViewController?.detailViewController == nil {
                                 replaceDetailVC(searchCategory: searchTokenValue)
@@ -188,6 +193,14 @@ extension ViewController: SuggestedSearch {
         itemDetailVC.navigationItem.leftBarButtonItem = button
         itemDetailVC.navigationItem.leftItemsSupplementBackButton = true
         let nav = UINavigationController(rootViewController: itemDetailVC)
+        self.showDetailViewController(nav, sender: self)
+    }
+    
+    func openWebView(fetchedData: FetchedData) {
+        NotificationCenter.default.post(name:.detailChosen, object:self)
+        let webViewController = WebViewController()
+        webViewController.fetchedData = fetchedData
+        let nav = UINavigationController(rootViewController: webViewController)
         self.showDetailViewController(nav, sender: self)
     }
 }

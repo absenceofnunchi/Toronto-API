@@ -74,8 +74,14 @@ extension ItemDetailViewController {
         switch fetchedData.searchCategories {
             case .tag(_), .qualityScores, .recentlyChanged, .topic(_):
                 urlString = URLScheme.baseURL + Query.ActionType.packageShow
-            case .packages, .civicIssues:
+            case .packages, .civicIssues, .packageAutocomplete:
                 urlString = URLScheme.baseURL + Query.ActionType.packageSearch
+            case .admins:
+                urlString = URLScheme.baseURL + Query.ActionType.userShow
+            case .vocabularyList:
+                urlString = URLScheme.baseURL + Query.ActionType.vocabularyList
+            case .helpShow:
+                urlString = URLScheme.baseURL + Query.ActionType.helpShow
             default:
                 break
         }
@@ -107,20 +113,32 @@ extension ItemDetailViewController {
             if let responseObject = responseObject {
                 let json = JSON(responseObject as [String: Any])
                 let myDictionary = self.json2dic(json)
+                
+//                switch fetchedData.searchCategories {
+//                    case <#pattern#>:
+//                        <#code#>
+//                    default:
+//                        <#code#>
+//                }
                 if let result = myDictionary["result"] as? [String: AnyObject] {
                     let resultArr = result.map { $0 }.sorted { $0.key < $1.key }
                     self.data.append(contentsOf: resultArr)
-                    DispatchQueue.main.async {
-                        self.navigationController?.activityStopAnimating()
-                        self.tableView.reloadData()
+                } else if let result = myDictionary["result"] as? String {
+                    if let definition = ("Overview", result) as? (String, AnyObject) {
+                        self.data.append(definition)
                     }
+                }
+                
+                DispatchQueue.main.async {
+                    self.navigationController?.activityStopAnimating()
+                    self.tableView.reloadData()
                 }
             } else {
                 DispatchQueue.main.async {
                     self.navigationController?.activityStopAnimating()
                     let alertController = UIAlertController(title: "No Data", message: nil, preferredStyle: .alert)
-                    alertController.addAction(UIAlertAction(title: "Go Back", style: .default, handler: { (_) in
-                        self.navigationController?.popViewController(animated: true)
+                    alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { (_) in
+                        self.navigationController?.navigationController?.popViewController(animated: true)
                     }))
                     self.present(alertController, animated: true, completion: nil)
                 }
@@ -161,14 +179,8 @@ extension ItemDetailViewController {
             let value = arr as [(String, AnyObject)]
             if value.count > 0 {
                 if let text = value[indexPath.row].1 as? String {
-                    //                    let text = value[indexPath.row].0 + ": " + text
-                    //                    let mas = NSMutableAttributedString(string: text)
-                    //                    let range = (mas.string as NSString).range(of: value[indexPath.row].0)
-                    //                    mas.addAttributes([.font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize)], range: range)
-                    
                     cell.textLabel?.text = value[indexPath.row].0 + ": " + text
                 } else {
-                    
                     var text: String!
                     if value[indexPath.row].1 is Dictionary<String, Any> {
                         text = value[indexPath.row].0
@@ -176,10 +188,6 @@ extension ItemDetailViewController {
                     } else {
                         text = value[indexPath.row].0 + ": null"
                     }
-                    
-                    //                    let mas = NSMutableAttributedString(string: text)
-                    //                    let range = (mas.string as NSString).range(of: value[indexPath.row].0)
-                    //                    mas.addAttributes([.font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize)], range: range)
                     cell.textLabel?.text = text
                 }
             }
@@ -251,6 +259,8 @@ extension ItemDetailViewController {
 
 extension ItemDetailViewController {
     func configureNavigationItems() {
+        self.edgesForExtendedLayout = []
+
         do {
             if let savedFavourites = defaults.object(forKey: Keys.favourites) as? Data {
                 let decoded = try JSONDecoder().decode([FetchedData].self, from: savedFavourites)

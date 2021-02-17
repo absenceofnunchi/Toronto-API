@@ -40,6 +40,10 @@ class SearchResultsController: UITableViewController {
                 suggestedColor = UIColor.purple
             case 6:
                 suggestedColor = UIColor.brown
+            case 7:
+                suggestedColor = UIColor(red: 93/255, green: 109/255, blue: 126/255, alpha: 1)
+            case 8:
+                suggestedColor = UIColor(red: 245/255, green: 176/255, blue: 65/255, alpha: 1)
             default:
                 suggestedColor = UIColor.cyan
         }
@@ -47,14 +51,14 @@ class SearchResultsController: UITableViewController {
         return suggestedColor
     }
 
-    let searchCategoryArr = [SearchCategories.tags, SearchCategories.packages, SearchCategories.qualityScores, SearchCategories.recentlyChanged, SearchCategories.topics, SearchCategories.civicIssues]
+    let searchCategoryArr = [SearchCategories.tags, SearchCategories.packages, SearchCategories.qualityScores, SearchCategories.recentlyChanged, SearchCategories.topics, SearchCategories.civicIssues, SearchCategories.notices, SearchCategories.admins, SearchCategories.vocabularyList, SearchCategories.helpShow]
 
     // categories i.e. tags, packages, quality score, etc
     var suggestedSearches: [String] {
         var s = [String]()
 
         switch showSuggestedSearches {
-            case .none, .additionalSuggest:
+            case .none, .additionalSuggest, .notices:
                 if let fetchedDataArr = fetchedDataArr {
                     for fetchedData in fetchedDataArr {
                         s.append(fetchedData.title)
@@ -86,7 +90,7 @@ class SearchResultsController: UITableViewController {
     }()
 
     @objc func filterButtonHandler() {
-        let alertController = UIAlertController(title: "", message: "The current search result being shown are filtered by your settings. Filters are not applicable to Packages, Quality Scores, and Recently Changed. Reset your filter settings to see the full result.", preferredStyle: .alert)
+        let alertController = UIAlertController(title: "", message: "The current search result being shown are filtered by your settings. Filters are not applicable to Packages, Quality Scores, Recently Changed, and Notices. Reset your filter settings to see the full result.", preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         self.present(alertController, animated: true, completion: nil)
     }
@@ -147,7 +151,7 @@ extension SearchResultsController {
         switch showSuggestedSearches {
             case .suggested:
                 return NSLocalizedString("Suggested Searches", comment: "")
-            case .none, .additionalSuggest:
+            case .none, .additionalSuggest, .notices:
                 return ""
         }
     }
@@ -168,10 +172,9 @@ extension SearchResultsController {
                 let image = suggestedImage(fromIndex: indexPath.row)
                 let tintableImage = image.withRenderingMode(.alwaysOriginal)
                 cell.imageView?.image = tintableImage
-            case .none, .additionalSuggest:
-                if fetchedDataArr.count > 0 {
+            case .none, .additionalSuggest, .notices:
+                if let fetchedDataArr = fetchedDataArr, fetchedDataArr.count > 0 {
                     let item = fetchedDataArr[indexPath.row].title
-//                    configureCell(cell, forItemTitle: item)
                     cell.textLabel?.text = item
                     cell.imageView?.image = nil
                 }
@@ -192,7 +195,7 @@ extension SearchResultsController {
                 let tokenToInsert = searchToken(searchCategory: tokenValue, index: indexPath.row)
                 suggestedSearchDelegate.didSelectSuggestedSearch(token: tokenToInsert)
             case .additionalSuggest:
-                if fetchedDataArr.count > 0 {
+                if let fetchedDataArr = fetchedDataArr, fetchedDataArr.count > 0 {
                     let title = fetchedDataArr[indexPath.row].title
                     let searchCategory = fetchedDataArr[indexPath.row].searchCategories
                     let tokenToInsert = searchToken(searchCategory: searchCategory! ,title: title)
@@ -200,9 +203,14 @@ extension SearchResultsController {
                 }
             case .none:
                 // A product was selected; inform our delgete that a product was selected to view.
-                if fetchedDataArr.count > 0 {
+                if let fetchedDataArr = fetchedDataArr, fetchedDataArr.count > 0 {
                     let selected = fetchedDataArr[indexPath.row]
                     suggestedSearchDelegate.didSelectItem(fetchedData: selected)
+                }
+            case .notices:
+                if let fetchedDataArr = fetchedDataArr, fetchedDataArr.count > 0 {
+                    let selected = fetchedDataArr[indexPath.row]
+                    suggestedSearchDelegate.openWebView(fetchedData: selected)
                 }
         }
     }

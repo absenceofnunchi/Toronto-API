@@ -16,6 +16,8 @@ protocol SuggestedSearch: AnyObject {
     
     /// A product was selected; inform our delgeate that a product was selected to view.
     func didSelectItem(fetchedData: FetchedData)
+    
+    func openWebView(fetchedData: FetchedData)
 }
 
 // MARK: - Filter delegate
@@ -34,4 +36,9 @@ protocol LeftViewDelegate: AnyObject {
 protocol DataSourceDelegate: AnyObject {
     func didSelectCellAtIndexPath(at indexPath: IndexPath, with fetchedData: FetchedData)
     func didFetchData()
+}
+
+// MARK: - Custom tab bar delegate
+protocol CustomTabBarDelegate: AnyObject {
+    func tabBarDidSelect(with tag: Int)
 }

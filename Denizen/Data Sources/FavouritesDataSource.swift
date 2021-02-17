@@ -60,9 +60,16 @@ extension FavouritesDataSource: UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        NotificationCenter.default.post(name:.detailChosen, object:self)
         let fetchedData = data[indexPath.item]
         dataSourceDelegate?.didSelectCellAtIndexPath(at: indexPath, with: fetchedData)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        guard let supplementaryView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Cell.supplementaryCell, for: indexPath) as? TitleSupplementaryView else {
+            fatalError("Expected `\(TitleSupplementaryView.self)` type for reuseIdentifier \(TitleSupplementaryView.reuseIdentifier). Check the configuration.")
+        }
+        
+        return supplementaryView
     }
 }
 
@@ -81,4 +88,3 @@ extension FavouritesDataSource {
         }
     }
 }
-

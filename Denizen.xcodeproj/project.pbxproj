@@ -28,6 +28,7 @@
 		4918476325BCF0AE006AC15C /* TitleSupplementaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4918476225BCF0AE006AC15C /* TitleSupplementaryView.swift */; };
 		492B145425DA07BA0083D3AB /* FavouriteCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492B145325DA07BA0083D3AB /* FavouriteCollectionViewController.swift */; };
 		492B145925DA0AFF0083D3AB /* FavouriteVC + Datasource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492B145825DA0AFF0083D3AB /* FavouriteVC + Datasource.swift */; };
+		4962957525DD56A500812024 /* CustomTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4962957425DD56A500812024 /* CustomTabBar.swift */; };
 		496A8EEA25D49E6200B390C0 /* 2.json in Resources */ = {isa = PBXBuildFile; fileRef = 496A8EDE25D49E6000B390C0 /* 2.json */; };
 		496A8EEB25D49E6200B390C0 /* 5.json in Resources */ = {isa = PBXBuildFile; fileRef = 496A8EDF25D49E6000B390C0 /* 5.json */; };
 		496A8EEC25D49E6200B390C0 /* 7.json in Resources */ = {isa = PBXBuildFile; fileRef = 496A8EE025D49E6000B390C0 /* 7.json */; };
@@ -49,6 +50,7 @@
 		499D566825BE0E3F00FB2FDE /* CollectionViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499D566725BE0E3F00FB2FDE /* CollectionViewDataSource.swift */; };
 		499D567F25BE308800FB2FDE /* WebServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499D567E25BE308800FB2FDE /* WebServiceManager.swift */; };
 		499EB18025DC74FD006D0F18 /* FavouritesDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499EB17F25DC74FD006D0F18 /* FavouritesDataSource.swift */; };
+		499EB18D25DCC323006D0F18 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499EB18C25DCC323006D0F18 /* WebViewController.swift */; };
 		49BC9EF825C64F3F00859AF6 /* ExpandDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BC9EF725C64F3F00859AF6 /* ExpandDetailViewController.swift */; };
 		49CA84AD25C5A5740015B125 /* ItemDetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CA84AC25C5A5740015B125 /* ItemDetailCell.swift */; };
 		49CE395D25D06BBB00660673 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CE395C25D06BBB00660673 /* MapViewController.swift */; };
@@ -108,6 +110,7 @@
 		4918476225BCF0AE006AC15C /* TitleSupplementaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleSupplementaryView.swift; sourceTree = "<group>"; };
 		492B145325DA07BA0083D3AB /* FavouriteCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouriteCollectionViewController.swift; sourceTree = "<group>"; };
 		492B145825DA0AFF0083D3AB /* FavouriteVC + Datasource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FavouriteVC + Datasource.swift"; sourceTree = "<group>"; };
+		4962957425DD56A500812024 /* CustomTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBar.swift; sourceTree = "<group>"; };
 		496A8EDE25D49E6000B390C0 /* 2.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 2.json; sourceTree = "<group>"; };
 		496A8EDF25D49E6000B390C0 /* 5.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 5.json; sourceTree = "<group>"; };
 		496A8EE025D49E6000B390C0 /* 7.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 7.json; sourceTree = "<group>"; };
@@ -129,6 +132,7 @@
 		499D566725BE0E3F00FB2FDE /* CollectionViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewDataSource.swift; sourceTree = "<group>"; };
 		499D567E25BE308800FB2FDE /* WebServiceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebServiceManager.swift; sourceTree = "<group>"; };
 		499EB17F25DC74FD006D0F18 /* FavouritesDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesDataSource.swift; sourceTree = "<group>"; };
+		499EB18C25DCC323006D0F18 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		49BC9EF725C64F3F00859AF6 /* ExpandDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandDetailViewController.swift; sourceTree = "<group>"; };
 		49CA84AC25C5A5740015B125 /* ItemDetailCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailCell.swift; sourceTree = "<group>"; };
 		49CE395C25D06BBB00660673 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
@@ -205,6 +209,7 @@
 				4909019D25B91DB900E38196 /* SceneDelegate.swift */,
 				49993CDF25BA400A00091758 /* temp.swift */,
 				49E317B425D4565200129EA0 /* GradientLayer.swift */,
+				4962957425DD56A500812024 /* CustomTabBar.swift */,
 				499EB17B25DC74D7006D0F18 /* Data Sources */,
 				496A8ED725D49AE200B390C0 /* Resources */,
 				499D566625BE0E1800FB2FDE /* ViewControllers */,
@@ -301,6 +306,7 @@
 				490D348525BF29D000E94116 /* ItemDetailViewController.swift */,
 				49BC9EF725C64F3F00859AF6 /* ExpandDetailViewController.swift */,
 				49794B6625C75DBC00D2B2B5 /* ExpandTableViewController.swift */,
+				499EB18C25DCC323006D0F18 /* WebViewController.swift */,
 				490D4CEE25CA3F32008D9015 /* FilterViewController.swift */,
 				490D4CF325CA607D008D9015 /* FilterSettingsTableViewController.swift */,
 				49CE395C25D06BBB00660673 /* MapViewController.swift */,
@@ -594,12 +600,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				490D348B25BF2CB200E94116 /* ViewController + ResultsUpdate.swift in Sources */,
+				499EB18D25DCC323006D0F18 /* WebViewController.swift in Sources */,
 				49D9BE9C25BB865C00F59FDC /* MenuCell.swift in Sources */,
 				49FF0B7225DAC422008CB0B2 /* CustomTabBarController.swift in Sources */,
 				490D348625BF29D000E94116 /* ItemDetailViewController.swift in Sources */,
 				49993CD825BA14FC00091758 /* AppExtensions.swift in Sources */,
 				490BB81325D1A6C7000AA6CF /* DetailViewController.swift in Sources */,
 				49CE396225D0D91B00660673 /* MapTableViewController.swift in Sources */,
+				4962957525DD56A500812024 /* CustomTabBar.swift in Sources */,
 				499D566825BE0E3F00FB2FDE /* CollectionViewDataSource.swift in Sources */,
 				499EB18025DC74FD006D0F18 /* FavouritesDataSource.swift in Sources */,
 				490D4CDA25CA33E3008D9015 /* ViewController + OptionsBar.swift in Sources */,

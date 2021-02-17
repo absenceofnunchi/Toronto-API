@@ -44,6 +44,9 @@ extension ViewController {
                 }
                 DispatchQueue.main.async {
                     self.collectionView.setCollectionViewLayout(self.createLayout(with: self.layoutType), animated: true, completion: nil)
+                    if self.favouriteView != nil {
+                        self.favouriteView.setCollectionViewLayout(self.createLayout(with: self.layoutType), animated: true, completion: nil)
+                    }
                 }
             default:
                 break
