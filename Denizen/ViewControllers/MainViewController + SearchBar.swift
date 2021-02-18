@@ -16,7 +16,7 @@ import UIKit
 
 // MARK: - Search results controller
 
-extension ViewController {
+extension MainViewController {
     
     // configure search controller
     func configureSearchController() {
@@ -37,7 +37,7 @@ extension ViewController {
 
 // MARK:- Search bar
 
-extension ViewController: UISearchBarDelegate {
+extension MainViewController: UISearchBarDelegate {
     
     // search bar and search field appearance
     func configureSearchBar() {
@@ -55,8 +55,8 @@ extension ViewController: UISearchBarDelegate {
         searchTextField.layer.cornerRadius = 8
         searchTextField.layer.borderWidth = 1
         searchTextField.layer.borderColor = UIColor(red: 224/255, green: 224/255, blue: 224/255, alpha: 1).cgColor
-        let size = CGSize(width: 1, height: 50)
-        searchTextField.frame = CGRect(origin: .zero, size: size)
+//        let size = CGSize(width: 1, height: 50)
+//        searchTextField.frame = CGRect(origin: .zero, size: size)
         
         let filterButton = UIButton.systemButton(with: UIImage(systemName: "line.horizontal.3.decrease.circle")!, target: self, action: #selector(leftViewButtonHandler))
         filterButton.frame = CGRect(x: 0, y: 0, width: 50, height: searchTextField.frame.height)
@@ -70,7 +70,6 @@ extension ViewController: UISearchBarDelegate {
     }
     
     @objc func leftViewButtonHandler() {
-        //        let text = searchController.searchBar.searchTextField.text
         let filterViewController = FilterViewController(style: .insetGrouped)
         filterViewController.delegate = self
         let navController = UINavigationController(rootViewController: filterViewController)
@@ -94,7 +93,7 @@ extension ViewController: UISearchBarDelegate {
             // We are no longer interested in cell navigating, since we are now showing the suggested searches.
             searchResultsController.tableView.delegate = searchResultsController
 
-            if UIDevice.current.orientation.isLandscape {
+            if UIDevice.current.orientation.isLandscape || UIDevice.current.userInterfaceIdiom == .pad {
                 if let count = self.splitViewController?.viewControllers.count, count > 1 {
                     self.splitViewController?.detailViewController?.createAnnotation(searchCateogry: .none)
                 }
@@ -104,14 +103,13 @@ extension ViewController: UISearchBarDelegate {
     
     // User tapped the Done button in the keyboard.
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        self.suggestArray.removeAll()
         keyboardDismissed()
 
         guard let text = searchController.searchBar.text, let searchField = searchField else { return }
         
         if !text.isEmpty && searchField.tokens.isEmpty, let text = searchField.text {
-//            fetchAndParse(suggestedSearch: .tag(text))
-            
-            let urlString = URLScheme.baseURL + "package_autocomplete"
+            let urlString = URLScheme.baseURL + URLScheme.Subdomain.packageAutocomplete
             let parameters = [Query.Key.q: text]
             fetchAPI(urlString: urlString, parameters: parameters, suggestedSearch: .packageAutocomplete)
         }
@@ -121,7 +119,7 @@ extension ViewController: UISearchBarDelegate {
 // MARK: - UISearchControllerDelegate
 // Use these delegate functions for additional control over the search controller.
 
-extension ViewController: UISearchControllerDelegate {
+extension MainViewController: UISearchControllerDelegate {
     // We are being asked to present the search controller, so from the start - show suggested searches.
     func presentSearchController(_ searchController: UISearchController) {
         searchController.showsSearchResultsController = true
@@ -131,7 +129,7 @@ extension ViewController: UISearchControllerDelegate {
 
 // MARK:- SuggestedSearch protocol conformance
 
-extension ViewController: SuggestedSearch {
+extension MainViewController: SuggestedSearch {
     // SearchResultsController selected a suggested search, so we need to apply the search token.
     func didSelectSuggestedSearch(token: UISearchToken) {
         if let searchField = searchField {
@@ -143,7 +141,7 @@ extension ViewController: SuggestedSearch {
                     case .tags:
                         searchResultsController.showSuggestedSearches = .additionalSuggest
 
-                        if UIDevice.current.orientation.isLandscape {
+                        if UIDevice.current.orientation.isLandscape || UIDevice.current.userInterfaceIdiom == .pad {
                             if self.splitViewController?.detailViewController == nil {
                                 replaceDetailVC(searchCategory: searchTokenValue)
                             }
@@ -157,7 +155,7 @@ extension ViewController: SuggestedSearch {
                     case .topics:
                         searchResultsController.showSuggestedSearches = .additionalSuggest
 
-                        if UIDevice.current.orientation.isLandscape {
+                        if UIDevice.current.orientation.isLandscape || UIDevice.current.userInterfaceIdiom == .pad {
                             if self.splitViewController?.detailViewController == nil {
                                 replaceDetailVC(searchCategory: searchTokenValue)
                             }
@@ -167,9 +165,15 @@ extension ViewController: SuggestedSearch {
                         searchResultsController.showSuggestedSearches = .none
                     case .notices:
                         searchResultsController.showSuggestedSearches = .notices
+                        if UIDevice.current.orientation.isLandscape || UIDevice.current.userInterfaceIdiom == .pad {
+                            if self.splitViewController?.detailViewController == nil {
+                                replaceDetailVC(searchCategory: searchTokenValue)
+                            }
+                            self.splitViewController?.detailViewController?.createAnnotation(searchCateogry: searchTokenValue)
+                        }
                     default:
                         searchResultsController.showSuggestedSearches = .none
-                        if UIDevice.current.orientation.isLandscape {
+                        if UIDevice.current.orientation.isLandscape || UIDevice.current.userInterfaceIdiom == .pad {
                             if self.splitViewController?.detailViewController == nil {
                                 replaceDetailVC(searchCategory: searchTokenValue)
                             }
@@ -177,8 +181,6 @@ extension ViewController: SuggestedSearch {
                         }
                 }
             }
-            // Update the search query with the newly inserted token
-            updateSearchResults(for: searchController!)
         }
     }
     
@@ -190,6 +192,7 @@ extension ViewController: SuggestedSearch {
         itemDetailVC.dataSourceDelegate = favouritesDataSource
 
         let button = self.splitViewController?.displayModeButtonItem
+        button?.tintColor = .lightGray
         itemDetailVC.navigationItem.leftBarButtonItem = button
         itemDetailVC.navigationItem.leftItemsSupplementBackButton = true
         let nav = UINavigationController(rootViewController: itemDetailVC)
@@ -197,9 +200,14 @@ extension ViewController: SuggestedSearch {
     }
     
     func openWebView(fetchedData: FetchedData) {
-        NotificationCenter.default.post(name:.detailChosen, object:self)
         let webViewController = WebViewController()
         webViewController.fetchedData = fetchedData
+        
+        let button = self.splitViewController?.displayModeButtonItem
+        button?.tintColor = .lightGray
+        webViewController.navigationItem.leftBarButtonItem = button
+        webViewController.navigationItem.leftItemsSupplementBackButton = true
+        
         let nav = UINavigationController(rootViewController: webViewController)
         self.showDetailViewController(nav, sender: self)
     }
@@ -207,7 +215,7 @@ extension ViewController: SuggestedSearch {
 
 // MARK: - Left view delegate
 
-extension ViewController: LeftViewDelegate {
+extension MainViewController: LeftViewDelegate {
     func didApplyFilter() {
         // run the search depending on what is present in the search field
         if let searchField = searchField, searchField.tokens.count > 0 {
@@ -220,9 +228,9 @@ extension ViewController: LeftViewDelegate {
 
 // MARK: - Search bar cancel button clicked
 
-extension ViewController {
+extension MainViewController {
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        if UIDevice.current.orientation.isLandscape {
+        if UIDevice.current.orientation.isLandscape || UIDevice.current.userInterfaceIdiom == .pad {
             replaceDetailVC(searchCategory: nil)
         }
     }

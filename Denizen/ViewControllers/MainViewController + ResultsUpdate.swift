@@ -15,7 +15,7 @@
 
 import UIKit
 
-extension ViewController: UISearchResultsUpdating {
+extension MainViewController: UISearchResultsUpdating {
     
     // MARK:- updateSearchResults
     // Called when the search bar's text has changed or when the search bar becomes first responder.
@@ -63,7 +63,6 @@ extension ViewController: UISearchResultsUpdating {
     
     func fetchAndParse(suggestedSearch: SearchCategories) {
         navigationController?.activityStartAnimating(activityColor: UIColor.darkGray, backgroundColor: UIColor(red: 211/255, green: 211/255, blue: 211/255, alpha: 0.5))
-        self.suggestArray.removeAll()
         
         var urlString: String!
         var parameters: [String: String]!
@@ -256,7 +255,7 @@ extension ViewController: UISearchResultsUpdating {
                     if let results = responseObject["result"] as? [[String: Any]] {
                         results.forEach { (result) in
                             if let name = result["name"] as? String {
-                                let fetchedData = FetchedData(title: name, searchCategories: suggestedSearch, parameters: [Query.Key.fq: "name" + name])
+                                let fetchedData = FetchedData(title: name, searchCategories: suggestedSearch, parameters: [Query.Key.fq: "name:" + name])
                                 self.suggestArray.append(fetchedData)
                             }
                         }
@@ -298,11 +297,15 @@ extension ViewController: UISearchResultsUpdating {
     
     func loadSearchControllerData(with fetchedDataArr: [FetchedData]) {
         // remove duplicates, but keep the order
-        let deduped = Array(NSOrderedSet(array: fetchedDataArr)) as! [FetchedData]
+//        let deduped = Array(NSOrderedSet(array: fetchedDataArr)) as! [FetchedData]
         
+//        var fetchedDataSet = Set<FetchedData>()
+//        let deduped = fetchedDataArr.flatMap { (fetchedData) -> FetchedData? in
+//            guard !fetchedDataSet.contains()
+//        }
         DispatchQueue.main.async {
             self.navigationController?.activityStopAnimating()
-            self.searchResultsController.fetchedDataArr = deduped
+            self.searchResultsController.fetchedDataArr = fetchedDataArr
             self.searchResultsController.tableView.reloadData()
         }
     }

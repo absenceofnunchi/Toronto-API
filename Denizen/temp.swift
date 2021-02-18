@@ -670,7 +670,9 @@
 // share - fixed
 // bookmark - fixed
 // toronto open data authors api?
-// the activity indicator is out of place when going from portrait to landscape
-// device landscape mode or the orientation landscape mode or both
+// the activity indicator is out of place when going from portrait to landscape - fixed
+// device landscape mode or the orientation landscape mode or both - fixed
 // delete url fetch observer - fixed
 // different icons for the landscape default page
+// ipad compatibility
+// back button tint color

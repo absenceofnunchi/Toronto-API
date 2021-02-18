@@ -33,6 +33,7 @@ struct URLScheme {
         static var recentlyChanged = "recently_changed_packages_activity_list"
         static var qualityScores = "datastore_search"
         static var packageAutocomplete = "package_autocomplete"
+        static var activityList = "package_activity_list"
         
         // full JSON representation
         static var tagShow = "tag_show"
@@ -340,6 +341,7 @@ enum SearchCategories: Equatable, Hashable, Codable {
     case helpShow
     case licenses
     case packageAutocomplete
+    case activityList
     
     var value: String {
         switch self {
@@ -373,6 +375,8 @@ enum SearchCategories: Equatable, Hashable, Codable {
                 return "Licenses"
             case .packageAutocomplete:
                 return "Package Autocomplete"
+            case .activityList:
+                return "Activity List"
         }
     }
 }
@@ -423,6 +427,8 @@ extension SearchCategories {
                 self = .licenses
             case 14:
                 self = .packageAutocomplete
+            case 15:
+                self = .activityList
             default:
                 throw CodingError.unknownValue
         }
@@ -463,6 +469,8 @@ extension SearchCategories {
                 try container.encode(13, forKey: .rawValue)
             case .packageAutocomplete:
                 try container.encode(14, forKey: .rawValue)
+            case .activityList:
+                try container.encode(15, forKey: .rawValue)
                 
         }
     }
@@ -517,3 +525,41 @@ enum FilterType: String, CaseIterable {
     }
 }
 
+// MARK: -  Styled alert controller
+
+private var windows: [String:UIWindow] = [:]
+
+extension UIWindowScene {
+    static var focused: UIWindowScene? {
+        return UIApplication.shared.connectedScenes
+            .first { $0.activationState == .foregroundActive && $0 is UIWindowScene } as? UIWindowScene
+    }
+}
+
+class StyledAlertController: UIAlertController {
+    var wid: String?
+    
+    func present(animated: Bool, completion: (() -> Void)?) {
+        
+        //let window = UIWindow(frame: UIScreen.main.bounds)
+        guard let window = UIWindowScene.focused.map(UIWindow.init(windowScene:)) else {
+            return
+        }
+        window.rootViewController = UIViewController()
+        window.windowLevel = .alert + 1
+        window.makeKeyAndVisible()
+        window.rootViewController!.present(self, animated: animated, completion: completion)
+        
+        wid = UUID().uuidString
+        windows[wid!] = window
+    }
+    
+    open override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        if let wid = wid {
+            windows[wid] = nil
+        }
+        
+    }
+    
+}

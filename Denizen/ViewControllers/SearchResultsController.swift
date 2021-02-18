@@ -185,7 +185,7 @@ extension SearchResultsController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let suggestedSearchDelegate = suggestedSearchDelegate else { return }
-        tableView.deselectRow(at: indexPath, animated: true)
+//        tableView.deselectRow(at: indexPath, animated: true)
 
         // Make sure we are showing suggested searches before notifying which token was selected
         switch showSuggestedSearches {

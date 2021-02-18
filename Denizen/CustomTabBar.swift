@@ -130,7 +130,7 @@ extension CustomTabBar {
         
         UIView.animateKeyframes(withDuration: 0.4, delay: 0, options: UIView.KeyframeAnimationOptions.calculationModeCubic, animations: {
             UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 0.5) {
-                sender.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
+                sender.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
             }
             
             UIView.addKeyframe(withRelativeStartTime: 0.5, relativeDuration: 0.5) {
@@ -141,81 +141,3 @@ extension CustomTabBar {
         delegate?.tabBarDidSelect(with: sender.tag)
     }
 }
-
-
-
-
-//class CustomTabBar: UIView {
-//    enum TabItem {
-//        case main, favourites
-//    }
-//
-//    var tabButton1: UIButton!
-//    override var frame: CGRect {
-//        didSet {
-//            self.layoutIfNeeded()
-//        }
-//    }
-//
-//    override var bounds: CGRect {
-//        didSet {
-//            self.layoutIfNeeded()
-//        }
-//    }
-//
-//    override init(frame: CGRect) {
-//        super.init(frame: frame)
-//        configure()
-//        setConstraints()
-//    }
-//
-//    override func layoutSubviews() {
-//        super.layoutSubviews()
-//        self.layer.cornerRadius = self.bounds.size.width / 30
-//        self.layer.masksToBounds = true
-//        //        self.alpha = 0.9
-//    }
-//
-//    required init?(coder: NSCoder) {
-//        fatalError("init(coder:) has not been implemented")
-//    }
-//
-//    override func draw(_ rect: CGRect) {
-//        let renderer = UIGraphicsImageRenderer(bounds: self.bounds)
-//        let image = renderer.image { (ctx) in
-//            let context = ctx.cgContext
-//            context.drawLinearGradient(in: self.bounds, startingWith: UIColor(red: 175/255, green: 122/255, blue: 197/255, alpha: 1).cgColor, finishingWith: UIColor(red: 215/255, green: 189/255, blue: 226/255, alpha: 1).cgColor)
-//        }
-//        image.draw(in: self.bounds)
-//    }
-//}
-//
-//// MARK: - Configure
-//
-//extension CustomTabBar {
-//    func configure() {
-//        tabButton1 = UIButton.systemButton(with: UIImage(systemName: "plus")!, target: self, action: #selector(tabBarButtonHandler))
-//        tabButton1.tag = 1
-//        tabButton1.tintColor = .white
-//        tabButton1.translatesAutoresizingMaskIntoConstraints = false
-//        self.addSubview(tabButton1)
-//    }
-//
-//    func setConstraints() {
-//        NSLayoutConstraint.activate([
-//            tabButton1.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-//            tabButton1.centerYAnchor.constraint(equalTo: self.centerYAnchor)
-//        ])
-//    }
-//}
-//
-//extension CustomTabBar {
-//    @objc func tabBarButtonHandler(_ sender: UIButton) {
-//        switch sender.tag {
-//            case 1:
-//                print("1")
-//            default:
-//                break
-//        }
-//    }
-//}

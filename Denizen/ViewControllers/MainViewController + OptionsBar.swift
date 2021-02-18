@@ -11,19 +11,22 @@
 
 import UIKit
 
-extension ViewController {
+extension MainViewController {
     
     func configureOptionsBar() {
         let barButtonMenu = UIMenu(title: "", children: [
             UIAction(title: NSLocalizedString("Filter", comment: ""), image: UIImage(systemName: "doc.on.doc"), handler: menuHandler),
             UIAction(title: NSLocalizedString("Layout", comment: ""), image: UIImage(systemName: "pencil"), handler: menuHandler),
-            UIAction(title: NSLocalizedString(Menu.orientation.toggled!, comment: ""), image: UIImage(systemName: "plus.square.on.square"), handler: menuHandler),
-            UIAction(title: NSLocalizedString("Move", comment: ""), image: UIImage(systemName: "folder"), handler: menuHandler)
         ])
         
         let image = UIImage(systemName: "line.horizontal.3.decrease")?.withRenderingMode(.alwaysOriginal)
-        optionsBarItem = UIBarButtonItem(title: nil, image: image, primaryAction: nil, menu: barButtonMenu)
-        navigationItem.rightBarButtonItem = optionsBarItem
+        if #available(iOS 14.0, *) {
+            optionsBarItem = UIBarButtonItem(title: nil, image: image, primaryAction: nil, menu: barButtonMenu)
+            navigationItem.rightBarButtonItem = optionsBarItem
+        } else {
+            optionsBarItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(menuHandler(action:)))
+            navigationItem.rightBarButtonItem = optionsBarItem
+        }
     }
     
     @objc func menuHandler(action: UIAction) {
@@ -32,11 +35,9 @@ extension ViewController {
                 let filterViewController = FilterViewController(style: .insetGrouped)
                 let navController = UINavigationController(rootViewController: filterViewController)
                 self.present(navController, animated: true, completion: nil)
-            case "Orientation":
-                UIView.setAnimationsEnabled(false)
-                UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
-                UIView.setAnimationsEnabled(true)
             case "Layout":
+                keyboardDismissed()
+                searchController.showsSearchResultsController = false
                 if layoutType == 3 {
                     layoutType = 1
                 } else {
@@ -50,22 +51,6 @@ extension ViewController {
                 }
             default:
                 break
-        }
-    }
-}
-
-enum Menu: String {
-    case orientation, Portrait, Landscape
-    var toggled: String? {
-        switch self {
-            case .orientation:
-                if UIDevice.current.orientation.isLandscape {
-                    return Menu.Portrait.rawValue
-                } else {
-                    return Menu.Landscape.rawValue
-                }
-            default:
-                return nil
         }
     }
 }

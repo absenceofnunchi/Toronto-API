@@ -16,7 +16,8 @@ class DetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = UIColor(red: (247/255), green: (247/255), blue: (247/255), alpha: 1)
+        addBorder()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -62,6 +63,18 @@ extension DetailViewController {
             case .civicIssues:
                 labelText = "Datasets filered by civic issues."
                 animationName = "6"
+            case .notices:
+                labelText = "The City gives notice to the public on a variety of different matters, including changes to fees and charges, heritage designations, renaming of roads, and sale of property."
+                animationName = "12"
+            case .admins:
+                labelText = "Admins"
+                animationName = "8"
+            case .vocabularyList:
+                labelText = "A list of all the site’s tag vocabularies"
+                animationName = "9"
+            case .helpShow:
+                labelText = "What do these API actions mean?"
+                animationName = "11"
             default:
                 labelText = "Start searching!"
                 animationName = "10"
@@ -84,6 +97,7 @@ extension  DetailViewController {
         label.numberOfLines = 0
         label.textColor = .lightGray
         label.sizeToFit()
+        label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(label)
     }
@@ -92,7 +106,7 @@ extension  DetailViewController {
         animationView.animation = Animation.named(name)
         animationView.frame = view.bounds
         animationView.translatesAutoresizingMaskIntoConstraints = false
-        animationView.backgroundColor = .white
+        animationView.backgroundColor = UIColor(red: (247/255), green: (247/255), blue: (247/255), alpha: 1)
         animationView.contentMode = .scaleAspectFit
         animationView.loopMode = .loop
         
@@ -110,6 +124,8 @@ extension  DetailViewController {
             // text label
             label.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             label.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -50),
+            label.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.70),
+            label.heightAnchor.constraint(lessThanOrEqualTo: view.heightAnchor, multiplier: 0.30),
             
             // animation
             animationView.widthAnchor.constraint(equalToConstant: 100),
@@ -117,5 +133,17 @@ extension  DetailViewController {
             animationView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             animationView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 0)
         ])
+    }
+}
+
+// MARK: - Left Border
+
+extension DetailViewController {
+    func addBorder() {
+        let border = UIView()
+        border.backgroundColor = UIColor(red: (211/255), green: (211/255), blue: (211/255), alpha: 1)
+        border.frame = CGRect(x: 0, y: 0, width: 1, height: view.frame.size.height)
+        border.autoresizingMask = [.flexibleHeight, .flexibleRightMargin]
+        view.addSubview(border)
     }
 }

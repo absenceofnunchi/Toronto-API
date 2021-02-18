@@ -22,7 +22,7 @@ class ContainerViewController: UIViewController {
     
     override func overrideTraitCollection(forChild childViewController: UIViewController) -> UITraitCollection? {
         guard let windowInterfaceOrientation = ContainerViewController.windowInterfaceOrientation else { return nil }
-        
+
         if windowInterfaceOrientation.isLandscape {
             // activate landscape changes
             return UITraitCollection(traitsFrom: [UITraitCollection(horizontalSizeClass: .regular)])
@@ -48,12 +48,12 @@ extension ContainerViewController {
 extension ContainerViewController: UISplitViewControllerDelegate {
     func configureSplitVC() {
         svc.delegate = self
-        svc.view.backgroundColor = .white
-//        svc.preferredDisplayMode = .automatic
         svc.view.backgroundColor = UIColor(red: (247/255), green: (247/255), blue: (247/255), alpha: 1)
+        svc.preferredDisplayMode = .oneBesideSecondary
+        svc.primaryBackgroundStyle = .sidebar
         
         // master
-        let vc = ViewController()
+        let vc = MainViewController()
         nav1 = UINavigationController(rootViewController: vc)
         
         // detail
@@ -79,31 +79,31 @@ extension ContainerViewController: UISplitViewControllerDelegate {
         return true
     }
 
-    func splitViewController(_ svc: UISplitViewController, topColumnForCollapsingToProposedTopColumn proposedTopColumn: UISplitViewController.Column) -> UISplitViewController.Column {
-        print("topColumnForCollapsingToProposedTopColumn", proposedTopColumn)
-
-        return proposedTopColumn
-    }
-    
-    func splitViewController(_ svc: UISplitViewController, willShow column: UISplitViewController.Column) {
-        print(column, "will show")
-    }
-    
-    func splitViewController(_ svc: UISplitViewController, willHide column: UISplitViewController.Column) {
-        print(column, "will hide")
-    }
-    
-    func splitViewControllerDidCollapse(_ svc: UISplitViewController) {
-    }
-    
-    func splitViewControllerDidExpand(_ svc: UISplitViewController) {
-    }
-    
-    func splitViewController(_ svc: UISplitViewController, displayModeForExpandingToProposedDisplayMode proposedDisplayMode: UISplitViewController.DisplayMode) -> UISplitViewController.DisplayMode {
-        return proposedDisplayMode
-    }
-    
-    func splitViewController(_ svc: UISplitViewController, willChangeTo displayMode: UISplitViewController.DisplayMode) {
-    }
+//    func splitViewController(_ svc: UISplitViewController, topColumnForCollapsingToProposedTopColumn proposedTopColumn: UISplitViewController.Column) -> UISplitViewController.Column {
+//        print("topColumnForCollapsingToProposedTopColumn", proposedTopColumn)
+//
+//        return proposedTopColumn
+//    }
+//    
+//    func splitViewController(_ svc: UISplitViewController, willShow column: UISplitViewController.Column) {
+//        print(column, "will show")
+//    }
+//    
+//    func splitViewController(_ svc: UISplitViewController, willHide column: UISplitViewController.Column) {
+//        print(column, "will hide")
+//    }
+//
+//    func splitViewControllerDidCollapse(_ svc: UISplitViewController) {
+//    }
+//
+//    func splitViewControllerDidExpand(_ svc: UISplitViewController) {
+//    }
+//
+//    func splitViewController(_ svc: UISplitViewController, displayModeForExpandingToProposedDisplayMode proposedDisplayMode: UISplitViewController.DisplayMode) -> UISplitViewController.DisplayMode {
+//        return proposedDisplayMode
+//    }
+//
+//    func splitViewController(_ svc: UISplitViewController, willChangeTo displayMode: UISplitViewController.DisplayMode) {
+//    }
 }
 

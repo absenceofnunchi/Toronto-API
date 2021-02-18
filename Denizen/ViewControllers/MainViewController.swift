@@ -13,7 +13,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class MainViewController: UIViewController {
     // MARK:- Properties
 
     static let sectionHeaderElementKind = "section-header-element-kind"
@@ -35,7 +35,7 @@ class ViewController: UIViewController {
     var collectionViewDataSource: CollectionViewDataSource!
     var favouritesDataSource: FavouritesDataSource!
     var tabBar: CustomTabBar!
-    var tabNumber = 1
+    var tabNumber = 0
     var constraints: [NSLayoutConstraint]!
     private var accessoryDoneButton: UIBarButtonItem!
     private var accessoryToolBar: UIToolbar!
@@ -89,12 +89,11 @@ class ViewController: UIViewController {
             delegate.supportedOrientation = orientation
         }
     }
-
 }
 
 // MARK:- Navigation controller
 
-extension ViewController {
+extension MainViewController {
     func configureNavigationController() {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = "Denizen"
@@ -127,7 +126,7 @@ extension ViewController {
 
 // MARK:- Create Layout
 
-extension ViewController {
+extension MainViewController {
     /// Creates a grid layout for the collection view
     /// - Parameter Int
     /// - Throws None
@@ -154,7 +153,7 @@ extension ViewController {
         
         // section header
         let headerFooterSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(50))
-        let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerFooterSize, elementKind: ViewController.sectionHeaderElementKind, alignment: .top)
+        let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerFooterSize, elementKind: MainViewController.sectionHeaderElementKind, alignment: .top)
         sectionHeader.pinToVisibleBounds = true
         sectionHeader.zIndex = 2
         section.boundarySupplementaryItems = [sectionHeader]
@@ -200,7 +199,7 @@ extension ViewController {
 
 // MARK:- Hierarchy
 
-extension ViewController: DataSourceDelegate {
+extension MainViewController: DataSourceDelegate {
     /// Creates a collection view
     /// - Parameter None
     /// - Throws None
@@ -209,7 +208,6 @@ extension ViewController: DataSourceDelegate {
     func configureCollectionViewHierarchy() {
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createLayout(with: layoutType))
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-//        collectionView.backgroundColor = .systemBackground
         collectionView.backgroundColor = UIColor(red: (247/255), green: (247/255), blue: (247/255), alpha: 1)
         collectionView.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 0, right: 0)
         collectionView.delegate = collectionViewDataSource
@@ -232,27 +230,27 @@ extension ViewController: DataSourceDelegate {
     }
     
     func didSelectCellAtIndexPath(at indexPath: IndexPath, with fetchedData: FetchedData){
-        NotificationCenter.default.post(name:.detailChosen, object:self)
-
         if fetchedData.searchCategories == .notices {
             let webViewController = WebViewController()
             webViewController.fetchedData = fetchedData
-            
+            webViewController.dataSourceDelegate = favouritesDataSource
+
             let button = self.splitViewController?.displayModeButtonItem
+            button?.tintColor = .lightGray
             webViewController.navigationItem.leftBarButtonItem = button
             webViewController.navigationItem.leftItemsSupplementBackButton = true
-            webViewController.dataSourceDelegate = favouritesDataSource
             
             let nav = UINavigationController(rootViewController: webViewController)
             self.showDetailViewController(nav, sender: self)
         } else {
             let itemDetailVC = ItemDetailViewController()
             itemDetailVC.fetchedData = fetchedData
-            
+            itemDetailVC.dataSourceDelegate = favouritesDataSource
+
             let button = self.splitViewController?.displayModeButtonItem
+            button?.tintColor = .lightGray
             itemDetailVC.navigationItem.leftBarButtonItem = button
             itemDetailVC.navigationItem.leftItemsSupplementBackButton = true
-            itemDetailVC.dataSourceDelegate = favouritesDataSource
             
             let nav = UINavigationController(rootViewController: itemDetailVC)
             self.showDetailViewController(nav, sender: self)
@@ -261,7 +259,7 @@ extension ViewController: DataSourceDelegate {
     
     func didFetchData() {
         DispatchQueue.main.async {
-            if self.tabNumber == 1 {
+            if self.tabNumber == 0 {
                 self.collectionView.reloadData()
             } else {
                 self.favouriteView.reloadData()
@@ -272,21 +270,21 @@ extension ViewController: DataSourceDelegate {
 
 // MARK: - Cell register
 
-extension ViewController {
+extension MainViewController {
     func configureCollectionCellRegister() {
         collectionView.register(MenuCell.self, forCellWithReuseIdentifier: Cell.menuCell)
-        collectionView.register(TitleSupplementaryView.self, forSupplementaryViewOfKind: ViewController.sectionHeaderElementKind, withReuseIdentifier: Cell.supplementaryCell)
+        collectionView.register(TitleSupplementaryView.self, forSupplementaryViewOfKind: MainViewController.sectionHeaderElementKind, withReuseIdentifier: Cell.supplementaryCell)
     }
     
     func configureFavouritesCellRegister() {
         favouriteView.register(MenuCell.self, forCellWithReuseIdentifier: Cell.favouriteCell)
-        favouriteView.register(TitleSupplementaryView.self, forSupplementaryViewOfKind: ViewController.sectionHeaderElementKind, withReuseIdentifier: Cell.supplementaryCell)
+        favouriteView.register(TitleSupplementaryView.self, forSupplementaryViewOfKind: MainViewController.sectionHeaderElementKind, withReuseIdentifier: Cell.supplementaryCell)
     }
 }
 
 // MARK: - Keyboard dissmiss
 
-extension ViewController {
+extension MainViewController {
     func configureKeyboardDismiss() {
         accessoryDoneButton = UIBarButtonItem(image: UIImage(systemName: "chevron.down")!, style: .plain, target: self, action: #selector(keyboardDismissed))
         accessoryToolBar = UIToolbar(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 44))

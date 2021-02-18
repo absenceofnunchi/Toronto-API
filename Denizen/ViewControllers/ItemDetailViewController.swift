@@ -19,6 +19,7 @@ class ItemDetailViewController: UITableViewController {
     
     var fetchedData: FetchedData!
     var dataSourceDelegate: FavouritesDataSource?
+    var isActivityList = false
     private var data = [(String, AnyObject)]()
     private var url: URL!
     private var shareButton: UIBarButtonItem!
@@ -40,8 +41,32 @@ class ItemDetailViewController: UITableViewController {
         if let fetchedData = fetchedData {
             fetchAPI()
             title = fetchedData.title
+            
+            if isActivityList {
+                navigationItem.prompt = NSLocalizedString("Activity Stream", comment: "")
+            }
         }
         configureNavigationItems()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tableView.reloadData()
+        configureURLNotification()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        NotificationCenter.default.post(name:.detailChosen, object:self)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NotificationCenter.default.post(name:.detailDismissed, object:self)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     func configureTableView() {
@@ -50,6 +75,21 @@ class ItemDetailViewController: UITableViewController {
         tableView.estimatedRowHeight = UITableView.automaticDimension
         tableView.delegate = self
         tableView.dataSource = self
+    }
+}
+
+// MARK: - fetch URL
+
+extension ItemDetailViewController {
+    func configureURLNotification() {
+        NotificationCenter.default.addObserver(self, selector: #selector(urlFetched), name: .urlFetched, object: nil)
+    }
+    
+    @objc func urlFetched(_ notification: Notification) {
+        print("notif", notification)
+        if let fetchedURL = notification.userInfo?["url"] as? URL {
+            self.url = fetchedURL
+        }
     }
 }
 
@@ -82,6 +122,8 @@ extension ItemDetailViewController {
                 urlString = URLScheme.baseURL + Query.ActionType.vocabularyList
             case .helpShow:
                 urlString = URLScheme.baseURL + Query.ActionType.helpShow
+            case .activityList:
+                urlString = URLScheme.baseURL + URLScheme.Subdomain.activityList
             default:
                 break
         }
@@ -114,11 +156,22 @@ extension ItemDetailViewController {
                 let json = JSON(responseObject as [String: Any])
                 let myDictionary = self.json2dic(json)
                 
-//                switch fetchedData.searchCategories {
-//                    case <#pattern#>:
-//                        <#code#>
+//                switch self.fetchedData.searchCategories {
+//                    case .helpShow:
+//                        if let result = myDictionary["result"] as? String {
+//                            if let definition = ("Overview", result) as? (String, AnyObject) {
+//                                self.data.append(definition)
+//                            }
+//                        }
+//                    case .packageAutocomplete:
+//                        if let result = myDictionary["result"] as? [String: AnyObject], let results = result["results"] {
+//
+//                        }
 //                    default:
-//                        <#code#>
+//                        if let result = myDictionary["result"] as? [String: AnyObject] {
+//                            let resultArr = result.map { $0 }.sorted { $0.key < $1.key }
+//                            self.data.append(contentsOf: resultArr)
+//                        }
 //                }
                 if let result = myDictionary["result"] as? [String: AnyObject] {
                     let resultArr = result.map { $0 }.sorted { $0.key < $1.key }
@@ -128,7 +181,6 @@ extension ItemDetailViewController {
                         self.data.append(definition)
                     }
                 }
-                
                 DispatchQueue.main.async {
                     self.navigationController?.activityStopAnimating()
                     self.tableView.reloadData()
@@ -177,6 +229,7 @@ extension ItemDetailViewController {
         if detail.1 is [String: AnyObject] {
             let arr = (detail.1 as! [String: AnyObject]).map { $0 }.sorted { $0.key < $1.key }
             let value = arr as [(String, AnyObject)]
+            
             if value.count > 0 {
                 if let text = value[indexPath.row].1 as? String {
                     cell.textLabel?.text = value[indexPath.row].0 + ": " + text
@@ -271,7 +324,13 @@ extension ItemDetailViewController {
                 }
             }
         } catch (let error){
-            print(error)
+            DispatchQueue.main.async {
+                let alertController = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+                alertController.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (_) in
+                    self.navigationController?.popViewController(animated: true)
+                }))
+                self.present(alertController, animated: true, completion: nil)
+            }
         }
         
         setNavigationItems()
@@ -280,14 +339,14 @@ extension ItemDetailViewController {
     @objc func buttonHandler(_ sender: UIButton) {
         switch sender.tag {
             case 1:
+                print("url", url)
                 guard let url = self.url else { return }
                 let shareSheetVC = UIActivityViewController(activityItems: [url], applicationActivities: nil)
                 present(shareSheetVC, animated: true, completion: nil)
-                
                 if let pop = shareSheetVC.popoverPresentationController {
                     pop.sourceView = self.view
                     pop.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.height, width: 0, height: 0)
-                    pop.permittedArrowDirections = []
+                    //                    pop.permittedArrowDirections = []
                 }
             case 2:
                 if isAlreadyFavourited {
@@ -305,13 +364,25 @@ extension ItemDetailViewController {
                     defaults.set(archived, forKey: Keys.favourites)
                     defaults.synchronize()
                 } catch (let error) {
-                    print("archiving error: \(error)")
+                    DispatchQueue.main.async {
+                        let alertController = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+                        alertController.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (_) in
+                            self.navigationController?.popViewController(animated: true)
+                        }))
+                        self.present(alertController, animated: true, completion: nil)
+                    }
                 }
                 
                 isAlreadyFavourited.toggle()
                 setNavigationItems()
                 
                 dataSourceDelegate?.configureInitialData()
+            case 3:
+                let activityData = FetchedData(title: fetchedData.title, searchCategories: .activityList, parameters: [Query.Key.id: fetchedData.title])
+                let activityVC = ItemDetailViewController()
+                activityVC.fetchedData = activityData
+                activityVC.isActivityList = true
+                self.navigationController?.pushViewController(activityVC, animated: true)
             default:
                 break
         }
@@ -325,19 +396,32 @@ extension ItemDetailViewController {
         let actionImage = UIImage(systemName: "square.and.arrow.up")?.withTintColor(UIColor.lightGray, renderingMode: .alwaysTemplate)
         let starImage = UIImage(systemName: isAlreadyFavourited ? "star.fill" : "star")
         
-        shareButton = UIBarButtonItem(image: actionImage, style: .plain, target: self, action: #selector(buttonHandler(_:)))
+        shareButton = UIBarButtonItem(image: actionImage, style: .plain, target: self, action: #selector(buttonHandler))
         shareButton.tag = 1
         
-        favouriteButton = UIBarButtonItem(image: starImage, style: .plain, target: self, action: #selector(buttonHandler(_:)))
+        favouriteButton = UIBarButtonItem(image: starImage, style: .plain, target: self, action: #selector(buttonHandler))
         favouriteButton.tag = 2
-        if UIDevice.current.orientation.isLandscape {
-            shareButton.tintColor = .lightGray
-            favouriteButton.tintColor = isAlreadyFavourited ? .yellow : .lightGray
-        } else {
-            shareButton.tintColor = .white
-            favouriteButton.tintColor = isAlreadyFavourited ? .yellow : .white
+        
+        var historyButton = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+        switch fetchedData.searchCategories {
+            case .qualityScores, .packages, .packageAutocomplete:
+                let historyImage = UIImage(systemName: "calendar")?.withTintColor(UIColor.lightGray)
+                historyButton = UIBarButtonItem(image: historyImage, style: .plain, target: self, action: #selector(buttonHandler(_:)))
+                historyButton.tag = 3
+            default:
+                break
         }
         
-        navigationItem.rightBarButtonItems = [shareButton, favouriteButton]
+        if UIDevice.current.orientation.isLandscape || UIDevice.current.userInterfaceIdiom == .pad {
+            shareButton.tintColor = .lightGray
+            favouriteButton.tintColor = isAlreadyFavourited ? .red : .lightGray
+            historyButton.tintColor = .lightGray
+        } else {
+            shareButton.tintColor = .white
+            favouriteButton.tintColor = isAlreadyFavourited ? .red : .white
+            historyButton.tintColor = .white
+        }
+        
+        navigationItem.rightBarButtonItems = [shareButton, favouriteButton, historyButton]
     }
 }

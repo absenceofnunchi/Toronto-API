@@ -33,6 +33,16 @@ class WebViewController: UIViewController {
         configureWebView()
         configureNavigationItems()
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        NotificationCenter.default.post(name:.detailChosen, object:self)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NotificationCenter.default.post(name:.detailDismissed, object:self)
+    }
 }
 
 // MARK: - Configure web view
@@ -150,12 +160,12 @@ extension WebViewController {
         
         favouriteButton = UIBarButtonItem(image: starImage, style: .plain, target: self, action: #selector(buttonHandler(_:)))
         favouriteButton.tag = 2
-        if UIDevice.current.orientation.isLandscape {
+        if UIDevice.current.orientation.isLandscape || UIDevice.current.userInterfaceIdiom == .pad {
             shareButton.tintColor = .lightGray
-            favouriteButton.tintColor = isAlreadyFavourited ? .yellow : .lightGray
+            favouriteButton.tintColor = isAlreadyFavourited ? .red : .lightGray
         } else {
             shareButton.tintColor = .white
-            favouriteButton.tintColor = isAlreadyFavourited ? .yellow : .white
+            favouriteButton.tintColor = isAlreadyFavourited ? .red : .white
         }
         
         navigationItem.rightBarButtonItems = [shareButton, favouriteButton]

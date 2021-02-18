@@ -46,6 +46,16 @@ class ExpandDetailViewController: UIViewController {
         
         configureShareButton()
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        NotificationCenter.default.post(name:.detailChosen, object:self)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NotificationCenter.default.post(name:.detailDismissed, object:self)
+    }
   }
 
 extension ExpandDetailViewController {

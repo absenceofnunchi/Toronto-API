@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		4909019C25B91DB900E38196 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4909019B25B91DB900E38196 /* AppDelegate.swift */; };
 		4909019E25B91DB900E38196 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4909019D25B91DB900E38196 /* SceneDelegate.swift */; };
-		490901A025B91DB900E38196 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4909019F25B91DB900E38196 /* ViewController.swift */; };
+		490901A025B91DB900E38196 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4909019F25B91DB900E38196 /* MainViewController.swift */; };
 		490901A325B91DB900E38196 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 490901A125B91DB900E38196 /* Main.storyboard */; };
 		490901A525B91DC000E38196 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 490901A425B91DC000E38196 /* Assets.xcassets */; };
 		490901A825B91DC000E38196 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 490901A625B91DC000E38196 /* LaunchScreen.storyboard */; };
@@ -17,17 +17,14 @@
 		490901BE25B91DC100E38196 /* DenizenUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490901BD25B91DC100E38196 /* DenizenUITests.swift */; };
 		490BB81325D1A6C7000AA6CF /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490BB81225D1A6C7000AA6CF /* DetailViewController.swift */; };
 		490BB81825D1AA5C000AA6CF /* ContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490BB81725D1AA5C000AA6CF /* ContainerViewController.swift */; };
-		490BB81D25D1E660000AA6CF /* ViewController + SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490BB81C25D1E660000AA6CF /* ViewController + SearchBar.swift */; };
+		490BB81D25D1E660000AA6CF /* MainViewController + SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490BB81C25D1E660000AA6CF /* MainViewController + SearchBar.swift */; };
 		490BB82725D1E7B2000AA6CF /* SearchResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490BB82625D1E7B2000AA6CF /* SearchResultsController.swift */; };
 		490D348625BF29D000E94116 /* ItemDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490D348525BF29D000E94116 /* ItemDetailViewController.swift */; };
-		490D348B25BF2CB200E94116 /* ViewController + ResultsUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490D348A25BF2CB200E94116 /* ViewController + ResultsUpdate.swift */; };
-		490D4CDA25CA33E3008D9015 /* ViewController + OptionsBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490D4CD925CA33E3008D9015 /* ViewController + OptionsBar.swift */; };
+		490D348B25BF2CB200E94116 /* MainViewController + ResultsUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490D348A25BF2CB200E94116 /* MainViewController + ResultsUpdate.swift */; };
+		490D4CDA25CA33E3008D9015 /* MainViewController + OptionsBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490D4CD925CA33E3008D9015 /* MainViewController + OptionsBar.swift */; };
 		490D4CEF25CA3F32008D9015 /* FilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490D4CEE25CA3F32008D9015 /* FilterViewController.swift */; };
 		490D4CF425CA607D008D9015 /* FilterSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490D4CF325CA607D008D9015 /* FilterSettingsTableViewController.swift */; };
-		49173F4525D6FD0900C2710C /* ViewController + DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49173F4425D6FD0900C2710C /* ViewController + DataSource.swift */; };
 		4918476325BCF0AE006AC15C /* TitleSupplementaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4918476225BCF0AE006AC15C /* TitleSupplementaryView.swift */; };
-		492B145425DA07BA0083D3AB /* FavouriteCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492B145325DA07BA0083D3AB /* FavouriteCollectionViewController.swift */; };
-		492B145925DA0AFF0083D3AB /* FavouriteVC + Datasource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492B145825DA0AFF0083D3AB /* FavouriteVC + Datasource.swift */; };
 		4962957525DD56A500812024 /* CustomTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4962957425DD56A500812024 /* CustomTabBar.swift */; };
 		496A8EEA25D49E6200B390C0 /* 2.json in Resources */ = {isa = PBXBuildFile; fileRef = 496A8EDE25D49E6000B390C0 /* 2.json */; };
 		496A8EEB25D49E6200B390C0 /* 5.json in Resources */ = {isa = PBXBuildFile; fileRef = 496A8EDF25D49E6000B390C0 /* 5.json */; };
@@ -57,8 +54,7 @@
 		49CE396225D0D91B00660673 /* MapTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CE396125D0D91B00660673 /* MapTableViewController.swift */; };
 		49D9BE9C25BB865C00F59FDC /* MenuCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D9BE9B25BB865C00F59FDC /* MenuCell.swift */; };
 		49E317B525D4565200129EA0 /* GradientLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E317B425D4565200129EA0 /* GradientLayer.swift */; };
-		49FF0B7225DAC422008CB0B2 /* CustomTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FF0B7125DAC422008CB0B2 /* CustomTabBarController.swift */; };
-		49FF0B7725DAE71A008CB0B2 /* ViewController+TabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FF0B7625DAE71A008CB0B2 /* ViewController+TabBar.swift */; };
+		49FF0B7725DAE71A008CB0B2 /* MainViewController+TabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FF0B7625DAE71A008CB0B2 /* MainViewController+TabBar.swift */; };
 		86CB5BDB5C47A74273118E92 /* Pods_DenizenTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 861951D686F8AE113AB2733D /* Pods_DenizenTests.framework */; };
 		BB01434DCCA7020476E8DBB8 /* Pods_Denizen_DenizenUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 579498E343E5D25F7720BFC9 /* Pods_Denizen_DenizenUITests.framework */; };
 		E74CF363FCC8108FDEDB3D47 /* Pods_Denizen.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5078C9CA5C8D025890357525 /* Pods_Denizen.framework */; };
@@ -86,7 +82,7 @@
 		4909019825B91DB900E38196 /* Denizen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Denizen.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4909019B25B91DB900E38196 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4909019D25B91DB900E38196 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		4909019F25B91DB900E38196 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		4909019F25B91DB900E38196 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		490901A225B91DB900E38196 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		490901A425B91DC000E38196 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		490901A725B91DC000E38196 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -99,17 +95,14 @@
 		490901BF25B91DC100E38196 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		490BB81225D1A6C7000AA6CF /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		490BB81725D1AA5C000AA6CF /* ContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerViewController.swift; sourceTree = "<group>"; };
-		490BB81C25D1E660000AA6CF /* ViewController + SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController + SearchBar.swift"; sourceTree = "<group>"; };
+		490BB81C25D1E660000AA6CF /* MainViewController + SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainViewController + SearchBar.swift"; sourceTree = "<group>"; };
 		490BB82625D1E7B2000AA6CF /* SearchResultsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsController.swift; sourceTree = "<group>"; };
 		490D348525BF29D000E94116 /* ItemDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailViewController.swift; sourceTree = "<group>"; };
-		490D348A25BF2CB200E94116 /* ViewController + ResultsUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController + ResultsUpdate.swift"; sourceTree = "<group>"; };
-		490D4CD925CA33E3008D9015 /* ViewController + OptionsBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController + OptionsBar.swift"; sourceTree = "<group>"; };
+		490D348A25BF2CB200E94116 /* MainViewController + ResultsUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainViewController + ResultsUpdate.swift"; sourceTree = "<group>"; };
+		490D4CD925CA33E3008D9015 /* MainViewController + OptionsBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainViewController + OptionsBar.swift"; sourceTree = "<group>"; };
 		490D4CEE25CA3F32008D9015 /* FilterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterViewController.swift; sourceTree = "<group>"; };
 		490D4CF325CA607D008D9015 /* FilterSettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterSettingsTableViewController.swift; sourceTree = "<group>"; };
-		49173F4425D6FD0900C2710C /* ViewController + DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController + DataSource.swift"; sourceTree = "<group>"; };
 		4918476225BCF0AE006AC15C /* TitleSupplementaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleSupplementaryView.swift; sourceTree = "<group>"; };
-		492B145325DA07BA0083D3AB /* FavouriteCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouriteCollectionViewController.swift; sourceTree = "<group>"; };
-		492B145825DA0AFF0083D3AB /* FavouriteVC + Datasource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FavouriteVC + Datasource.swift"; sourceTree = "<group>"; };
 		4962957425DD56A500812024 /* CustomTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBar.swift; sourceTree = "<group>"; };
 		496A8EDE25D49E6000B390C0 /* 2.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 2.json; sourceTree = "<group>"; };
 		496A8EDF25D49E6000B390C0 /* 5.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 5.json; sourceTree = "<group>"; };
@@ -139,8 +132,7 @@
 		49CE396125D0D91B00660673 /* MapTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapTableViewController.swift; sourceTree = "<group>"; };
 		49D9BE9B25BB865C00F59FDC /* MenuCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuCell.swift; sourceTree = "<group>"; };
 		49E317B425D4565200129EA0 /* GradientLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientLayer.swift; sourceTree = "<group>"; };
-		49FF0B7125DAC422008CB0B2 /* CustomTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarController.swift; sourceTree = "<group>"; };
-		49FF0B7625DAE71A008CB0B2 /* ViewController+TabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+TabBar.swift"; sourceTree = "<group>"; };
+		49FF0B7625DAE71A008CB0B2 /* MainViewController+TabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainViewController+TabBar.swift"; sourceTree = "<group>"; };
 		4A5F3B01F3F0460F8025684E /* Pods-Denizen-DenizenUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Denizen-DenizenUITests.debug.xcconfig"; path = "Target Support Files/Pods-Denizen-DenizenUITests/Pods-Denizen-DenizenUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		5078C9CA5C8D025890357525 /* Pods_Denizen.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Denizen.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		579498E343E5D25F7720BFC9 /* Pods_Denizen_DenizenUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Denizen_DenizenUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -294,13 +286,11 @@
 			isa = PBXGroup;
 			children = (
 				490BB81725D1AA5C000AA6CF /* ContainerViewController.swift */,
-				49FF0B7125DAC422008CB0B2 /* CustomTabBarController.swift */,
-				4909019F25B91DB900E38196 /* ViewController.swift */,
-				490D4CD925CA33E3008D9015 /* ViewController + OptionsBar.swift */,
-				49173F4425D6FD0900C2710C /* ViewController + DataSource.swift */,
-				490BB81C25D1E660000AA6CF /* ViewController + SearchBar.swift */,
-				490D348A25BF2CB200E94116 /* ViewController + ResultsUpdate.swift */,
-				49FF0B7625DAE71A008CB0B2 /* ViewController+TabBar.swift */,
+				4909019F25B91DB900E38196 /* MainViewController.swift */,
+				490D4CD925CA33E3008D9015 /* MainViewController + OptionsBar.swift */,
+				490BB81C25D1E660000AA6CF /* MainViewController + SearchBar.swift */,
+				490D348A25BF2CB200E94116 /* MainViewController + ResultsUpdate.swift */,
+				49FF0B7625DAE71A008CB0B2 /* MainViewController+TabBar.swift */,
 				490BB82625D1E7B2000AA6CF /* SearchResultsController.swift */,
 				490BB81225D1A6C7000AA6CF /* DetailViewController.swift */,
 				490D348525BF29D000E94116 /* ItemDetailViewController.swift */,
@@ -311,8 +301,6 @@
 				490D4CF325CA607D008D9015 /* FilterSettingsTableViewController.swift */,
 				49CE395C25D06BBB00660673 /* MapViewController.swift */,
 				49CE396125D0D91B00660673 /* MapTableViewController.swift */,
-				492B145325DA07BA0083D3AB /* FavouriteCollectionViewController.swift */,
-				492B145825DA0AFF0083D3AB /* FavouriteVC + Datasource.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -599,10 +587,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				490D348B25BF2CB200E94116 /* ViewController + ResultsUpdate.swift in Sources */,
+				490D348B25BF2CB200E94116 /* MainViewController + ResultsUpdate.swift in Sources */,
 				499EB18D25DCC323006D0F18 /* WebViewController.swift in Sources */,
 				49D9BE9C25BB865C00F59FDC /* MenuCell.swift in Sources */,
-				49FF0B7225DAC422008CB0B2 /* CustomTabBarController.swift in Sources */,
 				490D348625BF29D000E94116 /* ItemDetailViewController.swift in Sources */,
 				49993CD825BA14FC00091758 /* AppExtensions.swift in Sources */,
 				490BB81325D1A6C7000AA6CF /* DetailViewController.swift in Sources */,
@@ -610,24 +597,21 @@
 				4962957525DD56A500812024 /* CustomTabBar.swift in Sources */,
 				499D566825BE0E3F00FB2FDE /* CollectionViewDataSource.swift in Sources */,
 				499EB18025DC74FD006D0F18 /* FavouritesDataSource.swift in Sources */,
-				490D4CDA25CA33E3008D9015 /* ViewController + OptionsBar.swift in Sources */,
+				490D4CDA25CA33E3008D9015 /* MainViewController + OptionsBar.swift in Sources */,
 				499D567F25BE308800FB2FDE /* WebServiceManager.swift in Sources */,
 				49E317B525D4565200129EA0 /* GradientLayer.swift in Sources */,
 				49794B6725C75DBC00D2B2B5 /* ExpandTableViewController.swift in Sources */,
-				49FF0B7725DAE71A008CB0B2 /* ViewController+TabBar.swift in Sources */,
+				49FF0B7725DAE71A008CB0B2 /* MainViewController+TabBar.swift in Sources */,
 				490D4CF425CA607D008D9015 /* FilterSettingsTableViewController.swift in Sources */,
-				490BB81D25D1E660000AA6CF /* ViewController + SearchBar.swift in Sources */,
+				490BB81D25D1E660000AA6CF /* MainViewController + SearchBar.swift in Sources */,
 				490BB82725D1E7B2000AA6CF /* SearchResultsController.swift in Sources */,
 				49CE395D25D06BBB00660673 /* MapViewController.swift in Sources */,
 				49BC9EF825C64F3F00859AF6 /* ExpandDetailViewController.swift in Sources */,
 				49CA84AD25C5A5740015B125 /* ItemDetailCell.swift in Sources */,
-				49173F4525D6FD0900C2710C /* ViewController + DataSource.swift in Sources */,
-				492B145425DA07BA0083D3AB /* FavouriteCollectionViewController.swift in Sources */,
-				490901A025B91DB900E38196 /* ViewController.swift in Sources */,
+				490901A025B91DB900E38196 /* MainViewController.swift in Sources */,
 				4909019C25B91DB900E38196 /* AppDelegate.swift in Sources */,
 				490D4CEF25CA3F32008D9015 /* FilterViewController.swift in Sources */,
 				49993CE525BA54C200091758 /* AppProtocols.swift in Sources */,
-				492B145925DA0AFF0083D3AB /* FavouriteVC + Datasource.swift in Sources */,
 				49993CF025BA5AF900091758 /* AppDataTypes.swift in Sources */,
 				4909019E25B91DB900E38196 /* SceneDelegate.swift in Sources */,
 				490BB81825D1AA5C000AA6CF /* ContainerViewController.swift in Sources */,
@@ -738,7 +722,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -793,7 +777,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -812,6 +796,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 2RH2V33K5A;
 				INFOPLIST_FILE = "Denizen/Supporting Files/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -832,6 +817,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 2RH2V33K5A;
 				INFOPLIST_FILE = "Denizen/Supporting Files/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

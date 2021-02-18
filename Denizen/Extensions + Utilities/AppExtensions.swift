@@ -24,7 +24,7 @@ extension UIView {
 extension UIViewController {
     func activityStartAnimating(activityColor: UIColor, backgroundColor: UIColor) {
         let backgroundView = UIView()
-        backgroundView.frame = CGRect.init(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height)
+        backgroundView.translatesAutoresizingMaskIntoConstraints = false
         backgroundView.backgroundColor = backgroundColor
         backgroundView.tag = 5000
         
@@ -44,6 +44,15 @@ extension UIViewController {
         
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
+            // background view
+            backgroundView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            backgroundView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            backgroundView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            backgroundView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            backgroundView.widthAnchor.constraint(equalTo: self.view.widthAnchor),
+            backgroundView.heightAnchor.constraint(equalTo: self.view.heightAnchor),
+            
+            // activity indicator
             activityIndicator.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
             activityIndicator.centerYAnchor.constraint(equalTo: self.view.centerYAnchor)
         ])
@@ -189,4 +198,5 @@ extension Notification.Name {
     // for detail view controller to be brought foward when collapsed
     static let detailChosen = Notification.Name("detailChosen")
     static let detailDismissed = Notification.Name("detailDismissed")
+    static let urlFetched = Notification.Name("urlFetched")
 }

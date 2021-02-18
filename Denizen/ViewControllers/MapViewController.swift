@@ -40,6 +40,16 @@ class MapViewController: UIViewController {
         setConstraints()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        NotificationCenter.default.post(name:.detailChosen, object:self)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NotificationCenter.default.post(name:.detailDismissed, object:self)
+    }
+    
     func configureMapView() {
         mapView.delegate = self
         mapView.translatesAutoresizingMaskIntoConstraints = false

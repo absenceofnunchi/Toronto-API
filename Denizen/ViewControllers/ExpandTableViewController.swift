@@ -26,6 +26,16 @@ class ExpandTableViewController: UITableViewController {
         configure()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        NotificationCenter.default.post(name:.detailChosen, object:self)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NotificationCenter.default.post(name:.detailDismissed, object:self)
+    }
+    
     func configure() {
         if let dict = itemInfo?.dict {
             if dict.isEmpty {
