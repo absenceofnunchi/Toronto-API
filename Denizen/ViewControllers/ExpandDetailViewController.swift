@@ -40,10 +40,11 @@ class ExpandDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        
-        configure()
+    
+        navigationItem.backBarButtonItem?.tintColor = .gray
         self.edgesForExtendedLayout = []
         
+        configure()
         configureShareButton()
     }
     
@@ -163,8 +164,9 @@ extension ExpandDetailViewController {
         present(shareSheetVC, animated: true, completion: nil)
         
         if let pop = shareSheetVC.popoverPresentationController {
-            pop.sourceView = sender
-            pop.sourceRect = sender.bounds
+            pop.sourceView = self.view
+            pop.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.height, width: 0, height: 0)
+            pop.permittedArrowDirections = []
         }
     }
 }

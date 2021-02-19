@@ -49,7 +49,6 @@
 		499EB18025DC74FD006D0F18 /* FavouritesDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499EB17F25DC74FD006D0F18 /* FavouritesDataSource.swift */; };
 		499EB18D25DCC323006D0F18 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499EB18C25DCC323006D0F18 /* WebViewController.swift */; };
 		49BC9EF825C64F3F00859AF6 /* ExpandDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BC9EF725C64F3F00859AF6 /* ExpandDetailViewController.swift */; };
-		49CA84AD25C5A5740015B125 /* ItemDetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CA84AC25C5A5740015B125 /* ItemDetailCell.swift */; };
 		49CE395D25D06BBB00660673 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CE395C25D06BBB00660673 /* MapViewController.swift */; };
 		49CE396225D0D91B00660673 /* MapTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CE396125D0D91B00660673 /* MapTableViewController.swift */; };
 		49D9BE9C25BB865C00F59FDC /* MenuCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D9BE9B25BB865C00F59FDC /* MenuCell.swift */; };
@@ -103,6 +102,7 @@
 		490D4CEE25CA3F32008D9015 /* FilterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterViewController.swift; sourceTree = "<group>"; };
 		490D4CF325CA607D008D9015 /* FilterSettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterSettingsTableViewController.swift; sourceTree = "<group>"; };
 		4918476225BCF0AE006AC15C /* TitleSupplementaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleSupplementaryView.swift; sourceTree = "<group>"; };
+		49476F5325DF1B4E00B7F682 /* Denizen.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Denizen.entitlements; sourceTree = "<group>"; };
 		4962957425DD56A500812024 /* CustomTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBar.swift; sourceTree = "<group>"; };
 		496A8EDE25D49E6000B390C0 /* 2.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 2.json; sourceTree = "<group>"; };
 		496A8EDF25D49E6000B390C0 /* 5.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 5.json; sourceTree = "<group>"; };
@@ -127,7 +127,6 @@
 		499EB17F25DC74FD006D0F18 /* FavouritesDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesDataSource.swift; sourceTree = "<group>"; };
 		499EB18C25DCC323006D0F18 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		49BC9EF725C64F3F00859AF6 /* ExpandDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandDetailViewController.swift; sourceTree = "<group>"; };
-		49CA84AC25C5A5740015B125 /* ItemDetailCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailCell.swift; sourceTree = "<group>"; };
 		49CE395C25D06BBB00660673 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		49CE396125D0D91B00660673 /* MapTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapTableViewController.swift; sourceTree = "<group>"; };
 		49D9BE9B25BB865C00F59FDC /* MenuCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuCell.swift; sourceTree = "<group>"; };
@@ -197,6 +196,7 @@
 		4909019A25B91DB900E38196 /* Denizen */ = {
 			isa = PBXGroup;
 			children = (
+				49476F5325DF1B4E00B7F682 /* Denizen.entitlements */,
 				4909019B25B91DB900E38196 /* AppDelegate.swift */,
 				4909019D25B91DB900E38196 /* SceneDelegate.swift */,
 				49993CDF25BA400A00091758 /* temp.swift */,
@@ -319,7 +319,6 @@
 			children = (
 				49D9BE9B25BB865C00F59FDC /* MenuCell.swift */,
 				4918476225BCF0AE006AC15C /* TitleSupplementaryView.swift */,
-				49CA84AC25C5A5740015B125 /* ItemDetailCell.swift */,
 			);
 			path = "Cells and Supplementary Views";
 			sourceTree = "<group>";
@@ -607,7 +606,6 @@
 				490BB82725D1E7B2000AA6CF /* SearchResultsController.swift in Sources */,
 				49CE395D25D06BBB00660673 /* MapViewController.swift in Sources */,
 				49BC9EF825C64F3F00859AF6 /* ExpandDetailViewController.swift in Sources */,
-				49CA84AD25C5A5740015B125 /* ItemDetailCell.swift in Sources */,
 				490901A025B91DB900E38196 /* MainViewController.swift in Sources */,
 				4909019C25B91DB900E38196 /* AppDelegate.swift in Sources */,
 				490D4CEF25CA3F32008D9015 /* FilterViewController.swift in Sources */,
@@ -793,7 +791,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Denizen/Denizen.entitlements;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 2RH2V33K5A;
 				INFOPLIST_FILE = "Denizen/Supporting Files/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -803,6 +803,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ovis.Denizen;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -814,7 +815,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Denizen/Denizen.entitlements;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 2RH2V33K5A;
 				INFOPLIST_FILE = "Denizen/Supporting Files/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -824,6 +827,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ovis.Denizen;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

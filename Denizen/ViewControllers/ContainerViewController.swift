@@ -31,6 +31,10 @@ class ContainerViewController: UIViewController {
             return super.traitCollection
         }
     }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
 }
 
 extension ContainerViewController {

@@ -46,6 +46,13 @@ extension FilterSettingsTableViewController {
                     alertController.addAction(UIAlertAction(title: "Go Back", style: .cancel, handler: {_ in
                         self.navigationController?.popViewController(animated: true)
                     }))
+                    
+                    if let popoverController = alertController.popoverPresentationController {
+                        popoverController.sourceView = self.view
+                        popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.height, width: 0, height: 0)
+                        popoverController.permittedArrowDirections = []
+                    }
+                    
                     self.present(alertController, animated: true, completion: nil)
                 }
                 return

@@ -344,7 +344,7 @@
 //        //        let urlString = "https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/recently_changed_packages_activity_list"
 //        //        let parameters: [String: String] = ["limit": "20", "offset": String(OFFSET_CONSTANT * offsetBy)]
 //
-//        //        let urlString = "https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/package_show?id=473def30-1c87-45f1-95c4-06b9bf693fec"
+//        //        let urlString = "https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/package_show?"
 //        let urlString = "https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/datastore_search"
 //        //        var parameters: [String: String]?
 //        let parameters: [String: String] = ["id": "22f223e7-73f7-4842-935c-80a0ba5c3e5b", "limit": "5", "offset": String(OFFSET_CONSTANT * offsetBy)]
@@ -673,6 +673,7 @@
 // the activity indicator is out of place when going from portrait to landscape - fixed
 // device landscape mode or the orientation landscape mode or both - fixed
 // delete url fetch observer - fixed
-// different icons for the landscape default page
+// different icons for the landscape default page - fixed
 // ipad compatibility
 // back button tint color
+// use nscache for search results

@@ -7,7 +7,7 @@
 
 import UIKit
 
-class FilterViewController: UITableViewController {
+class FilterViewController: UIViewController {
     // MARK: - Properties
     // topics, civic_issues, owner_division (Publisher), refresh_rate, formats (Format), dataset_category (Type), last_refreshed (order)
 
@@ -25,31 +25,53 @@ class FilterViewController: UITableViewController {
         }
         return data
     }()
+    let tableView = UITableView(frame: .zero, style: .insetGrouped)
     
-    override init(style: UITableView.Style) {
-        super.init(style: style)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    override func loadView() {
+        let v = UIView()
+        v.backgroundColor = UIColor.secondarySystemGroupedBackground
+        v.addSubview(tableView)
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        view = v
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         title = "Filters"
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: Cell.filterCell)
         self.navigationController?.presentationController?.delegate = self
         
-        configureRightBarItem()
+        configureTableView()
+        configureRightBarItems()
         configureLeftBarItem()
+        setConstraints()
+    }
+    
+    func setConstraints() {
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: view.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 1),
+            tableView.widthAnchor.constraint(equalTo: view.widthAnchor)
+        ])
+    }
+}
+
+// MARK: - Configure table view
+
+extension FilterViewController {
+    func configureTableView() {
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: Cell.filterCell)
+        tableView.delegate = self
+        tableView.dataSource = self
     }
 }
 
 // MARK: - configureNavigationItem
 
 extension FilterViewController {
-    func configureRightBarItem() {
+    func configureLeftBarItem() {
         let applyButton = UIButton(frame: CGRect(origin: .zero, size: CGSize(width: 80, height: 40)))
         applyButton.setTitle("Apply", for: .normal)
         applyButton.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
@@ -58,15 +80,18 @@ extension FilterViewController {
         applyButton.layer.cornerRadius = 10
         applyButton.tag = 1
         
-        let rightBarButton = UIBarButtonItem(customView: applyButton)
-        self.navigationItem.rightBarButtonItem = rightBarButton
+        let leftBarButton = UIBarButtonItem(customView: applyButton)
+        self.navigationItem.leftBarButtonItem = leftBarButton
     }
     
-    func configureLeftBarItem() {
-        let leftBarButton = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector((buttonPressed)))
-        leftBarButton.tintColor = .black
-        leftBarButton.tag = 2
-        self.navigationItem.leftBarButtonItem = leftBarButton
+    func configureRightBarItems() {
+        let rightBarButton = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector((buttonPressed)))
+        rightBarButton.tag = 2
+        
+        let warningButton = UIBarButtonItem(image: UIImage(systemName: "info.circle"), style: .plain, target: self, action: #selector(buttonPressed(_:)))
+        warningButton.tag = 3
+        
+        self.navigationItem.rightBarButtonItems = [rightBarButton, warningButton]
     }
     
     @objc func buttonPressed(_ sender: UIButton) {
@@ -84,6 +109,17 @@ extension FilterViewController {
                     filters.append(Filter(title: filter, setting: NSLocalizedString("All", comment: "")))
                 }
                 tableView.reloadData()
+            case 3:
+                let alertController = UIAlertController(title: "", message: "Filters are only applicable to Tags, Topics, and Civic Issues. Reset your filter settings to see the full result.", preferredStyle: .alert)
+                alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                
+                if let popoverController = alertController.popoverPresentationController {
+                    popoverController.sourceView = self.view
+                    popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.height, width: 0, height: 0)
+                    popoverController.permittedArrowDirections = []
+                }
+                
+                self.present(alertController, animated: true, completion: nil)
             default:
                 break
         }
@@ -92,16 +128,16 @@ extension FilterViewController {
 
 // MARK:- Table view datasource
 
-extension FilterViewController {
-    override func numberOfSections(in tableView: UITableView) -> Int {
+extension FilterViewController: UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return filters.count
     }
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Cell.filterCell, for: indexPath)
         cell.accessoryType = .disclosureIndicator
         cell.textLabel?.text = filters[indexPath.section].setting
@@ -109,15 +145,15 @@ extension FilterViewController {
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return filters[section].title.rawValue
     }
 }
 
 // MARK: - Table view delegate
 
-extension FilterViewController {
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+extension FilterViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedFilter = filters[indexPath.section]
         let filterSettingsVC = FilterSettingsTableViewController()
         filterSettingsVC.data = selectedFilter

@@ -27,8 +27,8 @@ class DetailViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
         createAnnotation(searchCateogry: searchCategory)
+        NotificationCenter.default.post(name:.detailDismissed, object:self)
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -99,7 +99,13 @@ extension  DetailViewController {
         label.sizeToFit()
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.alpha = 0
         view.addSubview(label)
+        
+        let animation = UIViewPropertyAnimator(duration: 0.8, curve: .linear) {
+            self.label.alpha = 1
+        }
+        animation.startAnimation()
     }
     
     func configureAnimation(with name: String) {
@@ -109,6 +115,7 @@ extension  DetailViewController {
         animationView.backgroundColor = UIColor(red: (247/255), green: (247/255), blue: (247/255), alpha: 1)
         animationView.contentMode = .scaleAspectFit
         animationView.loopMode = .loop
+        animationView.alpha = 0
         
         // color
         let keypath = AnimationKeypath(keypath: "**.**.**.Color")
@@ -117,6 +124,11 @@ extension  DetailViewController {
         
         animationView.play()
         view.addSubview(animationView)
+        
+        let animation = UIViewPropertyAnimator(duration: 0.8, curve: .linear) {
+            self.animationView.alpha = 1
+        }
+        animation.startAnimation()
     }
     
     func setConstraints() {

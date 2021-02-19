@@ -26,7 +26,9 @@ class FavouritesDataSource: NSObject, UICollectionViewDataSource {
     private var data = [FetchedData]()
     private let defaults = UserDefaults.standard
     weak var dataSourceDelegate:DataSourceDelegate?
-
+    private var Y_OF_HEADER_VIEW: CGFloat! = 0
+    private var supplementaryView: UICollectionReusableView!
+    
     init(dataSourceDelegate: DataSourceDelegate) {
         super.init()
         self.dataSourceDelegate = dataSourceDelegate
@@ -68,6 +70,13 @@ extension FavouritesDataSource: UICollectionViewDelegate {
         guard let supplementaryView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Cell.supplementaryCell, for: indexPath) as? TitleSupplementaryView else {
             fatalError("Expected `\(TitleSupplementaryView.self)` type for reuseIdentifier \(TitleSupplementaryView.reuseIdentifier). Check the configuration.")
         }
+        self.Y_OF_HEADER_VIEW = supplementaryView.bounds.origin.y
+        
+        supplementaryView.label.text = "Saved Datasets"
+        supplementaryView.label.textColor = .gray
+        supplementaryView.layer.cornerRadius = 10
+        
+        self.supplementaryView = supplementaryView
         
         return supplementaryView
     }
@@ -85,6 +94,24 @@ extension FavouritesDataSource {
             }
         } catch (let error){
             print(error)
+        }
+    }
+}
+
+// MARK: - Scroll view delegate
+
+extension FavouritesDataSource {
+    // changes the atttributes of the supplementary view once it floats
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if let cell = supplementaryView as? TitleSupplementaryView {
+            if scrollView.contentOffset.y > Y_OF_HEADER_VIEW {
+                cell.backgroundColor = .clear
+                cell.label.isHidden = true
+            } else {
+                cell.backgroundColor = .clear
+                cell.label.textColor = .gray
+                cell.label.isHidden = false
+            }
         }
     }
 }

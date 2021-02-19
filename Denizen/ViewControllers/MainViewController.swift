@@ -33,7 +33,7 @@ class MainViewController: UIViewController {
     var collectionView: UICollectionView! = nil
     var favouriteView: UICollectionView! = nil
     var collectionViewDataSource: CollectionViewDataSource!
-    var favouritesDataSource: FavouritesDataSource!
+    lazy var favouritesDataSource = FavouritesDataSource(dataSourceDelegate: self)
     var tabBar: CustomTabBar!
     var tabNumber = 0
     var constraints: [NSLayoutConstraint]!
@@ -96,10 +96,10 @@ class MainViewController: UIViewController {
 extension MainViewController {
     func configureNavigationController() {
         navigationController?.navigationBar.prefersLargeTitles = true
-        navigationItem.title = "Denizen"
         navigationItem.hidesSearchBarWhenScrolling = false
-        extendedLayoutIncludesOpaqueBars = true
+//        extendedLayoutIncludesOpaqueBars = true
 
+        navigationItem.title = "Toronto API"
         applyImageBackgroundToTheNavigationBar()
     }
     
@@ -119,6 +119,8 @@ extension MainViewController {
         
         let appearance = navigationController!.navigationBar.standardAppearance.copy()
         appearance.backgroundImage = image
+        appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.black]
+        appearance.titleTextAttributes = [.foregroundColor: UIColor.black]
         navigationController?.navigationBar.standardAppearance = appearance
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
     }
@@ -223,8 +225,7 @@ extension MainViewController: DataSourceDelegate {
         favouriteView = UICollectionView(frame: view.bounds, collectionViewLayout: createLayout(with: layoutType))
         favouriteView.translatesAutoresizingMaskIntoConstraints = false
         favouriteView.backgroundColor = UIColor(red: (247/255), green: (247/255), blue: (247/255), alpha: 1)
-        favouriteView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-        favouritesDataSource = FavouritesDataSource(dataSourceDelegate: self)
+        favouriteView.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 0, right: 0)
         favouriteView.delegate = favouritesDataSource
         favouriteView.dataSource = favouritesDataSource
     }

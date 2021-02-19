@@ -16,6 +16,7 @@ class MenuCell: UICollectionViewCell {
     // MARK:- Properties
     
     let titleLabel = UILabel()
+    let subTitleLabel = UILabel()
     let dateLabel = UILabel()
     static let reuseIdentifier = Cell.menuCell
     
@@ -39,12 +40,19 @@ extension MenuCell {
         // title label
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.adjustsFontForContentSizeCategory = true
-//        titleLabel.font = UIFont.preferredFont(forTextStyle: .caption1)
         titleLabel.textAlignment = .center
         titleLabel.font = UIFont.preferredFont(forTextStyle: .subheadline)
         titleLabel.textColor = .gray
         contentView.addSubview(titleLabel)
         
+        // subtitle
+        subTitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        subTitleLabel.adjustsFontForContentSizeCategory = true
+        subTitleLabel.textAlignment = .center
+        subTitleLabel.textColor = .lightGray
+        subTitleLabel.font = UIFont.preferredFont(forTextStyle: .caption1)
+        contentView.addSubview(subTitleLabel)
+
         // date label
         dateLabel.translatesAutoresizingMaskIntoConstraints = false
         dateLabel.adjustsFontForContentSizeCategory = true
@@ -59,13 +67,17 @@ extension MenuCell {
             titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: inset),
             titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -inset),
             titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: inset),
-            titleLabel.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 1/2),
+//            titleLabel.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 1/2),
+            
+            // subtitle label
+            subTitleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: inset),
+            subTitleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -inset),
+            subTitleLabel.bottomAnchor.constraint(equalTo: dateLabel.topAnchor, constant: -inset),
             
             // date label
             dateLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: inset),
             dateLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -inset),
-            dateLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor),
-            dateLabel.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 1/2),
+            dateLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -inset),
         ])
     }
 }

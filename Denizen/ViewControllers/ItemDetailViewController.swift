@@ -36,8 +36,10 @@ class ItemDetailViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        configureURLNotification()
         configureTableView()
-        
+        configureNavigationItems()
+
         if let fetchedData = fetchedData {
             fetchAPI()
             title = fetchedData.title
@@ -46,13 +48,11 @@ class ItemDetailViewController: UITableViewController {
                 navigationItem.prompt = NSLocalizedString("Activity Stream", comment: "")
             }
         }
-        configureNavigationItems()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tableView.reloadData()
-        configureURLNotification()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -78,7 +78,7 @@ class ItemDetailViewController: UITableViewController {
     }
 }
 
-// MARK: - fetch URL
+// MARK: - URL notification
 
 extension ItemDetailViewController {
     func configureURLNotification() {
@@ -86,7 +86,6 @@ extension ItemDetailViewController {
     }
     
     @objc func urlFetched(_ notification: Notification) {
-        print("notif", notification)
         if let fetchedURL = notification.userInfo?["url"] as? URL {
             self.url = fetchedURL
         }
@@ -135,6 +134,13 @@ extension ItemDetailViewController {
                 alertController.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (_) in
                     self.navigationController?.popViewController(animated: true)
                 }))
+                
+                if let popoverController = alertController.popoverPresentationController {
+                    popoverController.sourceView = self.view
+                    popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.height, width: 0, height: 0)
+                    popoverController.permittedArrowDirections = []
+                }
+                
                 self.present(alertController, animated: true, completion: nil)
             }
             return
@@ -148,6 +154,13 @@ extension ItemDetailViewController {
                     alertController.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (_) in
                         self.navigationController?.popViewController(animated: true)
                     }))
+                    
+                    if let popoverController = alertController.popoverPresentationController {
+                        popoverController.sourceView = self.view
+                        popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.height, width: 0, height: 0)
+                        popoverController.permittedArrowDirections = []
+                    }
+                    
                     self.present(alertController, animated: true, completion: nil)
                 }
             }
@@ -192,6 +205,13 @@ extension ItemDetailViewController {
                     alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { (_) in
                         self.navigationController?.navigationController?.popViewController(animated: true)
                     }))
+                    
+                    if let popoverController = alertController.popoverPresentationController {
+                        popoverController.sourceView = self.view
+                        popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.height, width: 0, height: 0)
+                        popoverController.permittedArrowDirections = []
+                    }
+                    
                     self.present(alertController, animated: true, completion: nil)
                 }
             }
@@ -329,6 +349,13 @@ extension ItemDetailViewController {
                 alertController.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (_) in
                     self.navigationController?.popViewController(animated: true)
                 }))
+                
+                if let popoverController = alertController.popoverPresentationController {
+                    popoverController.sourceView = self.view
+                    popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.height, width: 0, height: 0)
+                    popoverController.permittedArrowDirections = []
+                }
+                
                 self.present(alertController, animated: true, completion: nil)
             }
         }
@@ -339,14 +366,13 @@ extension ItemDetailViewController {
     @objc func buttonHandler(_ sender: UIButton) {
         switch sender.tag {
             case 1:
-                print("url", url)
                 guard let url = self.url else { return }
                 let shareSheetVC = UIActivityViewController(activityItems: [url], applicationActivities: nil)
                 present(shareSheetVC, animated: true, completion: nil)
                 if let pop = shareSheetVC.popoverPresentationController {
                     pop.sourceView = self.view
                     pop.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.height, width: 0, height: 0)
-                    //                    pop.permittedArrowDirections = []
+                    pop.permittedArrowDirections = []
                 }
             case 2:
                 if isAlreadyFavourited {
@@ -369,13 +395,20 @@ extension ItemDetailViewController {
                         alertController.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (_) in
                             self.navigationController?.popViewController(animated: true)
                         }))
+                        
+                        if let popoverController = alertController.popoverPresentationController {
+                            popoverController.sourceView = self.view
+                            popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.height, width: 0, height: 0)
+                            popoverController.permittedArrowDirections = []
+                        }
+                        
                         self.present(alertController, animated: true, completion: nil)
                     }
                 }
                 
                 isAlreadyFavourited.toggle()
                 setNavigationItems()
-                
+                // refetch and reload the favourites data source
                 dataSourceDelegate?.configureInitialData()
             case 3:
                 let activityData = FetchedData(title: fetchedData.title, searchCategories: .activityList, parameters: [Query.Key.id: fetchedData.title])
@@ -399,8 +432,13 @@ extension ItemDetailViewController {
         shareButton = UIBarButtonItem(image: actionImage, style: .plain, target: self, action: #selector(buttonHandler))
         shareButton.tag = 1
         
-        favouriteButton = UIBarButtonItem(image: starImage, style: .plain, target: self, action: #selector(buttonHandler))
-        favouriteButton.tag = 2
+        
+        if isActivityList {
+            favouriteButton = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+        } else {
+            favouriteButton = UIBarButtonItem(image: starImage, style: .plain, target: self, action: #selector(buttonHandler))
+            favouriteButton.tag = 2
+        }
         
         var historyButton = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
         switch fetchedData.searchCategories {

@@ -92,6 +92,13 @@ class SearchResultsController: UITableViewController {
     @objc func filterButtonHandler() {
         let alertController = UIAlertController(title: "", message: "The current search result being shown are filtered by your settings. Filters are not applicable to Packages, Quality Scores, Recently Changed, and Notices. Reset your filter settings to see the full result.", preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        
+        if let popoverController = alertController.popoverPresentationController {
+            popoverController.sourceView = self.view
+            popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.height, width: 0, height: 0)
+            popoverController.permittedArrowDirections = []
+        }
+        
         self.present(alertController, animated: true, completion: nil)
     }
 

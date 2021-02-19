@@ -70,7 +70,7 @@ extension MainViewController: UISearchBarDelegate {
     }
     
     @objc func leftViewButtonHandler() {
-        let filterViewController = FilterViewController(style: .insetGrouped)
+        let filterViewController = FilterViewController()
         filterViewController.delegate = self
         let navController = UINavigationController(rootViewController: filterViewController)
         self.present(navController, animated: true, completion: nil)

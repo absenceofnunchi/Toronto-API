@@ -26,9 +26,10 @@ class TitleSupplementaryView: UICollectionReusableView {
 
 extension TitleSupplementaryView {
     func configure() {
-        addSubview(label)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.adjustsFontForContentSizeCategory = true
+        addSubview(label)
+
         let inset = CGFloat(10)
         NSLayoutConstraint.activate([
             label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: inset),
@@ -36,6 +37,6 @@ extension TitleSupplementaryView {
             label.topAnchor.constraint(equalTo: topAnchor, constant: inset),
             label.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -inset),
         ])
-        label.font = UIFont.preferredFont(forTextStyle: .title3)
+        label.font = UIFont.preferredFont(forTextStyle: .subheadline)
     }
 }
