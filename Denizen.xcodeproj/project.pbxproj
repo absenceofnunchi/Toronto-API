@@ -25,6 +25,12 @@
 		490D4CEF25CA3F32008D9015 /* FilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490D4CEE25CA3F32008D9015 /* FilterViewController.swift */; };
 		490D4CF425CA607D008D9015 /* FilterSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490D4CF325CA607D008D9015 /* FilterSettingsTableViewController.swift */; };
 		4918476325BCF0AE006AC15C /* TitleSupplementaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4918476225BCF0AE006AC15C /* TitleSupplementaryView.swift */; };
+		491AA69527FCE10400D50D40 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 491AA68E27FCE10300D50D40 /* README.md */; };
+		491AA69627FCE10400D50D40 /* 4.png in Resources */ = {isa = PBXBuildFile; fileRef = 491AA69027FCE10400D50D40 /* 4.png */; };
+		491AA69727FCE10400D50D40 /* 5.png in Resources */ = {isa = PBXBuildFile; fileRef = 491AA69127FCE10400D50D40 /* 5.png */; };
+		491AA69827FCE10400D50D40 /* 2.png in Resources */ = {isa = PBXBuildFile; fileRef = 491AA69227FCE10400D50D40 /* 2.png */; };
+		491AA69927FCE10400D50D40 /* 3.png in Resources */ = {isa = PBXBuildFile; fileRef = 491AA69327FCE10400D50D40 /* 3.png */; };
+		491AA69A27FCE10400D50D40 /* 1.png in Resources */ = {isa = PBXBuildFile; fileRef = 491AA69427FCE10400D50D40 /* 1.png */; };
 		4962957525DD56A500812024 /* CustomTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4962957425DD56A500812024 /* CustomTabBar.swift */; };
 		496A8EEA25D49E6200B390C0 /* 2.json in Resources */ = {isa = PBXBuildFile; fileRef = 496A8EDE25D49E6000B390C0 /* 2.json */; };
 		496A8EEB25D49E6200B390C0 /* 5.json in Resources */ = {isa = PBXBuildFile; fileRef = 496A8EDF25D49E6000B390C0 /* 5.json */; };
@@ -102,6 +108,12 @@
 		490D4CEE25CA3F32008D9015 /* FilterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterViewController.swift; sourceTree = "<group>"; };
 		490D4CF325CA607D008D9015 /* FilterSettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterSettingsTableViewController.swift; sourceTree = "<group>"; };
 		4918476225BCF0AE006AC15C /* TitleSupplementaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleSupplementaryView.swift; sourceTree = "<group>"; };
+		491AA68E27FCE10300D50D40 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		491AA69027FCE10400D50D40 /* 4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 4.png; sourceTree = "<group>"; };
+		491AA69127FCE10400D50D40 /* 5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 5.png; sourceTree = "<group>"; };
+		491AA69227FCE10400D50D40 /* 2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 2.png; sourceTree = "<group>"; };
+		491AA69327FCE10400D50D40 /* 3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 3.png; sourceTree = "<group>"; };
+		491AA69427FCE10400D50D40 /* 1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 1.png; sourceTree = "<group>"; };
 		49476F5325DF1B4E00B7F682 /* Denizen.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Denizen.entitlements; sourceTree = "<group>"; };
 		4962957425DD56A500812024 /* CustomTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBar.swift; sourceTree = "<group>"; };
 		496A8EDE25D49E6000B390C0 /* 2.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 2.json; sourceTree = "<group>"; };
@@ -174,6 +186,8 @@
 		4909018F25B91DB900E38196 = {
 			isa = PBXGroup;
 			children = (
+				491AA68E27FCE10300D50D40 /* README.md */,
+				491AA68F27FCE10400D50D40 /* ReadmeAssets */,
 				4909019A25B91DB900E38196 /* Denizen */,
 				490901B125B91DC100E38196 /* DenizenTests */,
 				490901BC25B91DC100E38196 /* DenizenUITests */,
@@ -228,6 +242,18 @@
 				490901BF25B91DC100E38196 /* Info.plist */,
 			);
 			path = DenizenUITests;
+			sourceTree = "<group>";
+		};
+		491AA68F27FCE10400D50D40 /* ReadmeAssets */ = {
+			isa = PBXGroup;
+			children = (
+				491AA69027FCE10400D50D40 /* 4.png */,
+				491AA69127FCE10400D50D40 /* 5.png */,
+				491AA69227FCE10400D50D40 /* 2.png */,
+				491AA69327FCE10400D50D40 /* 3.png */,
+				491AA69427FCE10400D50D40 /* 1.png */,
+			);
+			path = ReadmeAssets;
 			sourceTree = "<group>";
 		};
 		496A8ED725D49AE200B390C0 /* Resources */ = {
@@ -448,8 +474,11 @@
 				496A8EF325D49E6200B390C0 /* 8.json in Resources */,
 				496A8EEF25D49E6200B390C0 /* 6.json in Resources */,
 				496A8EEB25D49E6200B390C0 /* 5.json in Resources */,
+				491AA69627FCE10400D50D40 /* 4.png in Resources */,
 				496A8EEE25D49E6200B390C0 /* 3.json in Resources */,
+				491AA69A27FCE10400D50D40 /* 1.png in Resources */,
 				496A8EEC25D49E6200B390C0 /* 7.json in Resources */,
+				491AA69527FCE10400D50D40 /* README.md in Resources */,
 				496A8EF125D49E6200B390C0 /* 1.json in Resources */,
 				496A8EEA25D49E6200B390C0 /* 2.json in Resources */,
 				490901A825B91DC000E38196 /* LaunchScreen.storyboard in Resources */,
@@ -457,6 +486,9 @@
 				490901A325B91DB900E38196 /* Main.storyboard in Resources */,
 				496A8EF025D49E6200B390C0 /* 12.json in Resources */,
 				496A8EF425D49E6200B390C0 /* 9.json in Resources */,
+				491AA69927FCE10400D50D40 /* 3.png in Resources */,
+				491AA69727FCE10400D50D40 /* 5.png in Resources */,
+				491AA69827FCE10400D50D40 /* 2.png in Resources */,
 				496A8EF225D49E6200B390C0 /* 4.json in Resources */,
 				496A8EED25D49E6200B390C0 /* 10.json in Resources */,
 			);
