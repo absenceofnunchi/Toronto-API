@@ -221,20 +221,20 @@ func createLayout(with layoutType: Int = 1) -> UICollectionViewLayout {
 
 1. Show the latest dataset from Open Data.
 
-![](https://github.com/igibliss00/readmetest/blob/master/ReadmeAssets/1.png)
+![](https://github.com/igibliss00/Toronto-API/blob/main/ReadmeAssets/1.png)
 
 2. Saved dataset.
 
-![](https://github.com/igibliss00/readmetest/blob/master/ReadmeAssets/2.png)
+![](https://github.com/igibliss00/Toronto-API/blob/main/ReadmeAssets/2.png)
 
 3. Search tokens inside search text field.
 
-![](https://github.com/igibliss00/readmetest/blob/master/ReadmeAssets/4.png)
+![](https://github.com/igibliss00/Toronto-API/blob/main/ReadmeAssets/4.png)
 
 4. Landscape mode showing the primary and the secondary view of the split view controller.
 
-![](https://github.com/igibliss00/readmetest/blob/master/ReadmeAssets/3.png)
+![](https://github.com/igibliss00/Toronto-API/blob/main/ReadmeAssets/3.png)
 
 5. iPad app showing the visualization of the data set.
 
-![](https://github.com/igibliss00/readmetest/blob/master/ReadmeAssets/5.png)
+![](https://github.com/igibliss00/Toronto-API/blob/main/ReadmeAssets/5.png)
